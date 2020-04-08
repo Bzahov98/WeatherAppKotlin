@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data
+package com.bzahov.weatherapp.data.db.entity
 
 
 data class Request(

@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data
+package com.bzahov.weatherapp.data.db.entity
 
 
 import com.google.gson.annotations.SerializedName

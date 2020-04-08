@@ -1,6 +1,8 @@
 package com.bzahov.weatherapp.data
 
 import android.util.Log
+import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
+import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
@@ -10,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private  const val TAG = "WeatherApiService"
+private const val TAG = "WeatherApiService"
 const val API_KEY = "d008d274c9b7d028454d802a2f80a75a"
 const val API_URL = "http://api.weatherstack.com/"
 interface WeatherApiService {
@@ -21,7 +23,9 @@ interface WeatherApiService {
         @Query("unit") unit: String = "m"
     ) : Deferred<CurrentWeatherResponse>
     companion object{
-        operator fun invoke():WeatherApiService{
+        operator fun invoke(
+            connectivityInterceptorImpl: ConnectivityInterceptorImpl
+        ): WeatherApiService {
             val requestInterceptor = Interceptor{
                 val url = it.request()
                     .url()
@@ -40,6 +44,7 @@ interface WeatherApiService {
             }
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(requestInterceptor)
+                .addInterceptor(connectivityInterceptorImpl)
                 .build()
 
             return Retrofit.Builder()

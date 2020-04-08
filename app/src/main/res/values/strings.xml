@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="menu_today">Today</string>
+    <string name="menu_sevendays">7 Days</string>
+    <string name="menu_settings">Settings</string>
+    <string name="current_weather_text">Current</string>
 </resources>
