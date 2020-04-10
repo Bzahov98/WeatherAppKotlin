@@ -1,7 +1,6 @@
 package com.bzahov.weatherapp.data.db.unitlocalized
 
 data class ImperialCurrentWeatherEntry(
-// REWORK
     override val temperature: Double,
     override val conditionText: String,
     override val conditionIconUrl: String,

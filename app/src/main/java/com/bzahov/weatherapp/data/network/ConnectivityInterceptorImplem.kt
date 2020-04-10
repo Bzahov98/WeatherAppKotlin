@@ -22,6 +22,7 @@ class ConnectivityInterceptorImpl(
     private fun isOnline(): Boolean {
         val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE)
                 as ConnectivityManager
+        // QUESTION: deprecated?
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
     }

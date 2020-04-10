@@ -29,5 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
+        //return NavigationUI.navigateUp(navController,null)
     }
 }

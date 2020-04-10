@@ -19,7 +19,7 @@ interface WeatherApiService {
     @GET("current")
     fun getCurrentWeather(
         @Query("query") location: String ,
-        //@Query("language") languageCode: String = "en",
+//        @Query("language") languageCode: String = "en",
         @Query("unit") unit: String = "m"
     ) : Deferred<CurrentWeatherResponse>
     companion object{

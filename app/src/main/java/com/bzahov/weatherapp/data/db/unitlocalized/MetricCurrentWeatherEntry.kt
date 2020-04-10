@@ -1,7 +1,6 @@
 package com.bzahov.weatherapp.data.db.unitlocalized
 
 class MetricCurrentWeatherEntry (
-    // same // REWORK
     override val temperature: Double,
     override val conditionText: String,
     override val conditionIconUrl: String,

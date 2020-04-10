@@ -13,7 +13,6 @@ import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
     version = 1,
     exportSchema = false
 )
-// TODO FIX ERROR
 abstract class ForecastDatabase : RoomDatabase() {
     abstract fun currentWeatherDao(): CurrentWeatherDao
 

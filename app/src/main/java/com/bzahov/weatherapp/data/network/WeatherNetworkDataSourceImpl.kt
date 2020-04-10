@@ -11,15 +11,15 @@ import com.bzahov.weatherapp.internal.NoConnectivityException
 class WeatherNetworkDataSourceImpl(
     private val weatherApiService: WeatherApiService
 ) : WeatherNetworkDataSource {
-    private val downloadedCurentWeartherMutable = MutableLiveData<CurrentWeatherResponse>()
+    private val downloadedCurrentWeatherMutable = MutableLiveData<CurrentWeatherResponse>()
     override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
-        get() = downloadedCurentWeartherMutable
+        get() = downloadedCurrentWeatherMutable
     override suspend fun fetchCurrentWeather(location: String,/*languageCode: String,*/ unit: String) {
         try {
             val fetchedCurrentWeather = weatherApiService
                 .getCurrentWeather(location/*,languageCode*/,unit)
                 .await()
-                downloadedCurentWeartherMutable.postValue(fetchedCurrentWeather)
+                downloadedCurrentWeatherMutable.postValue(fetchedCurrentWeather)
         }catch (e: NoConnectivityException){
             Log.e("TagConnectivity","No Internet Connection", e)
         }
