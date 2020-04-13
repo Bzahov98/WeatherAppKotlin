@@ -2,6 +2,7 @@ package com.bzahov.weatherapp.data
 
 import android.util.Log
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
+import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
 import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
@@ -24,7 +25,7 @@ interface WeatherApiService {
     ) : Deferred<CurrentWeatherResponse>
     companion object{
         operator fun invoke(
-            connectivityInterceptorImpl: ConnectivityInterceptorImpl
+            connectivityInterceptor: ConnectivityInterceptor
         ): WeatherApiService {
             val requestInterceptor = Interceptor{
                 val url = it.request()
@@ -44,7 +45,7 @@ interface WeatherApiService {
             }
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(requestInterceptor)
-                .addInterceptor(connectivityInterceptorImpl)
+                .addInterceptor(connectivityInterceptor)
                 .build()
 
             return Retrofit.Builder()

@@ -14,12 +14,14 @@ class WeatherNetworkDataSourceImpl(
     private val downloadedCurrentWeatherMutable = MutableLiveData<CurrentWeatherResponse>()
     override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
         get() = downloadedCurrentWeatherMutable
-    override suspend fun fetchCurrentWeather(location: String,/*languageCode: String,*/ unit: String) {
+    override suspend fun fetchCurrentWeather(location: String, unit: String) {
         try {
             val fetchedCurrentWeather = weatherApiService
-                .getCurrentWeather(location/*,languageCode*/,unit)
+                .getCurrentWeather(location,unit)
                 .await()
                 downloadedCurrentWeatherMutable.postValue(fetchedCurrentWeather)
+
+            Log.d("TAG_connectivity", "$fetchedCurrentWeather")
         }catch (e: NoConnectivityException){
             Log.e("TagConnectivity","No Internet Connection", e)
         }

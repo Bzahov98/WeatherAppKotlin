@@ -1,16 +1,14 @@
 package com.bzahov.weatherapp.data.db.entity
 
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bzahov.weatherapp.data.db.entity.Condition
-import com.bzahov.weatherapp.data.db.entity.WindCondition
 import com.google.gson.annotations.SerializedName
 
 const val CURRENT_WEATHER_ID = 0
-@Entity(tableName= "current_weather")
-    data class CurrentWeatherEntry(
+
+@Entity(tableName = "current_weather")
+data class CurrentWeatherEntry(
     val cloudcover: Int,
     val feelslike: Double,
     val humidity: Int,
@@ -24,11 +22,19 @@ const val CURRENT_WEATHER_ID = 0
     @SerializedName("uv_index")
     val uvIndex: Int,
     val visibility: Double,
-    @Embedded(prefix = "condition_")
-    val condition: Condition,
-    @Embedded(prefix = "wind_")
-    val wind : WindCondition
-){
+    @SerializedName("weather_code")
+    val weatherCode: Int, /*
+    @SerializedName("weather_descriptions")
+    val weatherDescriptions: List<String>,
+    @SerializedName("weather_icons")
+    val weatherIcons: List<String>,*/
+    @SerializedName("wind_degree")
+    val degree: Int,
+    @SerializedName("wind_dir")
+    val dir: String,
+    @SerializedName("wind_speed")
+    val speed: Double
+) {
     @PrimaryKey(autoGenerate = false)
-    var id : Int = CURRENT_WEATHER_ID // we have only 1 instance in db
+    var id: Int = CURRENT_WEATHER_ID // we have only 1 instance in db
 }

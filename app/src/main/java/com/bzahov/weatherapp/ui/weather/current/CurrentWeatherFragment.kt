@@ -44,9 +44,9 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         //deprecatedRequest()
     }
 
-    private fun bindUI() = GlobalScope.launch {
+    private fun bindUI() = launch {
         val currentWeatherLiveData = viewModel.weather.await()
-        currentWeatherLiveData.observe(this@CurrentWeatherFragment.viewLifecycleOwner, Observer {
+        currentWeatherLiveData.observe(viewLifecycleOwner, Observer {
             currentWeather.text = it?.toString()
         })
     }
@@ -64,10 +64,10 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             })
 
         val location = "Sofia"
-        val language = "en"
+
         val unit = "m"
         GlobalScope.launch(Dispatchers.Main) {
-            weatherNetworkDataSource.fetchCurrentWeather(location,/*language,*/unit)
+            weatherNetworkDataSource.fetchCurrentWeather(location,unit)
             /*val currentWeatherResponse = apiService
                 .getCurrentWeather(location)
                 .await()
