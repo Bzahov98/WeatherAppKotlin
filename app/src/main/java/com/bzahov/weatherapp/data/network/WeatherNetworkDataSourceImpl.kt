@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bzahov.weatherapp.data.WeatherApiService
 import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
 import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
-import com.bzahov.weatherapp.internal.NoConnectivityException
+import com.bzahov.weatherapp.internal.exceptions.NoConnectivityException
 
 class WeatherNetworkDataSourceImpl(
     private val weatherApiService: WeatherApiService
@@ -17,7 +17,7 @@ class WeatherNetworkDataSourceImpl(
     override suspend fun fetchCurrentWeather(location: String, unit: String) {
         try {
             val fetchedCurrentWeather = weatherApiService
-                .getCurrentWeather(location,unit)
+                .getCurrentWeatherAsync(location,unit)
                 .await()
                 downloadedCurrentWeatherMutable.postValue(fetchedCurrentWeather)
 

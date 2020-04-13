@@ -3,7 +3,6 @@ package com.bzahov.weatherapp.ui.weather.current
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.data.repo.ForecastRepository
-import com.resocoder.forecastmvvm.ui.weather.current.CurrentWeatherViewModel
 
 class CurrentWeatherViewModelFactory(
     private val forecastRepository: ForecastRepository

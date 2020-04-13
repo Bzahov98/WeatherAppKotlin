@@ -1,8 +1,6 @@
-package com.resocoder.forecastmvvm.ui.settings
+package com.bzahov.weatherapp.ui.settings
 
 import androidx.fragment.app.Fragment
 
 
-class SettingsFragment : Fragment() {
-
-}
+class SettingsFragment : Fragment()

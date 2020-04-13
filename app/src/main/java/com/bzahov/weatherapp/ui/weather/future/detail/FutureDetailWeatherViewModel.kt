@@ -1,6 +1,6 @@
-package com.resocoder.forecastmvvm.ui.weather.future.detail
+package com.bzahov.weatherapp.ui.weather.future.detail
 
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel
 
 class FutureDetailWeatherViewModel : ViewModel() {
     // TODO: Implement the ViewModel

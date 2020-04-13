@@ -1,12 +1,11 @@
-package com.resocoder.forecastmvvm.ui.weather.future.detail
+package com.bzahov.weatherapp.ui.weather.future.detail
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.R
 
 class FutureDetailWeatherFragment : Fragment() {

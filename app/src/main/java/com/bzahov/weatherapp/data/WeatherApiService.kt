@@ -1,7 +1,6 @@
 package com.bzahov.weatherapp.data
 
 import android.util.Log
-import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
 import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -18,9 +17,8 @@ const val API_KEY = "d008d274c9b7d028454d802a2f80a75a"
 const val API_URL = "http://api.weatherstack.com/"
 interface WeatherApiService {
     @GET("current")
-    fun getCurrentWeather(
+    fun getCurrentWeatherAsync(
         @Query("query") location: String ,
-//        @Query("language") languageCode: String = "en",
         @Query("unit") unit: String = "m"
     ) : Deferred<CurrentWeatherResponse>
     companion object{

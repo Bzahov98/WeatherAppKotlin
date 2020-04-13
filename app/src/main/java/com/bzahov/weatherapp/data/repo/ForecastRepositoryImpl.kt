@@ -1,6 +1,7 @@
 package com.bzahov.weatherapp.data.repo
 
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.bzahov.weatherapp.data.db.CurrentWeatherDao
 import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
@@ -12,10 +13,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 
+private const val TAG = "ForecastRepoImpl"
 class ForecastRepositoryImpl(
     private val currentWeatherDao: CurrentWeatherDao,
     private val weatherNetworkDataSource: WeatherNetworkDataSource
 ) : ForecastRepository {
+
     init {
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever {
             persistFetchedCurrentWeather(it)
@@ -27,8 +30,6 @@ class ForecastRepositoryImpl(
         return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext currentWeatherDao.getCurrentWeather()
-            /* return@withContext if (metric) currentWeatherDao.getWeatherMetric()
-        else currentWeatherDao.getWeatherImperial()*/
         }
     }
 
@@ -45,13 +46,13 @@ class ForecastRepositoryImpl(
             } else { true }
         ) {
             fetchCurrentWeather()
-        }else{} // dont fetch data
+        }else{
+            Log.e(TAG,"don't fetch data from api")} // don't fetch data
     }
 
     private suspend fun fetchCurrentWeather() {
         weatherNetworkDataSource.fetchCurrentWeather(
             "Sofia",
-            /*Locale.getDefault().language,*/
             "m"
         )
     }
@@ -70,7 +71,7 @@ class ForecastRepositoryImpl(
         val thirtyMinAgo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ZonedDateTime.now().minusMinutes(30)
         } else {
-            return true // TODO hh
+            return true
         }
         return lastFetchTime.isBefore(thirtyMinAgo)
     }

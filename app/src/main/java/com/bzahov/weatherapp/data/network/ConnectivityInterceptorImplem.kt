@@ -3,7 +3,7 @@ package com.bzahov.weatherapp.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
-import com.bzahov.weatherapp.internal.NoConnectivityException
+import com.bzahov.weatherapp.internal.exceptions.NoConnectivityException
 import okhttp3.Interceptor
 import okhttp3.Response
 
