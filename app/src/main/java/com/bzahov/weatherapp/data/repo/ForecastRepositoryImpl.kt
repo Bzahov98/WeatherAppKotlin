@@ -3,8 +3,6 @@ package com.bzahov.weatherapp.data.repo
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.bzahov.weatherapp.ForecastApplication
-import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.CurrentWeatherDao
 import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
 import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
@@ -28,9 +26,13 @@ class ForecastRepositoryImpl(
     }
 
 
-    override suspend fun getCurrentWeather(metric: Boolean): LiveData<out /*UnitSpecificCurrentWeatherEntry*/CurrentWeatherEntry> {
+    override suspend fun getCurrentWeather(
+        metric: Boolean,
+        location: String
+    ): LiveData<out CurrentWeatherEntry> {
         return withContext(Dispatchers.IO) {
-            initWeatherData()
+           val unitSystem = if(metric)"m" else "f"
+            initWeatherData(location, unitSystem)
             return@withContext currentWeatherDao.getCurrentWeather()
             /* return@withContext if (metric) currentWeatherDao.getWeatherMetric()
         else currentWeatherDao.getWeatherImperial()*/
@@ -43,21 +45,20 @@ class ForecastRepositoryImpl(
         }
     }
 
-    private suspend fun initWeatherData() {
+    private suspend fun initWeatherData(location: String,unitSystem: String) {
         if (
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 isFetchCurrentNeeded(ZonedDateTime.now().minusHours(1)) // REWORK lastFetchTime save in base
             } else { true }
         ) {
-            fetchCurrentWeather()
+            fetchCurrentWeather(location, unitSystem)
         }else{
             Log.e(TAG,"don't fetch data from api")} // don't fetch data
     }
 
-    private suspend fun fetchCurrentWeather() {
-        val app = ForecastApplication// REWORK find better way
-        val location = app.getAppString(R.string.default_location) // find better way
-        val unitSystem = app.getAppString(R.string.default_unit_system) //  find better way
+    private suspend fun fetchCurrentWeather(location: String,unitSystem: String) {
+       // val app = ForecastApplication// REWORK find better way
+       // val unitSystem = app.getAppString(R.string.default_unit_system) //  find better way
 
         weatherNetworkDataSource.fetchCurrentWeather(
             location,

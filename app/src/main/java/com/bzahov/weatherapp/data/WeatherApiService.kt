@@ -19,7 +19,7 @@ interface WeatherApiService {
     @GET("current")
     fun getCurrentWeatherAsync(
         @Query("query") location: String ,
-        @Query("unit") unit: String = "m"
+        @Query("units") unit: String = "m"
     ) : Deferred<CurrentWeatherResponse>
     companion object{
         operator fun invoke(

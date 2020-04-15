@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.R
@@ -13,6 +14,7 @@ import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
+import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -27,21 +29,26 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     private lateinit var viewModel: CurrentWeatherViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.current_weather_fragment, container, false)
+        val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
+
+        view.textView_feels_like_temperature.setOnClickListener{
+            bindUI(viewModel.location)
+        }
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
-        bindUI()
+        bindUI(viewModel.location)
     }
 
-    private fun bindUI(): Job {
-        val location = getString(R.string.default_location) // REWORK !!
+    private fun bindUI(location: String): Job {
 
         return launch {
             val currentWeatherLiveData = viewModel.weather.await()
@@ -60,15 +67,35 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         group_loading.visibility = View.GONE
         updateCondition(it.weatherDescriptions.toString())
         updateDateToToday()
-        updateLocation(location) //REWORK
+        updateLocation(location) //REWORK show location which is choosen in settings not location of showing location
         updatePrecipitation(it.precipation)
         updateTemperatures(it.temperature, it.feelslike)
         updateWind(it.dir, it.speed)
         updateVisibility(it.visibility)
-        //GlideApp.with(this@CurrentWeatherFragment)
+        updateBackground(it)
         GlideApp.with(this)
             .load(it.weatherIcons.last())
             .into(imageView_condition_icon)
+
+
+    }
+
+    private fun updateBackground(it: CurrentWeatherEntry) {
+        if (it.isDay == "yes") {
+            currentWeatherFragment.setBackgroundColor(
+                ContextCompat.getColor(
+                    context!!,
+                    R.color.colorWeatherIconBackgroundDay
+                )
+            )
+        } else {
+            currentWeatherFragment.setBackgroundColor(
+                ContextCompat.getColor(
+                    context!!,
+                    R.color.colorWeatherIconBackgroundNight
+                )
+            )
+        }
     }
 
     private fun updateLocation(location: String) {
@@ -119,5 +146,9 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
         return if (viewModel.isMetric) metric else imperial
+    }
+
+    private fun refreshWeather(){
+
     }
 }

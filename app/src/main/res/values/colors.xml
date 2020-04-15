@@ -3,5 +3,7 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="colorWeatherIconBackground">#95B3E3</color>
+    <color name="colorWeatherIconBackgroundDay">#95B3E3</color>
+    <color name="colorWeatherIconBackgroundNight">#3C4A8F</color>
+    <color name="colorWeatherIconBackgroundClouds">#C4C4C4</color>
 </resources>
