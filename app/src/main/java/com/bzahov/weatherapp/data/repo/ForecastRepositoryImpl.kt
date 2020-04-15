@@ -3,6 +3,8 @@ package com.bzahov.weatherapp.data.repo
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.CurrentWeatherDao
 import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
 import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
@@ -30,6 +32,8 @@ class ForecastRepositoryImpl(
         return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext currentWeatherDao.getCurrentWeather()
+            /* return@withContext if (metric) currentWeatherDao.getWeatherMetric()
+        else currentWeatherDao.getWeatherImperial()*/
         }
     }
 
@@ -51,9 +55,13 @@ class ForecastRepositoryImpl(
     }
 
     private suspend fun fetchCurrentWeather() {
+        val app = ForecastApplication// REWORK find better way
+        val location = app.getAppString(R.string.default_location) // find better way
+        val unitSystem = app.getAppString(R.string.default_unit_system) //  find better way
+
         weatherNetworkDataSource.fetchCurrentWeather(
-            "Sofia",
-            "m"
+            location,
+            unitSystem
         )
     }
 

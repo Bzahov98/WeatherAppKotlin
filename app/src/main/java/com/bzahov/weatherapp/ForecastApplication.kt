@@ -1,6 +1,7 @@
 package com.bzahov.weatherapp
 
 import android.app.Application
+import android.content.res.Resources
 import com.bzahov.weatherapp.data.WeatherApiService
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
@@ -20,6 +21,8 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 // QUESTION: data binding?
 class ForecastApplication : Application(), KodeinAware {
+
+
     override val kodein = Kodein.lazy {
         import(androidXModule(this@ForecastApplication))
 
@@ -35,5 +38,19 @@ class ForecastApplication : Application(), KodeinAware {
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
+        resourcesNew = resources
     }
+
+
+    companion object{
+        var resourcesNew: Resources? = null
+        fun getAppResources(): Resources? {
+            return resourcesNew
+        }
+
+        fun getAppString(id: Int): String {
+            return resourcesNew!!.getString(id)
+        }
+    }
+
 }

@@ -4,15 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 
 import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
 
 @Database(
     entities = [CurrentWeatherEntry::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
+@TypeConverters(DateConverters::class)
 abstract class ForecastDatabase : RoomDatabase() {
     abstract fun currentWeatherDao(): CurrentWeatherDao
 
@@ -28,7 +30,11 @@ abstract class ForecastDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 ForecastDatabase::class.java, "forecast.db"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
+
+
     }
 
 
