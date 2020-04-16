@@ -9,7 +9,7 @@
     <string name="image_weather_condition_description">Weather condition icon</string>
 
     <string name="current_weather_today">Today</string>
-    <string name="default_location">Sofia</string>
+    <string name="default_location">New York</string>
     <string name="default_unit_system">m</string>
 
     <string name="metric_temperature">°C</string>

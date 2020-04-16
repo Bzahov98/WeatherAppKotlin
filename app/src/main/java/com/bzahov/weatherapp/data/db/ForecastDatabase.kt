@@ -5,18 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.bzahov.weatherapp.data.db.dao.CurrentWeatherDao
+import com.bzahov.weatherapp.data.db.dao.WeatherLocationDao
 
 
 import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
+import com.bzahov.weatherapp.data.db.entity.WeatherLocation
 
 @Database(
-    entities = [CurrentWeatherEntry::class],
-    version = 3,
+    entities = [CurrentWeatherEntry::class,WeatherLocation::class],
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(DateConverters::class)
 abstract class ForecastDatabase : RoomDatabase() {
     abstract fun currentWeatherDao(): CurrentWeatherDao
+    abstract fun currentLocationDao(): WeatherLocationDao
 
     companion object {
         @Volatile

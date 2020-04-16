@@ -11,6 +11,7 @@ const val UNIT_SYSTEM = "UNIT_SYSTEM"
 class UnitProviderImpl(context: Context) :
     UnitProvider {
     private val appContext = context.applicationContext
+    private var isUnitSystemChanged = false
 
     private val preferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(appContext)
@@ -18,5 +19,14 @@ class UnitProviderImpl(context: Context) :
     override fun getUnitSystem(): UnitSystem {
         val selectedName = preferences.getString(UNIT_SYSTEM, UnitSystem.METRIC.name)
         return UnitSystem.valueOf(selectedName!!)
+    }
+
+    override fun hasUnitSystemChanged(): Boolean {
+        //TODO("Not yet implemented")
+        return isUnitSystemChanged
+    }
+
+    override fun notifyUnitSystemChanged() {
+        isUnitSystemChanged = !isUnitSystemChanged
     }
 }

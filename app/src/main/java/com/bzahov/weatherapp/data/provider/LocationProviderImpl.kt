@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.bzahov.weatherapp.R
+import com.bzahov.weatherapp.data.db.entity.WeatherLocation
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 const val CUSTOM_LOCATION = "CUSTOM_LOCATION"
 class LocationProviderImpl(context: Context) : LocationProvider {
@@ -14,6 +15,11 @@ class LocationProviderImpl(context: Context) : LocationProvider {
     override fun getLocation(): String {
         val selectedName = preferences.getString(CUSTOM_LOCATION, appContext.getString(R.string.default_location))
         return selectedName!!
+    }
+
+    override fun hasLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
+        //TODO implement
+        return true
     }
 
 }

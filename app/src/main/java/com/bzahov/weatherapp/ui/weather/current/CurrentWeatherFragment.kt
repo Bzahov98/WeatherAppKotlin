@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
+    import org.kodein.di.android.x.closestKodein
+    import org.kodein.di.generic.instance
 
 
 class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
@@ -36,7 +36,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
 
         view.textView_feels_like_temperature.setOnClickListener{
-            bindUI(viewModel.location)
+            bindUI()
         }
         return view
     }
@@ -45,29 +45,34 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
-        bindUI(viewModel.location)
+        bindUI()
     }
 
-    private fun bindUI(location: String): Job {
-
+    private fun bindUI(): Job {
         return launch {
             val currentWeatherLiveData = viewModel.weather.await()
+            val weatherLocation = viewModel.weatherLocation.await()
+
+            weatherLocation.observe(viewLifecycleOwner, Observer { location ->
+                if (location == null) return@Observer
+                updateLocation(location.name)
+                Log.d(TAG, "Update location with that data: $location")
+            })
+
             currentWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 if (it == null) return@Observer
-                updateUI(it, location)
+                updateUI(it)
                 Log.d(TAG, "Update UI with that data: $it")
             })
         }
     }
 
     private fun updateUI(
-        it: CurrentWeatherEntry,
-        location: String
+        it: CurrentWeatherEntry
     ) {
         group_loading.visibility = View.GONE
         updateCondition(it.weatherDescriptions.toString())
         updateDateToToday()
-        updateLocation(location) //REWORK show location which is choosen in settings not location of showing location
         updatePrecipitation(it.precipation)
         updateTemperatures(it.temperature, it.feelslike)
         updateWind(it.dir, it.speed)

@@ -15,6 +15,7 @@ import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.ForecastRepository
 import com.bzahov.weatherapp.data.repo.ForecastRepositoryImpl
+import com.bzahov.weatherapp.ui.settings.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
@@ -24,7 +25,6 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
-// QUESTION: data binding?
 class ForecastApplication : Application(), KodeinAware {
 
 
@@ -33,13 +33,15 @@ class ForecastApplication : Application(), KodeinAware {
 
         bind() from singleton { ForecastDatabase(instance()) }
         bind() from singleton { instance<ForecastDatabase>().currentWeatherDao() }
+        bind() from singleton { instance<ForecastDatabase>().currentLocationDao() }
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         bind() from singleton { WeatherApiService(instance()) }
         bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
-        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance()) }
+        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(),instance(),instance(),instance()) }
         bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
         bind<LocationProvider>() with singleton{ LocationProviderImpl(instance()) }
         bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance())}
+        bind() from provider { SettingsFragmentViewModelFactory(instance(),instance()) }
     }
 
     override fun onCreate() {

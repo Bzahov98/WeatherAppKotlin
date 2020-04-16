@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data.db
+package com.bzahov.weatherapp.data.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
