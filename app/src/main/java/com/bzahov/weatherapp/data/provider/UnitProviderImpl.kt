@@ -2,11 +2,13 @@ package com.bzahov.weatherapp.data.provider
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.preference.PreferenceManager
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.internal.enums.UnitSystem
 
 const val UNIT_SYSTEM = "UNIT_SYSTEM"
+const val TAG = "UnitProviderImpl"
 
 class UnitProviderImpl(context: Context) :
     UnitProvider {
@@ -22,11 +24,14 @@ class UnitProviderImpl(context: Context) :
     }
 
     override fun hasUnitSystemChanged(): Boolean {
-        //TODO("Not yet implemented")
+        Log.d(TAG,"\nhasUnitSystemChanged $isUnitSystemChanged")
         return isUnitSystemChanged
     }
 
     override fun notifyUnitSystemChanged() {
-        isUnitSystemChanged = !isUnitSystemChanged
+        isUnitSystemChanged = true
+    }
+    override fun notifyNoNeedToChangeUnitSystem() {
+        isUnitSystemChanged = false
     }
 }

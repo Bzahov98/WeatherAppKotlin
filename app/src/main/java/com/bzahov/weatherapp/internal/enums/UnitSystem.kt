@@ -1,5 +1,5 @@
 package com.bzahov.weatherapp.internal.enums
 
-enum class UnitSystem {
-    METRIC,IMPERIAL
+enum class UnitSystem(val urlToken : String) {
+    METRIC("m"),IMPERIAL("f")
 }

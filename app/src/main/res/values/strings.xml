@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">WeatherApp</string>
 
+    <string name="default_location">Smolian</string>
+    <string name="default_unit_system">m</string>
+
     <string name="menu_today">Today</string>
     <string name="menu_sevendays">7 Days</string>
     <string name="menu_settings">Settings</string>
@@ -9,8 +12,6 @@
     <string name="image_weather_condition_description">Weather condition icon</string>
 
     <string name="current_weather_today">Today</string>
-    <string name="default_location">New York</string>
-    <string name="default_unit_system">m</string>
 
     <string name="metric_temperature">°C</string>
     <string name="metric_precipitation">mm</string>
@@ -21,6 +22,7 @@
     <string name="imperial_precipitation">in</string>
     <string name="imperial_speed">mph</string>
     <string name="imperial_distance">mi.</string>
+    <string name="is_day_yes">yes</string>
 
 
 </resources>

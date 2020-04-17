@@ -1,7 +1,6 @@
 package com.bzahov.weatherapp.data.repo
 
 import android.database.sqlite.SQLiteException
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.bzahov.weatherapp.data.db.dao.CurrentWeatherDao
@@ -12,6 +11,7 @@ import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
+import com.bzahov.weatherapp.internal.enums.UnitSystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ class ForecastRepositoryImpl(
     private val unitSystemProvider: UnitProvider,
     private val weatherNetworkDataSource: WeatherNetworkDataSource
 ) : ForecastRepository {
-
+    val requireRefreshOfData = false
     init {
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever {
             persistFetchedCurrentWeather(it)
@@ -40,13 +40,15 @@ class ForecastRepositoryImpl(
         metric: Boolean,
         location: String
     ): LiveData<out CurrentWeatherEntry> {
-        return withContext(Dispatchers.IO) {
-            val unitSystem = if (metric) "m" else "f"
+        val resultData  = withContext(Dispatchers.IO) {
+            val unitSystem = if (metric) UnitSystem.METRIC.urlToken else UnitSystem.IMPERIAL.urlToken // Rework maybe rework it
             initWeatherData(location, unitSystem)
             return@withContext currentWeatherDao.getCurrentWeather()
             /* return@withContext if (metric) currentWeatherDao.getWeatherMetric()
         else currentWeatherDao.getWeatherImperial()*/
         }
+        unitSystemProvider.notifyNoNeedToChangeUnitSystem()
+        return resultData
     }
 
     override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
@@ -85,29 +87,21 @@ class ForecastRepositoryImpl(
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
                 || lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo)
                 || unitSystemProvider.hasUnitSystemChanged()
+                || requireRefreshOfData
                 )
     }
 
     private suspend fun fetchCurrentWeather(location: String, unitSystem: String) {
-        // val app = ForecastApplication// REWORK find better way
-        // val unitSystem = app.getAppString(R.string.default_unit_system) //  find better way
 
+        //unitSystemProvider.getUnitSystem()
         weatherNetworkDataSource.fetchCurrentWeather(
             location,
             unitSystem
         )
     }
 
-
-    private fun fetchCurrentWeather(lastFetchData: ZonedDateTime): Boolean {
-        val thirtyMinAgo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ZonedDateTime.now().minusMinutes(30)
-        } else {
-            return true
-        }
-        return true
+    suspend fun requestRefreshOfData(){
+        fetchCurrentWeather(locationProvider.getLocation(),unitSystemProvider.getUnitSystem().urlToken)
     }
-
-
 }
 

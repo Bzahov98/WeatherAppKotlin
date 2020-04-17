@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
-    import org.kodein.di.android.x.closestKodein
-    import org.kodein.di.generic.instance
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
 
 class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
@@ -35,8 +35,8 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     ): View? {
         val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
 
-        view.textView_feels_like_temperature.setOnClickListener{
-            bindUI()
+        view.textView_feels_like_temperature.setOnClickListener {
+            refreshWeather()
         }
         return view
     }
@@ -67,9 +67,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateUI(
-        it: CurrentWeatherEntry
-    ) {
+    private fun updateUI(it: CurrentWeatherEntry) {
         group_loading.visibility = View.GONE
         updateCondition(it.weatherDescriptions.toString())
         updateDateToToday()
@@ -81,12 +79,11 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         GlideApp.with(this)
             .load(it.weatherIcons.last())
             .into(imageView_condition_icon)
-
-
     }
 
+    // Rework change background with proper color to match to all pictures background
     private fun updateBackground(it: CurrentWeatherEntry) {
-        if (it.isDay == "yes") {
+        if (it.isDay == getString(R.string.is_day_yes)) {
             currentWeatherFragment.setBackgroundColor(
                 ContextCompat.getColor(
                     context!!,
@@ -117,7 +114,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_temperature),
             getString(R.string.imperial_temperature)
         )
-        if (viewModel.isMetric) textView_temperature.text = "$temperature$unitAbbreviation"
+        textView_temperature.text = "$temperature$unitAbbreviation"
         textView_feels_like_temperature.text = "Feels like $feelsLike$unitAbbreviation"
     }
 
@@ -153,7 +150,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         return if (viewModel.isMetric) metric else imperial
     }
 
-    private fun refreshWeather(){
+    private fun refreshWeather() {
 
     }
 }
