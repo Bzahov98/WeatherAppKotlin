@@ -25,7 +25,7 @@ import org.kodein.di.generic.instance
 class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     private val TAG = "CurrentWeatherFragment"
     override val kodein by closestKodein()
-    private val viewModelFactory: CurrentWeatherViewModelFactory by instance()
+    private val viewModelFactory: CurrentWeatherViewModelFactory by instance<CurrentWeatherViewModelFactory>()
     private lateinit var viewModel: CurrentWeatherViewModel
 
     override fun onCreateView(

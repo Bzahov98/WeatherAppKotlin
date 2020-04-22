@@ -10,20 +10,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
+import androidx.preference.SwitchPreference
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.provider.CUSTOM_LOCATION
 import com.bzahov.weatherapp.data.provider.UNIT_SYSTEM
+import com.bzahov.weatherapp.data.provider.USE_DEVICE_LOCATION
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
 import org.kodein.di.KodeinAware
 
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+
 private const val TAG = "SettingsFragment"
+
 class SettingsFragment : ScopedPreferenceCompatFragment(),
-    SharedPreferences.OnSharedPreferenceChangeListener , KodeinAware {
+    SharedPreferences.OnSharedPreferenceChangeListener, KodeinAware {
 
     override val kodein by closestKodein()
-    private val viewModelFactory: SettingsFragmentViewModelFactory by instance()
+    private val viewModelFactory: SettingsFragmentViewModelFactory by instance<SettingsFragmentViewModelFactory>()
     private lateinit var viewModel: SettingsFragmentViewModel
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -42,10 +46,11 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         val key = preference?.key ?: return super.onPreferenceTreeClick(preference)
 
-        return if(key == UNIT_SYSTEM){
+        return if (key == UNIT_SYSTEM) {
             true
-        }else super.onPreferenceTreeClick(preference)
+        } else super.onPreferenceTreeClick(preference)
     }
+
     override fun onResume() {
         super.onResume()
         makeSelectablePreferences()
@@ -60,11 +65,10 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
 
     // TODO: check is there connection and forbid changing UnitSystem when there is no internet
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if(key == UNIT_SYSTEM){
-//            if(isOnline()){}
+        if (key == UNIT_SYSTEM) {
             makeSelectablePreferences()
 
-            Log.d(TAG,"notifyForUnitSystemChanged")
+            Log.d(TAG, "notifyForUnitSystemChanged")
             viewModel.notifyForUnitSystemChanged()
 
         }
@@ -75,7 +79,10 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
         unitSystemPreference?.isSelectable = isOnline()
         val locationPreference =
             preferenceManager.findPreference<EditTextPreference>(CUSTOM_LOCATION)
-       // unitSystemPreference?.isSelectable = isOnline()
+        locationPreference?.isSelectable = isOnline()
+        val currentLocationPreference =
+            preferenceManager.findPreference<SwitchPreference>(USE_DEVICE_LOCATION)
+        currentLocationPreference?.isSelectable = isOnline()
     }
 
     private fun isOnline(): Boolean {
