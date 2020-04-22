@@ -37,15 +37,12 @@ class ForecastRepositoryImpl(
 
 
     override suspend fun getCurrentWeather(
-        metric: Boolean,
-        location: String
+        metric: Boolean // REWORK i can remove that :)
     ): LiveData<out CurrentWeatherEntry> {
         val resultData  = withContext(Dispatchers.IO) {
-            val unitSystem = if (metric) UnitSystem.METRIC.urlToken else UnitSystem.IMPERIAL.urlToken // Rework maybe rework it
-            initWeatherData(location, unitSystem)
+            val unitSystem = if (metric) UnitSystem.METRIC.urlToken else UnitSystem.IMPERIAL.urlToken // Rework maybe rework it  i can remove that :)
+            initWeatherData(unitSystem)
             return@withContext currentWeatherDao.getCurrentWeather()
-            /* return@withContext if (metric) currentWeatherDao.getWeatherMetric()
-        else currentWeatherDao.getWeatherImperial()*/
         }
         unitSystemProvider.notifyNoNeedToChangeUnitSystem()
         return resultData
@@ -67,19 +64,19 @@ class ForecastRepositoryImpl(
             }
         }
     }
-
-    private suspend fun initWeatherData(location: String, unitSystem: String) {
+    // REWORK i can remove that and remove unitSystem param:)
+    private suspend fun initWeatherData(unitSystem: String) {
 
         val lastWeatherLocation = weatherLocationDao.getLocation().value
         if (isFetchNeeded(lastWeatherLocation) // REWORK lastFetchTime save in base
         ) {
-            fetchCurrentWeather(location, unitSystem)
+            fetchCurrentWeather(unitSystem)
         } else {
             Log.e(TAG, "don't fetch data from api")
         } // don't fetch data
     }
 
-    private fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
+    private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
         val thirtyMinAgo =
             ZonedDateTime.now().minusMinutes(30)
 
@@ -91,17 +88,17 @@ class ForecastRepositoryImpl(
                 )
     }
 
-    private suspend fun fetchCurrentWeather(location: String, unitSystem: String) {
+    private suspend fun fetchCurrentWeather(unitSystem: String) {
 
-        //unitSystemProvider.getUnitSystem()
         weatherNetworkDataSource.fetchCurrentWeather(
-            location,
+            locationProvider.getPreferredLocationString(), // change to locationProvider.getPreferredLocationString()
             unitSystem
         )
     }
 
+    // REWORK i can remove that:)
     suspend fun requestRefreshOfData(){
-        fetchCurrentWeather(locationProvider.getLocation(),unitSystemProvider.getUnitSystem().urlToken)
+        fetchCurrentWeather(unitSystemProvider.getUnitSystem().urlToken)
     }
 }
 
