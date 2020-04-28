@@ -5,12 +5,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.bzahov.weatherapp.data.db.dao.CurrentWeatherDao
 import com.bzahov.weatherapp.data.db.dao.WeatherLocationDao
-import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
-import com.bzahov.weatherapp.data.db.entity.WeatherLocation
-import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
+import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
+import com.bzahov.weatherapp.data.db.entity.current.WeatherLocation
+import com.bzahov.weatherapp.data.network.intefaces.CurrentWeatherNetworkDataSource
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
-import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
+import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
+import com.bzahov.weatherapp.data.response.current.CurrentWeatherResponse
 import com.bzahov.weatherapp.internal.enums.UnitSystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,32 +22,32 @@ import java.time.ZonedDateTime
 
 private const val TAG = "ForecastRepoImpl"
 
-class ForecastRepositoryImpl(
+class CurrentForecastRepositoryImpl(
     private val currentWeatherDao: CurrentWeatherDao,
     private val weatherLocationDao: WeatherLocationDao,
     private val locationProvider: LocationProvider,
     private val unitSystemProvider: UnitProvider,
-    private val weatherNetworkDataSource: WeatherNetworkDataSource
-) : ForecastRepository {
+    private val currentWeatherNetworkDataSource: CurrentWeatherNetworkDataSource
+) : CurrentForecastRepository {
     val requireRefreshOfData = false
     init {
-        weatherNetworkDataSource.downloadedCurrentWeather.observeForever {
+        currentWeatherNetworkDataSource.downloadedCurrentWeather.observeForever {
             persistFetchedCurrentWeather(it)
         }
     }
 
 
-    override suspend fun getCurrentWeather(
-        metric: Boolean // REWORK i can remove that :)
-    ): LiveData<out CurrentWeatherEntry> {
+    override suspend fun getCurrentWeather( isMetric: Boolean )
+            : LiveData<out CurrentWeatherEntry> { // REWORK i can remove that :)
         val resultData  = withContext(Dispatchers.IO) {
-            val unitSystem = if (metric) UnitSystem.METRIC.urlToken else UnitSystem.IMPERIAL.urlToken // Rework maybe rework it  i can remove that :)
+            val unitSystem = UnitSystem.getUrlToken(isMetric) // Rework maybe rework it  i can remove that :)
             initWeatherData(unitSystem)
-            return@withContext currentWeatherDao.getCurrentWeather()
+                return@withContext currentWeatherDao.getCurrentWeather()
         }
         unitSystemProvider.notifyNoNeedToChangeUnitSystem()
         return resultData
     }
+
 
     override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
         return withContext(Dispatchers.IO) {
@@ -68,7 +69,7 @@ class ForecastRepositoryImpl(
     private suspend fun initWeatherData(unitSystem: String) {
 
         val lastWeatherLocation = weatherLocationDao.getLocation().value
-        if (isFetchNeeded(lastWeatherLocation) // REWORK lastFetchTime save in base
+        if (isFetchNeeded(lastWeatherLocation)
         ) {
             fetchCurrentWeather(unitSystem)
         } else {
@@ -78,7 +79,7 @@ class ForecastRepositoryImpl(
 
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
         val thirtyMinAgo =
-            ZonedDateTime.now().minusMinutes(30)
+            ZonedDateTime.now().minusMinutes(1)//30
 
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
@@ -90,14 +91,13 @@ class ForecastRepositoryImpl(
 
     private suspend fun fetchCurrentWeather(unitSystem: String) {
 
-        weatherNetworkDataSource.fetchCurrentWeather(
-            locationProvider.getPreferredLocationString(), // change to locationProvider.getPreferredLocationString()
+        currentWeatherNetworkDataSource.fetchCurrentWeather(
+            locationProvider.getPreferredLocationString(),
             unitSystem
         )
     }
 
-    // REWORK i can remove that:)
-    suspend fun requestRefreshOfData(){
+    override suspend fun requestRefreshOfData(){
         fetchCurrentWeather(unitSystemProvider.getUnitSystem().urlToken)
     }
 }

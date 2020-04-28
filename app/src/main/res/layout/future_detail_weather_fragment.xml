@@ -6,8 +6,17 @@
     tools:context=".ui.weather.future.detail.FutureDetailWeatherFragment">
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/futureTextView"
+        android:layout_width="155dp"
+        android:background="@color/cardview_dark_background"
         android:layout_height="match_parent"
+        android:text="Hello" />
+    <TextView
+        android:id="@+id/futureTextView2"
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="match_parent"
+
         android:text="Hello" />
 
 </FrameLayout>

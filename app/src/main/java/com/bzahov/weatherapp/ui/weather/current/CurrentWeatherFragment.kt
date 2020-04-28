@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.data.db.entity.CurrentWeatherEntry
+import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
@@ -36,7 +36,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
 
         view.textView_feels_like_temperature.setOnClickListener {
-            refreshWeather()
+            launch {   refreshWeather() }
         }
         return view
     }
@@ -52,10 +52,11 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         return launch {
             val currentWeatherLiveData = viewModel.weather.await()
             val weatherLocation = viewModel.weatherLocation.await()
-
+            // FIX: current location isnt changed and stay with name current_weather_fragment
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                updateLocation(location.name)
+                Log.e(TAG,"Location : $location")
+                updateLocation(location.city.name)
                 Log.d(TAG, "Update location with that data: $location")
             })
 
@@ -100,6 +101,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
+    // FIX : current location isnt changed and stay with name current_weather_fragment
     private fun updateLocation(location: String) {
         (activity as? AppCompatActivity)?.supportActionBar?.title = location
     }
@@ -150,7 +152,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         return if (viewModel.isMetric) metric else imperial
     }
 
-    private fun refreshWeather() {
-
+    private suspend fun refreshWeather() {
+        viewModel.requestRefreshOfData()
     }
 }

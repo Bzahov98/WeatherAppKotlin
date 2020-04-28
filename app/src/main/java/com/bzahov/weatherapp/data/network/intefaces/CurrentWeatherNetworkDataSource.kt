@@ -1,9 +1,9 @@
 package com.bzahov.weatherapp.data.network.intefaces
 
 import androidx.lifecycle.LiveData
-import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
+import com.bzahov.weatherapp.data.response.current.CurrentWeatherResponse
 
-interface WeatherNetworkDataSource {
+interface CurrentWeatherNetworkDataSource {
     val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
     suspend fun fetchCurrentWeather( //Update
         location: String,

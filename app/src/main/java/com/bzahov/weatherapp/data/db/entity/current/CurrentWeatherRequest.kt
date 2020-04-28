@@ -1,7 +1,7 @@
-package com.bzahov.weatherapp.data.db.entity
+package com.bzahov.weatherapp.data.db.entity.current
 
 
-data class Request(
+data class CurrentWeatherRequest(
     val language: String,
     val query: String,
     val type: String,

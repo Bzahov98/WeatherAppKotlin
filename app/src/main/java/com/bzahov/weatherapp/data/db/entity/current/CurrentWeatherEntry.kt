@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data.db.entity
+package com.bzahov.weatherapp.data.db.entity.current
 
 
 import androidx.room.Entity
@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName
 const val CURRENT_WEATHER_ID = 0
 
 @Entity(tableName = "current_weather")
+@TypeConverters(DateConverters::class)
 data class CurrentWeatherEntry(
 
     val temperature: Double,
@@ -43,5 +44,6 @@ data class CurrentWeatherEntry(
     val speed: Double
 ) {
     @PrimaryKey(autoGenerate = false)
-    var id: Int = CURRENT_WEATHER_ID // we have only 1 instance in db
+    var id: Int =
+        CURRENT_WEATHER_ID // we have only 1 instance in db
 }

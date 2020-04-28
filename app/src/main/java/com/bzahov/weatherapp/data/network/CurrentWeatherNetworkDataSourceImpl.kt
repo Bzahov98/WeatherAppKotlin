@@ -4,15 +4,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bzahov.weatherapp.data.WeatherApiService
-import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
-import com.bzahov.weatherapp.data.response.CurrentWeatherResponse
+import com.bzahov.weatherapp.data.network.intefaces.CurrentWeatherNetworkDataSource
+import com.bzahov.weatherapp.data.response.current.CurrentWeatherResponse
 import com.bzahov.weatherapp.internal.exceptions.NoConnectivityException
 
-class WeatherNetworkDataSourceImpl(
+class CurrentWeatherNetworkDataSourceImpl(
     private val weatherApiService: WeatherApiService
-) : WeatherNetworkDataSource {
-    private val downloadedCurrentWeatherMutable = MutableLiveData<CurrentWeatherResponse>()
-    override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
+) : CurrentWeatherNetworkDataSource {
+        private val downloadedCurrentWeatherMutable = MutableLiveData<CurrentWeatherResponse>()
+        override val downloadedCurrentWeather: LiveData<CurrentWeatherResponse>
         get() = downloadedCurrentWeatherMutable
     override suspend fun fetchCurrentWeather(location: String, unit: String) {
         try {
@@ -22,8 +22,8 @@ class WeatherNetworkDataSourceImpl(
                 downloadedCurrentWeatherMutable.postValue(fetchedCurrentWeather)
 
             Log.d("TAG_connectivity", "$fetchedCurrentWeather")
-        }catch (e: NoConnectivityException){
-            Log.e("TagConnectivity","No Internet Connection", e)
+        }catch (ignored: NoConnectivityException){
+            Log.e("TagConnectivity","No Internet Connection:")
         }
     }
 }

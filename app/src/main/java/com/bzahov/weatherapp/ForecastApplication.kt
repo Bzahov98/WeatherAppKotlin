@@ -7,17 +7,23 @@ import androidx.preference.PreferenceManager
 import com.bzahov.weatherapp.data.WeatherApiService
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
-import com.bzahov.weatherapp.data.network.WeatherNetworkDataSourceImpl
+import com.bzahov.weatherapp.data.network.CurrentWeatherNetworkDataSourceImpl
+import com.bzahov.weatherapp.data.network.FutureWeatherNetworkDataSourceImpl
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
-import com.bzahov.weatherapp.data.network.intefaces.WeatherNetworkDataSource
+import com.bzahov.weatherapp.data.network.intefaces.CurrentWeatherNetworkDataSource
+import com.bzahov.weatherapp.data.network.intefaces.FutureWeatherNetworkDataSource
 import com.bzahov.weatherapp.data.provider.LocationProviderImpl
 import com.bzahov.weatherapp.data.provider.UnitProviderImpl
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
-import com.bzahov.weatherapp.data.repo.ForecastRepository
-import com.bzahov.weatherapp.data.repo.ForecastRepositoryImpl
+import com.bzahov.weatherapp.data.repo.CurrentForecastRepositoryImpl
+import com.bzahov.weatherapp.data.repo.FutureForecastRepositoryImpl
+import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
+import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
+import com.bzahov.weatherapp.data.services.OpenWeatherApiService
 import com.bzahov.weatherapp.ui.settings.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
+import com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherViewModelFactory
 import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
@@ -34,20 +40,42 @@ class ForecastApplication : Application(), KodeinAware {
         import(androidXModule(this@ForecastApplication))
 
         bind() from singleton { ForecastDatabase(instance()) }
+
         bind() from singleton { instance<ForecastDatabase>().currentWeatherDao() }
         bind() from singleton { instance<ForecastDatabase>().currentLocationDao() }
-        bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
-        bind() from singleton { WeatherApiService(instance()) }
-        bind<WeatherNetworkDataSource>() with singleton { WeatherNetworkDataSourceImpl(instance()) }
-        bind<ForecastRepository>() with singleton { ForecastRepositoryImpl(instance(), instance(),instance(),instance(),instance()) }
-        bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
+        bind() from singleton { instance<ForecastDatabase>().forecastDao() } // for forecast
 
-        //bind() from provider { MainActivity(instance()) }
+        bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
+        // bind different weather api services
+        bind() from singleton { WeatherApiService(instance()) } // for current
+        bind() from singleton { OpenWeatherApiService(instance()) } // for forecast
+
+        // bind different data sources for each api service
+        bind<CurrentWeatherNetworkDataSource>() with singleton { CurrentWeatherNetworkDataSourceImpl(instance()) }
+        bind<FutureWeatherNetworkDataSource>() with singleton { FutureWeatherNetworkDataSourceImpl(instance()) }
+        // bind app repository
+        bind<CurrentForecastRepository>() with singleton { CurrentForecastRepositoryImpl(instance(), instance(),instance(),instance(),instance()) }
+        bind<FutureForecastRepository>() with singleton {
+            FutureForecastRepositoryImpl(
+                instance(),
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
+
+        // bind all providers
+        bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
+        bind<LocationProvider>() with singleton{ LocationProviderImpl(instance(),instance()) }
+
+        //bind location providers
         bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
 
-        bind<LocationProvider>() with singleton{ LocationProviderImpl(instance(),instance()) }
+        //bind all fragment's view models
         bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance())}
         bind() from provider { SettingsFragmentViewModelFactory(instance(),instance()) }
+        bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance()) }
 
     }
 
