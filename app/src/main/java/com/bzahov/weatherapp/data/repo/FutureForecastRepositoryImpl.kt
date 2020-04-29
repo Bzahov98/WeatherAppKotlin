@@ -37,23 +37,22 @@ class FutureForecastRepositoryImpl(
         }
     }
 
-    // Rework maybe remove isMetric it  i can remove that :)
+    // REWORK maybe remove isMetric it  i can remove that :)
     override suspend fun getFutureWeather(
         today: LocalDate,
         isMetric: Boolean
     ): LiveData<List<out FutureDayData>> {
         Log.d(TAG, "")
-        val resultData = withContext(Dispatchers.IO) {
+        //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
+        return withContext(Dispatchers.IO) {
             val unitSystem = UnitSystem.getOpenWeatherUrlToken(isMetric)
-            initWeatherData(unitSystem)
+            initWeatherData()
             return@withContext forecastDao.getForecastWeather(today)
         }
-        //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
-        return resultData
     }
 
     override suspend fun requestRefreshOfData() {
-        TODO("Not yet implemented")
+        fetchFutureWeather()
     }
 
     override suspend fun getWeatherLocation(): LiveData<WeatherLocation> {
@@ -62,12 +61,11 @@ class FutureForecastRepositoryImpl(
         }
     }
 
-    // REWORK i can remove that and remove unitSystem param:)
-    private suspend fun initWeatherData(unitSystem: String) {
+    private suspend fun initWeatherData() {
 
         val lastWeatherLocation = weatherLocationDao.getLocation().value
         if (isFetchNeeded(lastWeatherLocation)) {
-            fetchFutureWeather(unitSystem)
+            fetchFutureWeather()
         } else {
             Log.e(TAG, "don't fetch data from api")
         } // don't fetch data
@@ -85,22 +83,24 @@ class FutureForecastRepositoryImpl(
                 )
     }
 
-    private suspend fun fetchFutureWeather(unitSystem: String) {
+    private suspend fun fetchFutureWeather() {
+        val unitSystem = unitSystemProvider.getUnitSystem().urlOpenWeatherToken
         val lastPhysicalLocation = locationProvider.getLastPhysicalDeviceLocation()//WeatherLocation(City(34.2,32.12,"DebugCity",""))//weatherLocationDao.getLocation().value
+
         if (lastPhysicalLocation == null || !locationProvider.isDeviceLocationSelected()) {
             val location = locationProvider.getLocationString()
             Log.d(TAG,"FetchFutureWeather with LocationString $location and unit $unitSystem")
 
             futureWeatherNetworkDataSource.fetchForecastWeather(
                 location,
-                unitSystem// change to unitProvider.getUnitProvide...()
+                unitSystem
             )
         } else {
-            Log.d(TAG,"FetchFutureWeather with LocationString with lat: ${lastPhysicalLocation.latitude} and lon: ${lastPhysicalLocation.longitude} and unit $unitSystem")
+            Log.d(TAG,"FetchFutureWeather with lat: ${lastPhysicalLocation.latitude} and lon: ${lastPhysicalLocation.longitude} and unit $unitSystem")
             futureWeatherNetworkDataSource.fetchForecastWeatherWithCoords(
                 lastPhysicalLocation.latitude,
                 lastPhysicalLocation.longitude,
-                unitSystem// change to unitProvider.getUnitProvide...()
+                unitSystem
             )
         }
     }

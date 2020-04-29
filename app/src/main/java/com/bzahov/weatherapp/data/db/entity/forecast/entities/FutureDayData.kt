@@ -3,13 +3,14 @@ package com.bzahov.weatherapp.data.db.entity.forecast.entities
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Clouds
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Main
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Sys
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
 import com.google.gson.annotations.SerializedName
-@Entity(tableName = "forecast_day")
+@Entity(tableName = "forecast_day",indices = [Index(value= ["dtTxt"],unique = true)])
 data class FutureDayData(
     @PrimaryKey(autoGenerate = true)
     var futureID :Int? = null, // ownerId

@@ -1,10 +1,8 @@
 package com.bzahov.weatherapp.data.db.entity.current
 
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bzahov.weatherapp.data.db.entity.model.City
 import com.google.gson.annotations.SerializedName
 import java.time.Instant
 import java.time.ZoneId
@@ -13,9 +11,12 @@ import java.time.ZonedDateTime
 const val WEATHER_LOCATION_ID = 0
 
 @Entity(tableName = "weather_location")
-data class WeatherLocation (
-    @Embedded
-    val city: City,
+data class WeatherLocation(
+    // REWORK Return City object temporary FIX for: current location isn't changed and stay with name current_weather_fragment all city attributes are null
+    val lat: Double,
+    val lon: Double,
+    val name: String,
+    val country: String,
     val region: String,
 
     val localtime: String,
@@ -26,8 +27,8 @@ data class WeatherLocation (
     val timezoneId: String,
     @SerializedName("utc_offset")
     val utcOffset: String
-) {
-    constructor(city : City) : this(city,"","",0,"","")
+){
+    //constructor(name : String,country: String,lat: Double,lon: Double) : this()
     @PrimaryKey(autoGenerate = false)
     var id: Int =
         WEATHER_LOCATION_ID

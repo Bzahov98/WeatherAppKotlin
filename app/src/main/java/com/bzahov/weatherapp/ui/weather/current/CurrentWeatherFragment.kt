@@ -52,11 +52,12 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         return launch {
             val currentWeatherLiveData = viewModel.weather.await()
             val weatherLocation = viewModel.weatherLocation.await()
-            // FIX: current location isnt changed and stay with name current_weather_fragment
+            // REWORK Return City object temporary FIX for: current location isn't changed and stay with name current_weather_fragment all city attributes are null
+
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
                 Log.e(TAG,"Location : $location")
-                updateLocation(location.city.name)
+                updateLocation(location.name)
                 Log.d(TAG, "Update location with that data: $location")
             })
 
@@ -101,7 +102,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    // FIX : current location isnt changed and stay with name current_weather_fragment
+    // REWORK Return City object temporary FIX for: current location isn't changed and stay with name current_weather_fragment all city attributes are null
     private fun updateLocation(location: String) {
         (activity as? AppCompatActivity)?.supportActionBar?.title = location
     }

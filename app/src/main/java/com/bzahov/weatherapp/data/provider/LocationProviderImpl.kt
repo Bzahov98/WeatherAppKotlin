@@ -46,7 +46,7 @@ class LocationProviderImpl(
                 val deviceLocation = getLastPhysicalDeviceLocation()
                 if (deviceLocation == null) {
                     Log.d(TAG, "getPreferredLocationString 1)new location is: $customLocationName")
-                    return "${getCustomLocationName()}"
+                    return customLocationName
                 }
                 Log.d(TAG, ">>>getPreferredLocationString 2)new location is: ${deviceLocation.latitude},${deviceLocation.longitude} ")
                // return getLocationStringBasedOnProvider(deviceLocation)
@@ -54,13 +54,13 @@ class LocationProviderImpl(
             } catch (e: LocationPermissionNotGrantedException) {
                 Log.d(
                     TAG,
-                    "getPreferredLocationString 3)new location is: ${customLocationName}"
+                    "getPreferredLocationString 3)new location is: $customLocationName"
                 )
-                return "${customLocationName}"
+                return customLocationName
             }
         } else
-            Log.d(TAG, "getPreferredLocationString 4)new location is: ${customLocationName}")
-        return "${customLocationName}"
+            Log.d(TAG, "getPreferredLocationString 4)new location is: $customLocationName")
+        return customLocationName
     }
 
     private fun getLocationStringBasedOnProvider(deviceLocation: Location): String {
@@ -80,14 +80,14 @@ class LocationProviderImpl(
 
         val comparisonThreshold = 0.03
         val result =
-            Math.abs(deviceLocation.latitude - lastWeatherLocation.city.lat) > comparisonThreshold &&
-                    Math.abs(deviceLocation.longitude - lastWeatherLocation.city.lon) > comparisonThreshold
+            Math.abs(deviceLocation.latitude - lastWeatherLocation.lat) > comparisonThreshold &&
+                    Math.abs(deviceLocation.longitude - lastWeatherLocation.lon) > comparisonThreshold
         return result
     }
 
     private fun hasCustomLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
         val customLocationName = getCustomLocationName()
-        return customLocationName != lastWeatherLocation.city.name
+        return customLocationName != lastWeatherLocation.name
     }
 
     private fun isUsingDeviceLocation(): Boolean {

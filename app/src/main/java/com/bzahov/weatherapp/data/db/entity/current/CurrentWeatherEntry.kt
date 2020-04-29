@@ -29,7 +29,6 @@ data class CurrentWeatherEntry(
     val uvIndex: Int,
     @SerializedName("weather_code")
     val weatherCode: Int,
-    // FIX: find way to serialize list of strings
     @TypeConverters(DateConverters::class)
     @SerializedName("weather_descriptions")
     val weatherDescriptions: List<String>,

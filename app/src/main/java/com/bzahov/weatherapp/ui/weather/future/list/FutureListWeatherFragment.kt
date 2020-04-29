@@ -33,7 +33,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         view.list_item.setOnClickListener{
             val bla = "sa" + list_item.text
             list_item.text = bla
-            bindUI()
+            launch { viewModel.requestRefreshOfData() }
         }
         return view
     }

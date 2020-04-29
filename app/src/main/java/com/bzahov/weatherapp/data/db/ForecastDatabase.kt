@@ -16,7 +16,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
 
 @Database(
     entities = [CurrentWeatherEntry::class, WeatherLocation::class, FutureDayData::class, WeatherDetails::class],
-    version =4,
+    version =5,
     exportSchema = false
 )
 @TypeConverters(DateConverters::class)
