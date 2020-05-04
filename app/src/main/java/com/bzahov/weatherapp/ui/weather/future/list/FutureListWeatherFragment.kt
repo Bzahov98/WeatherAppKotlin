@@ -6,12 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bzahov.weatherapp.R
+import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.ui.base.ScopedFragment
+import com.bzahov.weatherapp.ui.weather.future.list.recyclerview.FutureWeatherItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.future_list_weather_fragment.*
-import kotlinx.android.synthetic.main.future_list_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -30,11 +36,11 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.future_list_weather_fragment, container, false)
-        view.list_item.setOnClickListener{
+        /*view.list_item.setOnClickListener{
             val bla = "sa" + list_item.text
             list_item.text = bla
             launch { viewModel.requestRefreshOfData() }
-        }
+        }*/
         return view
     }
 
@@ -47,22 +53,61 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun bindUI(): Job {
-        Log.d(TAG,"blal")
+        Log.d(TAG, "bindUI")
         return launch {
             val futureWeatherLiveData = viewModel.forecastWeather.await()
             val weatherLocation = viewModel.weatherLocation.await()
 
-            Log.d(TAG, "buildUi ${futureWeatherLiveData.toString()}")
+            Log.d(TAG, "buildUi $futureWeatherLiveData")
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                //updateLocation(location.name)
-                Log.d(TAG, "Update location with that data: $location")
+                updateLocation(location.name)
+                Log.d(TAG, "bindUI Update location with that data: $location")
             })
             futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 if (it == null) return@Observer
-                list_item?.text = it.toString()
+                val data: List<out FutureDayData> = it
+                updateUI(data)
+                initRecyclerView(data.toFutureWeatherItems())
                 Log.d(TAG, "Update location with that data: $it")
             })
         }
+    }
+
+    private fun initRecyclerView(items: List<FutureWeatherItem>) {
+        val groupAdapter = GroupAdapter<ViewHolder>().apply {
+            this.addAll(items)
+        }
+        futureRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
+            adapter = groupAdapter
+        }
+
+        groupAdapter.setOnItemClickListener { item, view ->
+            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    private fun List<FutureDayData>.toFutureWeatherItems(): List<FutureWeatherItem> {
+        return this.filter { it.dtTxt.contains(getString(R.string.future_time_calibration)) }
+            .map { FutureWeatherItem(it,viewModel.isMetric) }
+            .apply { }
+    }
+
+    private fun updateUI(allDays: List<FutureDayData>) {
+        futureGroupLoading.visibility = View.GONE
+        //allDays.
+        updateActionBarDescription()
+
+    }
+
+    private fun updateLocation(location: String) {
+        (activity as? AppCompatActivity)?.supportActionBar?.title = location
+    }
+
+    private fun updateActionBarDescription() {
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
+            getString(R.string.future_weather_five_days)
     }
 }

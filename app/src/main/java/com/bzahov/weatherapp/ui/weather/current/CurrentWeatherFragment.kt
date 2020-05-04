@@ -35,7 +35,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     ): View? {
         val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
 
-        view.textView_feels_like_temperature.setOnClickListener {
+        view.currentFeelsLikeTemperature.setOnClickListener {
             launch {   refreshWeather() }
         }
         return view
@@ -70,7 +70,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateUI(it: CurrentWeatherEntry) {
-        group_loading.visibility = View.GONE
+        currentGroupLoading.visibility = View.GONE
         updateCondition(it.weatherDescriptions.toString())
         updateDateToToday()
         updatePrecipitation(it.precipation)
@@ -80,7 +80,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         updateBackground(it)
         GlideApp.with(this)
             .load(it.weatherIcons.last())
-            .into(imageView_condition_icon)
+            .into(currentIConditionIcon)
     }
 
     // Rework change background with proper color to match to all pictures background
@@ -112,17 +112,17 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.current_weather_today)
     }
 
-    private fun updateTemperatures(temperature: Double, feelsLike: Double) {
+    private fun updateTemperatures(temp: Double, feelsLike: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
             getString(R.string.metric_temperature),
             getString(R.string.imperial_temperature)
         )
-        textView_temperature.text = "$temperature$unitAbbreviation"
-        textView_feels_like_temperature.text = "Feels like $feelsLike$unitAbbreviation"
+        currentTextTemperature.text = "$temp$unitAbbreviation"
+        currentFeelsLikeTemperature.text = "Feels like $feelsLike$unitAbbreviation"
     }
 
     private fun updateCondition(condition: String) {
-        textView_condition.text = condition
+        currentTextCondition.text = condition.removePrefix("[").removeSuffix("]")
     }
 
     private fun updatePrecipitation(precipitationVolume: Double) {
@@ -130,7 +130,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_precipitation),
             getString(R.string.imperial_precipitation)
         )
-        textView_precipitation.text = "Precipitation: $precipitationVolume $unitAbbreviation"
+        currentPrecipitation.text = "Precipitation: $precipitationVolume $unitAbbreviation"
     }
 
     private fun updateWind(windDirection: String, windSpeed: Double) {
@@ -138,7 +138,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_speed),
             getString(R.string.imperial_speed)
         )
-        textView_wind.text = "Wind: $windDirection, $windSpeed $unitAbbreviation"
+        currentWind.text = "Wind: $windDirection, $windSpeed $unitAbbreviation"
     }
 
     private fun updateVisibility(visibilityDistance: Double) {
@@ -146,7 +146,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_distance),
             getString(R.string.imperial_distance)
         )
-        textView_visibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
+        currentVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
     }
 
     private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {

@@ -1,7 +1,7 @@
 package com.bzahov.weatherapp.data.network.intefaces
 
 import androidx.lifecycle.LiveData
-import com.bzahov.weatherapp.data.db.entity.model.City
+import com.bzahov.weatherapp.data.db.entity.forecast.model.City
 import com.bzahov.weatherapp.data.response.future.ForecastWeatherResponse
 
 interface FutureWeatherNetworkDataSource {

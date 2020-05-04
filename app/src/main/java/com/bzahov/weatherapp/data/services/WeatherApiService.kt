@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data
+package com.bzahov.weatherapp.data.services
 
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
@@ -31,7 +31,10 @@ interface WeatherApiService {
         ): WeatherApiService {
 
             val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(RequestInterceptor.getRequestWithParameter(API_KEY_PARAM_NAME, API_KEY))
+                .addInterceptor(RequestInterceptor.getRequestWithParameter(
+                    API_KEY_PARAM_NAME,
+                    API_KEY
+                ))
                 .addInterceptor(connectivityInterceptor)
                 .build()
 

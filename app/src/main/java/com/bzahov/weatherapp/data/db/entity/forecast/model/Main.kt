@@ -7,6 +7,8 @@ data class Main(
     @SerializedName("grnd_level")
     val grndLevel: Double,
     val humidity: Int,
+    @SerializedName("feels_like")
+    val feelsLike : Double,
     val pressure: Double,
     @SerializedName("sea_level")
     val seaLevel: Double,

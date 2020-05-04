@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import androidx.preference.PreferenceManager
-import com.bzahov.weatherapp.data.WeatherApiService
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
 import com.bzahov.weatherapp.data.network.CurrentWeatherNetworkDataSourceImpl
@@ -21,6 +20,7 @@ import com.bzahov.weatherapp.data.repo.FutureForecastRepositoryImpl
 import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.data.services.OpenWeatherApiService
+import com.bzahov.weatherapp.data.services.WeatherApiService
 import com.bzahov.weatherapp.ui.settings.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherViewModelFactory
@@ -47,7 +47,11 @@ class ForecastApplication : Application(), KodeinAware {
 
         bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
         // bind different weather api services
-        bind() from singleton { WeatherApiService(instance()) } // for current
+        bind() from singleton {
+            WeatherApiService(
+                instance()
+            )
+        } // for current
         bind() from singleton { OpenWeatherApiService(instance()) } // for forecast
 
         // bind different data sources for each api service

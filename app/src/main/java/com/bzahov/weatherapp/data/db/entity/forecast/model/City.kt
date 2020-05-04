@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.data.db.entity.model
+package com.bzahov.weatherapp.data.db.entity.forecast.model
 
 import androidx.annotation.Nullable
 import com.google.gson.annotations.SerializedName

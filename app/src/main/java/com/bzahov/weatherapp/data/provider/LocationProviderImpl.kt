@@ -28,7 +28,6 @@ class LocationProviderImpl(
     }
 
 
-
     override suspend fun hasLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
         val deviceLocationChanged = try {
             hasDeviceLocationChanged(lastWeatherLocation)
@@ -48,8 +47,11 @@ class LocationProviderImpl(
                     Log.d(TAG, "getPreferredLocationString 1)new location is: $customLocationName")
                     return customLocationName
                 }
-                Log.d(TAG, ">>>getPreferredLocationString 2)new location is: ${deviceLocation.latitude},${deviceLocation.longitude} ")
-               // return getLocationStringBasedOnProvider(deviceLocation)
+                Log.d(
+                    TAG,
+                    ">>>getPreferredLocationString 2)new location is: ${deviceLocation.latitude},${deviceLocation.longitude} "
+                )
+                // return getLocationStringBasedOnProvider(deviceLocation)
                 return "${deviceLocation.latitude},${deviceLocation.longitude}"
             } catch (e: LocationPermissionNotGrantedException) {
                 Log.d(
@@ -86,8 +88,11 @@ class LocationProviderImpl(
     }
 
     private fun hasCustomLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
-        val customLocationName = getCustomLocationName()
-        return customLocationName != lastWeatherLocation.name
+        return if (!isUsingDeviceLocation()) {
+            val customLocationName = getCustomLocationName()
+            customLocationName != lastWeatherLocation.name
+        }else
+            false
     }
 
     private fun isUsingDeviceLocation(): Boolean {

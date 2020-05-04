@@ -12,7 +12,6 @@ import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.data.response.future.ForecastWeatherResponse
-import com.bzahov.weatherapp.internal.enums.UnitSystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,8 +31,8 @@ class FutureForecastRepositoryImpl(
     val requireRefreshOfData = false
 
     init {
-        futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever {
-            persistFetchedCurrentWeather(it)
+        futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever{
+            persistFetchedFutureWeather(it)
         }
     }
 
@@ -45,8 +44,9 @@ class FutureForecastRepositoryImpl(
         Log.d(TAG, "")
         //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
         return withContext(Dispatchers.IO) {
-            val unitSystem = UnitSystem.getOpenWeatherUrlToken(isMetric)
             initWeatherData()
+            //REFACTOR: Use 1 to many relation object instead of futureWeather
+            //return@withContext forecastDao.futureDayDataAndAllWeatherDetails(today)
             return@withContext forecastDao.getForecastWeather(today)
         }
     }
@@ -63,7 +63,7 @@ class FutureForecastRepositoryImpl(
 
     private suspend fun initWeatherData() {
 
-        val lastWeatherLocation = weatherLocationDao.getLocation().value
+        val lastWeatherLocation = weatherLocationDao.getLocationNotLive()
         if (isFetchNeeded(lastWeatherLocation)) {
             fetchFutureWeather()
         } else {
@@ -84,6 +84,7 @@ class FutureForecastRepositoryImpl(
     }
 
     private suspend fun fetchFutureWeather() {
+
         val unitSystem = unitSystemProvider.getUnitSystem().urlOpenWeatherToken
         val lastPhysicalLocation = locationProvider.getLastPhysicalDeviceLocation()//WeatherLocation(City(34.2,32.12,"DebugCity",""))//weatherLocationDao.getLocation().value
 
@@ -105,11 +106,12 @@ class FutureForecastRepositoryImpl(
         }
     }
 
-    private fun persistFetchedCurrentWeather(fetchedFutureWeather: ForecastWeatherResponse) {
+    private fun persistFetchedFutureWeather(fetchedFutureWeather: ForecastWeatherResponse) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 Log.d(TAG, "FetchedData: $fetchedFutureWeather")
                 forecastDao.insert(fetchedFutureWeather.list)
+                //forecastDao.insert(fetchedFutureWeather.list)
                 //weatherLocationDao.upsert(fetchedFutureWeather.city.name)
             } catch (e: SQLiteException) {
                 Log.e(TAG, "$e")

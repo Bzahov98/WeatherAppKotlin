@@ -78,7 +78,7 @@ class DateConverters {
 //    }
     //List<ForecastWeatherEntry>
 
-//    c
+
 //    @TypeConverter
 //    fun <T> genericToStoredStringFe(myObjects: List<T>?): String? {
 //        val gson = Gson()
@@ -91,7 +91,7 @@ class DateConverters {
 //        if (data == null) {
 //            return Collections.emptyList()
 //        }
-//        val listType: Type = object : TypeToken<List<WeatherDescription?>?>() {}.type
+//        val listType: Type = object : TypeToken<List<WeatherDetails?>?>() {}.type
 //        return gson.fromJson<List<T>>(data, listType)
 //    }
 }

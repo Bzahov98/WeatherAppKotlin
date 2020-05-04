@@ -3,7 +3,7 @@ package com.bzahov.weatherapp.data.network
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bzahov.weatherapp.data.db.entity.model.City
+import com.bzahov.weatherapp.data.db.entity.forecast.model.City
 import com.bzahov.weatherapp.data.network.intefaces.FutureWeatherNetworkDataSource
 import com.bzahov.weatherapp.data.response.future.ForecastWeatherResponse
 import com.bzahov.weatherapp.data.services.OpenWeatherApiService
@@ -23,7 +23,7 @@ private val TAG = "TAG_fetchForecastWeather"
                 .await()
             downloadedFutureWeatherMutable.postValue(fetchedForecastWeather)
 
-            Log.d(TAG, "fetchForecastWeather ( $location, null, null,  $unit)  responce: $fetchedForecastWeather \n")
+            Log.d(TAG, "fetchForecastWeather ( $location, null, null,  $unit)\nResponce: $fetchedForecastWeather \n")
         } catch (ignored: NoConnectivityException) {
             Log.e(TAG, "No Internet Connection:")
         }
@@ -34,6 +34,7 @@ private val TAG = "TAG_fetchForecastWeather"
             val fetchedForecastWeather = weatherApiService
                 .getForecastWeatherAsync(null,lat,lon, unit)
                 .await()
+
             downloadedFutureWeatherMutable.postValue(fetchedForecastWeather)
 
             Log.d(TAG, "fetchForecastWeatherWithCoords ( null, $lat, $lon,  $unit)  responce: $fetchedForecastWeather \n")

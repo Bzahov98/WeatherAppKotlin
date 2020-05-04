@@ -68,7 +68,7 @@ class CurrentForecastRepositoryImpl(
     // REWORK i can remove that and remove unitSystem param:)
     private suspend fun initWeatherData(unitSystem: String) {
 
-        val lastWeatherLocation = weatherLocationDao.getLocation().value
+        val lastWeatherLocation = weatherLocationDao.getLocationNotLive()
         if (isFetchNeeded(lastWeatherLocation)
         ) {
             fetchCurrentWeather(unitSystem)

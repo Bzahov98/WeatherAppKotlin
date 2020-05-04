@@ -3,9 +3,9 @@ package com.bzahov.weatherapp.data.network
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bzahov.weatherapp.data.WeatherApiService
 import com.bzahov.weatherapp.data.network.intefaces.CurrentWeatherNetworkDataSource
 import com.bzahov.weatherapp.data.response.current.CurrentWeatherResponse
+import com.bzahov.weatherapp.data.services.WeatherApiService
 import com.bzahov.weatherapp.internal.exceptions.NoConnectivityException
 
 class CurrentWeatherNetworkDataSourceImpl(

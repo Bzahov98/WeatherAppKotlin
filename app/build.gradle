@@ -118,7 +118,8 @@ dependencies {
 
 // New Material Design
     implementation 'com.google.android.material:material:1.1.0'
-
+// Android Debug Database
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

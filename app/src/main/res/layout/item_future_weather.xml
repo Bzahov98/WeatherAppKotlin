@@ -1,0 +1,207 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/futureWeatherDate"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/futureConditionText"
+            tools:text="1.1.2000" />
+
+        <TextView
+            android:id="@+id/futureTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:foregroundGravity="center"
+            android:text="0.0°C"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
+            tools:text="23.0°C" />
+
+        <TextView
+            android:id="@+id/futureConditionText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline6"
+            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
+            tools:text="Clear" />
+
+        <ImageView
+            android:id="@+id/futureConditionIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.363"
+            app:layout_constraintWidth_percent="0.15"
+            tools:src="@drawable/ic_weather_sunny"
+            tools:tint="#f9a920" />
+
+        <TextView
+            android:id="@+id/futureFeelsLike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+
+            android:foregroundGravity="center"
+            android:text="@string/feels_like"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="@+id/futureTemperature"
+            app:layout_constraintTop_toBottomOf="@+id/futureTemperature" />
+
+
+        <TextView
+            android:id="@+id/futureMaxTempText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="2dp"
+            android:foregroundGravity="center"
+            android:text="Max:"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/futureMinTemptText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/futureMinTemptText"
+            app:layout_constraintTop_toBottomOf="@+id/futureMinTemptText" />
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/futureMinMaxGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:constraint_referenced_ids="futureMinTemptText, futureMinTemp,futureMaxTempText, futureMaxTemp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/futureMinTemptText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="2dp"
+            android:foregroundGravity="center"
+            android:text="Min:"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="@+id/futureFeelsLike"
+            app:layout_constraintTop_toBottomOf="@+id/futureFeelsLike" />
+
+        <TextView
+            android:id="@+id/futureMinTemp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:foregroundGravity="center"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/futureFeelsLikeValue"
+            app:layout_constraintStart_toEndOf="@+id/futureMinTemptText"
+            app:layout_constraintTop_toTopOf="@+id/futureMinTemptText"
+            tools:text="22.0°C" />
+
+        <TextView
+            android:id="@+id/futureMaxTemp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:foregroundGravity="center"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/futureMinTemp"
+            app:layout_constraintStart_toEndOf="@+id/futureMaxTempText"
+            app:layout_constraintTop_toTopOf="@+id/futureMaxTempText"
+            tools:text="23.0°C" />
+
+        <TextView
+            android:id="@+id/futureFeelsLikeValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:foregroundGravity="center"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/futureFeelsLike"
+            app:layout_constraintEnd_toEndOf="@+id/futureTemperature"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/futureFeelsLike"
+            tools:text="23.0°C" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineHorizont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.125" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.13" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
