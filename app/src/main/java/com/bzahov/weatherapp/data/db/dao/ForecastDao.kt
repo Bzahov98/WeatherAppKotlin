@@ -5,12 +5,16 @@ import androidx.room.*
 import com.bzahov.weatherapp.data.db.DateConverters
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Dao
 @TypeConverters(DateConverters::class)
 interface ForecastDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(futureWeatherEntries: List<FutureDayData>)
+
+    @Query("select * from forecast_day where date(dtTxt) = date(:date)")
+    fun getDetailedWeatherByDate(date: LocalDateTime): LiveData<FutureDayData>
 
     @Query("select * from forecast_day where date(dtTxt) >= date(:startDate) ")
     fun getForecastWeather(startDate: LocalDate): LiveData<List<FutureDayData>>

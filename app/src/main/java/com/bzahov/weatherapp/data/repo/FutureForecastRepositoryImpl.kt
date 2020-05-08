@@ -17,6 +17,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 private val TAG = "FutureRepositoryImpl"
@@ -28,7 +29,7 @@ class FutureForecastRepositoryImpl(
     private val unitSystemProvider: UnitProvider,
     private val futureWeatherNetworkDataSource: FutureWeatherNetworkDataSource
 ) : FutureForecastRepository {
-    val requireRefreshOfData = false
+    val requireRefreshOfData = true
 
     init {
         futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever{
@@ -51,6 +52,18 @@ class FutureForecastRepositoryImpl(
         }
     }
 
+    override suspend fun getFutureWeatherByDate(
+        dateTime: LocalDateTime,
+        isMetric: Boolean
+    ): LiveData<out FutureDayData> {
+        Log.d(TAG, "")
+        return withContext(Dispatchers.IO){
+            initWeatherData()
+            return@withContext forecastDao.getDetailedWeatherByDate(dateTime)
+        }
+    }
+
+
     override suspend fun requestRefreshOfData() {
         fetchFutureWeather()
     }
@@ -60,6 +73,9 @@ class FutureForecastRepositoryImpl(
             return@withContext weatherLocationDao.getLocation()
         }
     }
+
+
+
 
     private suspend fun initWeatherData() {
 
@@ -73,12 +89,16 @@ class FutureForecastRepositoryImpl(
 
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
         val thirtyMinAgo =
-            ZonedDateTime.now().minusMinutes(1)//30
-
+            ZonedDateTime.now().minusMinutes(0)//30
+        Log.e(TAG,"lastWeatherLocation == null ${lastWeatherLocation == null}" +
+                "|| locationProvider.hasLocationChanged(lastWeatherLocation) ${locationProvider.hasLocationChanged(lastWeatherLocation?:WeatherLocation())}" +
+                "|| lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(thirtyMinAgo)}" +
+                "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
+                "|| requireRefreshOfData $requireRefreshOfData")
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
                 || lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo)
-                //|| unitSystemProvider.hasUnitSystemChanged()
+                || unitSystemProvider.hasUnitSystemChanged()
                 || requireRefreshOfData
                 )
     }

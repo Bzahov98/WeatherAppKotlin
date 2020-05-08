@@ -28,6 +28,7 @@ data class WeatherLocation(
     @SerializedName("utc_offset")
     val utcOffset: String
 ){
+    constructor() : this(0.0,0.0,"TEST","TEEST","TEST","TEST",21312321,"TEST","TESR")
     //constructor(name : String,country: String,lat: Double,lon: Double) : this()
     @PrimaryKey(autoGenerate = false)
     var id: Int =

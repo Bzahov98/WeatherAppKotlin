@@ -4,14 +4,11 @@ import android.view.View
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_future_weather.view.*
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class FutureWeatherItem(
     val weatherEntry: FutureDayData,
@@ -33,24 +30,20 @@ class FutureWeatherItem(
     }
 
     private fun updateCondition(view: View) {
-        var cond = StringBuilder()
-        //TODO make it better
-        weatherEntry.weatherDetails.forEach() { cond.append(it.description).append(" ") }
-        view.futureConditionText.text = cond.toString()
+        view.futureConditionText.text = UIConverterFieldUtils.getAllDescriptionsString(weatherEntry.weatherDetails)
     }
+
+
 
     private fun updateIcon(view: View) {
         val iconNumber = weatherEntry.weatherDetails.last().icon
-        val iconUrl =
-            ForecastApplication.getAppString(R.string.weather_open_icon_url) +
-                    iconNumber +
-                    ForecastApplication.getAppString(
-                        R.string.image_format_png
-        )
+        val iconUrl = UIConverterFieldUtils.getWeatherIconUrl(iconNumber, view)
         GlideApp.with(view)
             .load(iconUrl)
             .into(view.futureConditionIcon)
     }
+
+
 
     private fun updateTemperature(view: View) {
         val temp = weatherEntry.main.temp
@@ -75,11 +68,7 @@ class FutureWeatherItem(
     }
 
     private fun updateDate(view: View) {
-        val dtFormatter = DateTimeFormatter.ofPattern("EEE, MMM d, 'at' HH:mm")
-        //  val dtFormatter = DateTimeFormatter.ofPattern("yyyy-dd-mm HH:mm:ss")
-        val dateTime =
-            LocalDateTime.ofInstant(Instant.ofEpochSecond(weatherEntry.dt), ZoneId.systemDefault())
-        view.futureWeatherDate.text = dateTime.format(dtFormatter)
+        view.futureWeatherDate.text = UIConverterFieldUtils.dateTimestampToString(weatherEntry.dt,view)
     }
 
     private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {

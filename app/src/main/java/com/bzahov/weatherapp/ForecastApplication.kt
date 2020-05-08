@@ -23,16 +23,16 @@ import com.bzahov.weatherapp.data.services.OpenWeatherApiService
 import com.bzahov.weatherapp.data.services.WeatherApiService
 import com.bzahov.weatherapp.ui.settings.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
+import com.bzahov.weatherapp.ui.weather.future.detail.FutureDetailWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherViewModelFactory
 import com.google.android.gms.location.LocationServices
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.generic.*
+import java.time.LocalDateTime
+
 class ForecastApplication : Application(), KodeinAware {
 
 
@@ -80,6 +80,7 @@ class ForecastApplication : Application(), KodeinAware {
         bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance())}
         bind() from provider { SettingsFragmentViewModelFactory(instance(),instance()) }
         bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance()) }
+        bind() from factory { detailDate: LocalDateTime -> FutureDetailWeatherViewModelFactory(detailDate,instance(),instance(),instance()) }
 
     }
 

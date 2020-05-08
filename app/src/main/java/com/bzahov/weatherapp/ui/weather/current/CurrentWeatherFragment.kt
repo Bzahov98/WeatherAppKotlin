@@ -85,17 +85,17 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     // Rework change background with proper color to match to all pictures background
     private fun updateBackground(it: CurrentWeatherEntry) {
-        if (it.isDay == getString(R.string.is_day_yes)) {
+        if (it.isDay == getString(R.string.weather_stack_is_day)) {
             currentWeatherFragment.setBackgroundColor(
                 ContextCompat.getColor(
-                    context!!,
+                    requireContext(),
                     R.color.colorWeatherIconBackgroundDay
                 )
             )
         } else {
             currentWeatherFragment.setBackgroundColor(
                 ContextCompat.getColor(
-                    context!!,
+                    requireContext(),
                     R.color.colorWeatherIconBackgroundNight
                 )
             )

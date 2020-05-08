@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+import java.time.format.DateTimeFormatter
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private val TAG = "FutureDetailWeatherFragment"
@@ -66,16 +68,16 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             })
             futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 if (it == null) return@Observer
-                val data: List<out FutureDayData> = it
-                updateUI(data)
-                initRecyclerView(data.toFutureWeatherItems())
-                Log.d(TAG, "Update location with that data: $it")
+                updateUI(it)
+                initRecyclerView(it.toFutureWeatherItems())
+                Log.d(TAG, "Update view with that data: $it")
             })
         }
     }
 
     private fun initRecyclerView(items: List<FutureWeatherItem>) {
         val groupAdapter = GroupAdapter<ViewHolder>().apply {
+
             this.addAll(items)
         }
         futureRecyclerView.apply {
@@ -86,12 +88,27 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         groupAdapter.setOnItemClickListener { item, view ->
             Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_SHORT)
                 .show()
+            (item as FutureWeatherItem)?.let {
+
+                showWeatherDetail(
+                    it.weatherEntry.dtTxt, view
+                )
+            }
         }
+    }
+
+    private fun showWeatherDetail(/*dateTime: LocalDateTime*/string: String, view: View) {
+        val dtFormatter =
+            DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
+        //val dateString = dateTime.format(dtFormatter)
+        //todo
+        val actionShowDetail =  FutureListWeatherFragmentDirections.actionShowDetail(string)// .onNestedPrePerformAccessibilityAction(view,)//.action(dateString)
+        Navigation.findNavController(view).navigate(actionShowDetail)
     }
 
     private fun List<FutureDayData>.toFutureWeatherItems(): List<FutureWeatherItem> {
         return this.filter { it.dtTxt.contains(getString(R.string.future_time_calibration)) }
-            .map { FutureWeatherItem(it,viewModel.isMetric) }
+            .map { FutureWeatherItem(it, viewModel.isMetric) }
             .apply { }
     }
 
@@ -109,5 +126,10 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private fun updateActionBarDescription() {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
             getString(R.string.future_weather_five_days)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bindUI()
     }
 }

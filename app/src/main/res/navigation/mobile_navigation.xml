@@ -11,15 +11,23 @@
         android:label="current_weather_fragment"
         tools:layout="@layout/current_weather_fragment" />
     <fragment
-        android:id="@+id/futureListWeatherFragment"
+        android:id="@+id/FutureListWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherFragment"
         android:label="future_list_weather_fragment"
-        tools:layout="@layout/future_list_weather_fragment" />
+        tools:layout="@layout/future_list_weather_fragment" >
+        <action
+            android:id="@+id/actionShowDetail"
+            app:destination="@id/futureDetailWeatherFragment" />
+    </fragment>
     <fragment
         android:id="@+id/futureDetailWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.weather.future.detail.FutureDetailWeatherFragment"
         android:label="future_detail_weather_fragment"
-        tools:layout="@layout/future_detail_weather_fragment" />
+        tools:layout="@layout/future_detail_weather_fragment" >
+        <argument
+            android:name="dateString"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.bzahov.weatherapp.ui.settings.SettingsFragment"

@@ -3,11 +3,9 @@ package com.bzahov.weatherapp.data.db.entity.forecast.entities
 
 import androidx.room.*
 import com.bzahov.weatherapp.data.db.DateConverters
-import com.bzahov.weatherapp.data.db.entity.forecast.model.Clouds
-import com.bzahov.weatherapp.data.db.entity.forecast.model.Main
-import com.bzahov.weatherapp.data.db.entity.forecast.model.Sys
-import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
+import com.bzahov.weatherapp.data.db.entity.forecast.model.*
 import com.google.gson.annotations.SerializedName
+
 @Entity(tableName = "forecast_day",foreignKeys =
 [ForeignKey(
 
@@ -39,7 +37,13 @@ data class FutureDayData(
     val sys: Sys,
 
     @Embedded(prefix = "wind_")
-    val wind: Wind
+    val wind: Wind,
+    @org.jetbrains.annotations.Nullable
+    @Embedded(prefix = "rain_")
+    val rain: Rain,
+    @org.jetbrains.annotations.Nullable
+    @Embedded(prefix = "snow_")
+    val snow: Snow
 )
 
 //@Entity(foreignKeys = [ForeignKey(entity = WeatherDetails::class,childColumns = ["futureDetailsID"],parentColumns = ["futureID"],onDelete = ForeignKey.CASCADE)])

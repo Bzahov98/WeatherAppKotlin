@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/futureDetailWeatherFragment"
+    android:name="com.bzahov.weatherapp.ui.navigation.FutureDetailWeatherFragment"
     android:layout_width="match_parent"
-    android:name=".ui.navigation.FutureDetailWeatherFragment"
     android:layout_height="match_parent"
     tools:context=".ui.weather.future.detail.FutureDetailWeatherFragment"
     android:background="@color/colorWeatherIconBackgroundDay">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -49,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/loading_string"
@@ -62,123 +61,106 @@
 
         <TextView
             android:id="@+id/futureDetailTextCondition"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="24dp"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.043"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.017"
             tools:text="Patchy rain possible" />
 
         <ImageView
             android:id="@+id/futureDetailIConditionIcon"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/image_weather_condition_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.593"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.207"
+            app:layout_constraintTop_toBottomOf="@+id/futureDetailTextCondition"
             app:layout_constraintWidth_percent="0.25"
             tools:src="@drawable/ic_weather_sunny"
             tools:tint="#f9a920" />
+
+        <!--        <androidx.constraintlayout.widget.Group-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            app:constraint_referenced_ids="textView_temperature,textView_visibility, textView_precipitation,textView_wind, textView_feels_like_temperature,"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/guideline"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/futureDetailTextTemperature"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             app:layout_constraintBottom_toBottomOf="@+id/futureDetailIConditionIcon"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/futureDetailIConditionIcon"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="25.0°C" />
 
         <TextView
             android:id="@+id/futureDetailFeelsLikeTemperature"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/futureDetailTextTemperature"
-            app:layout_constraintHorizontal_bias="0.423"
             app:layout_constraintStart_toStartOf="@+id/futureDetailTextTemperature"
             app:layout_constraintTop_toBottomOf="@+id/futureDetailTextTemperature"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="Feels like 20.4°C" />
 
         <TextView
             android:id="@+id/futureDetailWind"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.028"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.542"
+            app:layout_constraintEnd_toEndOf="@+id/futureDetailRainPrecipitation"
+            app:layout_constraintStart_toStartOf="@+id/futureDetailRainPrecipitation"
+            app:layout_constraintTop_toBottomOf="@+id/futureDetailFeelsLikeTemperature"
             tools:text="Wind: SE, 5.3 m/s" />
 
         <TextView
             android:id="@+id/futureDetailRainPrecipitation"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/futureDetailTextTemperature"
+            app:layout_constraintStart_toStartOf="@+id/futureDetailTextTemperature"
             app:layout_constraintTop_toBottomOf="@+id/futureDetailWind"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="Precipitation: 5 mm" />
 
         <TextView
             android:id="@+id/futureDetailVisibility"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.031"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/futureDetailRainPrecipitation"
+            app:layout_constraintStart_toStartOf="@+id/futureDetailRainPrecipitation"
             app:layout_constraintTop_toBottomOf="@+id/futureDetailRainPrecipitation"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="Visibility: 20 km" />
 
-        <ImageView
-            android:id="@+id/imageView"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/futureDetailRainPrecipitation"
-
-            tools:srcCompat="@drawable/snowflake" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

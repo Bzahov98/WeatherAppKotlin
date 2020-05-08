@@ -27,19 +27,25 @@
     <string name="imperial_precipitation">in</string>
     <string name="imperial_speed">mph</string>
     <string name="imperial_distance">mi.</string>
-    <string name="is_day_yes">yes</string>
+
 
     <string name="weather_stack_url">http://api.weatherstack.com/</string>
     <string name="weather_stack_key">d008d274c9b7d028454d802a2f80a75a</string>
     <string name="weather_stack_key_param">access_key</string>
+    <string name="weather_stack_is_day">yes</string>
+
 
     <string name="weather_open_url">http://api.openweathermap.org/</string>
     <string name="weather_open_key">5ff56a543a8b4131a9c0a79008db6fd4</string>
     <string name="weather_open_key_param">appid</string>
     <string name="weather_open_icon_url">http://openweathermap.org/img/w/</string>
 
-    <string name="image_format_png">.png</string>
+    <string name="weather_open_is_day">d</string>
+    <string name="weather_open_is_night">n</string>
 
+    <string name="image_format_png">.png</string>
+    <string name="date_formatter_pattern">EEE, MMM d, \'at\' HH:mm</string>
+    <string name="percentage">%</string>
 
 
 </resources>
