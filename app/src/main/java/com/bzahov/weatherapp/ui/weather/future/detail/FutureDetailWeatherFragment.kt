@@ -143,19 +143,20 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
     private fun updatePrecipitation(dayInfo: FutureDayData) {
         // always in mm
         val unitAbbreviation = getString(R.string.metric_precipitation)
-        val snowVolume3h = dayInfo.snow.precipitationsForLast3hours
-        if (snowVolume3h > 0) {
-            futureDetailRainPrecipitation.text = "Precipitation in Snow: $snowVolume3h $unitAbbreviation"
+        val snowVolume3h = dayInfo.snow?.precipitationsForLast3hours
+        val rainVolume3h = dayInfo.rain?.precipitationsForLast3hours
+
+        if(snowVolume3h?:0.0 >0 && rainVolume3h?:0.0 > 0) {
+            futureDetailRainPrecipitation.text = "Rain: $rainVolume3h $unitAbbreviation, Snow: $snowVolume3h"
             return
         }
-        val rainVolume3h = dayInfo.rain.precipitationsForLast3hours
-        if (rainVolume3h > 0) {
+        if (snowVolume3h ?:0.0 > 0) {
+            futureDetailRainPrecipitation.text = "Precipitation in Snow: $snowVolume3h $unitAbbreviation"
+        }
+       if (rainVolume3h ?:0.0 > 0) {
             futureDetailRainPrecipitation.text = "Precipitation in Rain: $rainVolume3h $unitAbbreviation"
         }
-        if(snowVolume3h>0 && rainVolume3h > 0) {
-            futureDetailRainPrecipitation.text = "Rain: $rainVolume3h $unitAbbreviation, Snow: $snowVolume3h"
 
-        }
     }
 
     private fun updateWind(windDirection: Double, windSpeed: Double) {

@@ -13,6 +13,9 @@ interface ForecastDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(futureWeatherEntries: List<FutureDayData>)
 
+    @Query("select * from forecast_day where dtTxt = :date")
+    fun getDetailedWeatherByDateString(date: String): LiveData<FutureDayData>
+
     @Query("select * from forecast_day where date(dtTxt) = date(:date)")
     fun getDetailedWeatherByDate(date: LocalDateTime): LiveData<FutureDayData>
 

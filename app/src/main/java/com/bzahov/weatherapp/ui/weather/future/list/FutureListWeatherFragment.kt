@@ -86,14 +86,13 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
 
         groupAdapter.setOnItemClickListener { item, view ->
-            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked", Toast.LENGTH_SHORT)
+            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked: ${item.itemCount}", Toast.LENGTH_SHORT)
                 .show()
-            (item as FutureWeatherItem)?.let {
-
-                showWeatherDetail(
-                    it.weatherEntry.dtTxt, view
-                )
-            }
+            val itemDetail = (item as FutureWeatherItem).weatherEntry
+            Log.e(TAG,"\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
+            showWeatherDetail(
+                itemDetail.dtTxt, view
+            )
         }
     }
 
@@ -101,7 +100,6 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         val dtFormatter =
             DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
         //val dateString = dateTime.format(dtFormatter)
-        //todo
         val actionShowDetail =  FutureListWeatherFragmentDirections.actionShowDetail(string)// .onNestedPrePerformAccessibilityAction(view,)//.action(dateString)
         Navigation.findNavController(view).navigate(actionShowDetail)
     }

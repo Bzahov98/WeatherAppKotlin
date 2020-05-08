@@ -13,7 +13,7 @@ object LocalDateConverter {
     @JvmStatic
     fun stringToDateTime(string: String?) = string?.let {
         val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_pattern))
+            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_from_string_formatter_pattern))
         //  val dateString = dateTime.format(dtFormatter)
         LocalDateTime.parse(it, dtFormatter)
     }

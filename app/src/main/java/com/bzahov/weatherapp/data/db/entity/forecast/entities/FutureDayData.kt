@@ -38,12 +38,12 @@ data class FutureDayData(
 
     @Embedded(prefix = "wind_")
     val wind: Wind,
-    @org.jetbrains.annotations.Nullable
+
     @Embedded(prefix = "rain_")
-    val rain: Rain,
-    @org.jetbrains.annotations.Nullable
+    val rain: Rain?,
+
     @Embedded(prefix = "snow_")
-    val snow: Snow
+    val snow: Snow?
 )
 
 //@Entity(foreignKeys = [ForeignKey(entity = WeatherDetails::class,childColumns = ["futureDetailsID"],parentColumns = ["futureID"],onDelete = ForeignKey.CASCADE)])

@@ -45,6 +45,7 @@
 
     <string name="image_format_png">.png</string>
     <string name="date_formatter_pattern">EEE, MMM d, \'at\' HH:mm</string>
+    <string name="date_from_string_formatter_pattern">yyyy-MM-d HH:mm:ss</string>
     <string name="percentage">%</string>
 
 
