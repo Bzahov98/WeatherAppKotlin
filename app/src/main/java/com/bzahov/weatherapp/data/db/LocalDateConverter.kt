@@ -24,8 +24,8 @@ public class LocalDateConverter() {
             DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_from_string_formatter_pattern))
         return dateTime?.format(dtFormatter)
     }
-    // LocalDate
 
+    // LocalDate
     @TypeConverter
     fun dateToString(dateTime: LocalDate?) = dateTime?.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
