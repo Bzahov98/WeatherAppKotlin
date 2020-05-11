@@ -3,12 +3,13 @@ package com.bzahov.weatherapp.data.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.bzahov.weatherapp.data.db.DateConverters
+import com.bzahov.weatherapp.data.db.LocalDateConverter
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Dao
-@TypeConverters(DateConverters::class)
+@TypeConverters(*[DateConverters::class, LocalDateConverter::class])
 interface ForecastDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(futureWeatherEntries: List<FutureDayData>)

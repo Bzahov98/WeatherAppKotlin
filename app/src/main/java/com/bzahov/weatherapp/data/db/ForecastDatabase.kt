@@ -19,7 +19,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
     version =13,
     exportSchema = false
 )
-@TypeConverters(DateConverters::class)
+@TypeConverters(DateConverters::class, LocalDateConverter::class)
 abstract class ForecastDatabase : RoomDatabase() {
     abstract fun currentWeatherDao(): CurrentWeatherDao
     abstract fun currentLocationDao(): WeatherLocationDao

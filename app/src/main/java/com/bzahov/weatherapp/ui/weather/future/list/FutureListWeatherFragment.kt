@@ -66,18 +66,18 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
                 updateLocation(location.name)
                 Log.d(TAG, "bindUI Update location with that data: $location")
             })
+
             futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
+                Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?:"null"} \n")
                 if (it == null) return@Observer
                 updateUI(it)
                 initRecyclerView(it.toFutureWeatherItems())
-                Log.d(TAG, "Update view with that data: $it")
             })
         }
     }
 
     private fun initRecyclerView(items: List<FutureWeatherItem>) {
         val groupAdapter = GroupAdapter<ViewHolder>().apply {
-
             this.addAll(items)
         }
         futureRecyclerView.apply {
@@ -86,13 +86,11 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
 
         groupAdapter.setOnItemClickListener { item, view ->
-            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked: ${item.itemCount}", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked: ${item.itemCount}", Toast.LENGTH_SHORT).show()
+
             val itemDetail = (item as FutureWeatherItem).weatherEntry
             Log.e(TAG,"\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
-            showWeatherDetail(
-                itemDetail.dtTxt, view
-            )
+            showWeatherDetail(itemDetail.dtTxt, view)
         }
     }
 

@@ -1,15 +1,10 @@
 package com.bzahov.weatherapp.data.db
 
 import androidx.room.TypeConverter
-import com.bzahov.weatherapp.ForecastApplication
-import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 //List<WeatherDescription>
@@ -30,19 +25,7 @@ class DateConverters {
         return gson.toJson(myObjects)
     }
 
-    companion object {
-        @TypeConverter
-        @JvmStatic
-        fun dateToString(dateTime: LocalDate?) = dateTime?.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
-        //
-        @TypeConverter
-        @JvmStatic
-        fun stringToDate(str: String?) = str?.let {
-            LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
-        }
-
-    }
     //
 
     //
@@ -62,20 +45,6 @@ class DateConverters {
         return gson.toJson(myObjects)
     }
 
-    @TypeConverter
-    fun stringToDateTime(string: String?) = string?.let {
-        val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_pattern))
-        //  val dateString = dateTime.format(dtFormatter)
-        LocalDateTime.parse(it, dtFormatter)
-    }
-
-    @TypeConverter
-    fun dateTimeToString(dateTime: LocalDateTime?): String? {
-        val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_pattern))
-        return dateTime?.format(dtFormatter)
-
 //    @TypeConverter
 //    fun convertToDatabaseColumn(locDate: LocalDate?): Date? {
 //        return locDate?.let { Date.from(locDate.atStartOfDay(systemDefault()).toInstant()) }
@@ -94,7 +63,7 @@ class DateConverters {
 //        return gson.fromJson(sqlDate, listType)
 //        //return instant?.atZone(defaultZoneId)?.toLocalDate()
 //    }
-        //List<ForecastWeatherEntry>
+    //List<ForecastWeatherEntry>
 
 
 //    @TypeConverter
@@ -114,5 +83,4 @@ class DateConverters {
 //    }
 
 
-    }
 }

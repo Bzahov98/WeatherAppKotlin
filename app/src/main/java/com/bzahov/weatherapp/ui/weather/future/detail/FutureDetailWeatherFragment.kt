@@ -45,7 +45,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         //viewModel = ViewModelProvider(this).get(FutureDetailWeatherViewModel::class.java)
         val safeArgs = arguments?.let { FutureDetailWeatherFragmentArgs.fromBundle(it) }
-        val date = LocalDateConverter.stringToDateTime(safeArgs?.dateString)
+        val date = LocalDateConverter().stringToDateTime(safeArgs?.dateString)
             ?: throw DateNotFoundException()
 
         viewModel = ViewModelProvider(this, viewModelFactoryInstanceFactory(date))
@@ -58,7 +58,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         return launch {
             val futureDetailWeatherLiveData = viewModel.weather.await()
             val weatherLocation = viewModel.weatherLocation.await()
-            // REWORK Return City object temporary FIX for: futureDetail location isn't changed and stay with name futureDetail_weather_fragment all city attributes are null
+            // REWORK Return City object temporary FiX for: futureDetail location isn't changed and stay with name futureDetail_weather_fragment all city attributes are null
 
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
@@ -66,16 +66,17 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
                 updateLocation(location.name)
                 Log.d(TAG, "Update location with that data: $location")
             })
-
+            //FIX error FutureDao Don't Return Data it is null
             futureDetailWeatherLiveData.observe(viewLifecycleOwner, Observer {
+                Log.d(TAG, "UpdateUI for FutureDayData with: \n ${it ?: "null"} \n")
                 if (it == null) return@Observer
                 updateUI(it)
-                Log.d(TAG, "Update UI with that data: $it")
             })
         }
     }
 
     private fun updateUI(it: FutureDayData) {
+        Log.d(TAG, "UpdateUI for FutureDayData with: \n $it \n")
         futureDetailGroupLoading.visibility = View.GONE
         updateCondition(it.weatherDetails)
         updateDateToToday(it.dt)
@@ -115,7 +116,6 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    // REWORK Return City object temporary FiX for: futureDetail location isn't changed and stay with name futureDetail_weather_fragment all city attributes are null
     private fun updateLocation(location: String) {
         (activity as? AppCompatActivity)?.supportActionBar?.title = location
     }
@@ -146,15 +146,18 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         val snowVolume3h = dayInfo.snow?.precipitationsForLast3hours
         val rainVolume3h = dayInfo.rain?.precipitationsForLast3hours
 
-        if(snowVolume3h?:0.0 >0 && rainVolume3h?:0.0 > 0) {
-            futureDetailRainPrecipitation.text = "Rain: $rainVolume3h $unitAbbreviation, Snow: $snowVolume3h"
+        if (snowVolume3h ?: 0.0 > 0 && rainVolume3h ?: 0.0 > 0) {
+            futureDetailRainPrecipitation.text =
+                "Rain: $rainVolume3h $unitAbbreviation, Snow: $snowVolume3h"
             return
         }
-        if (snowVolume3h ?:0.0 > 0) {
-            futureDetailRainPrecipitation.text = "Precipitation in Snow: $snowVolume3h $unitAbbreviation"
+        if (snowVolume3h ?: 0.0 > 0) {
+            futureDetailRainPrecipitation.text =
+                "Precipitation in Snow: $snowVolume3h $unitAbbreviation"
         }
-       if (rainVolume3h ?:0.0 > 0) {
-            futureDetailRainPrecipitation.text = "Precipitation in Rain: $rainVolume3h $unitAbbreviation"
+        if (rainVolume3h ?: 0.0 > 0) {
+            futureDetailRainPrecipitation.text =
+                "Precipitation in Rain: $rainVolume3h $unitAbbreviation"
         }
 
     }
