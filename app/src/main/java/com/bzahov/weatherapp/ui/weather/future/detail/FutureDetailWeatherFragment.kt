@@ -14,6 +14,7 @@ import com.bzahov.weatherapp.data.db.LocalDateConverter
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.exceptions.DateNotFoundException
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
@@ -87,7 +88,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         updateBackground(it)
 
         val iconUrl =
-            UIConverterFieldUtils.getWeatherIconUrl(it.weatherDetails.last().icon, requireView())
+            UIConverterFieldUtils.getOpenWeatherIconUrl(it.weatherDetails.last().icon)
         GlideApp.with(this)
             .load(iconUrl)
             .into(futureDetailIConditionIcon)
@@ -118,15 +119,16 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateLocation(location: String) {
         (activity as? AppCompatActivity)?.supportActionBar?.title = location
-    }
+}
 
     private fun updateDateToToday(dateTimestamp: Long) {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
-            UIConverterFieldUtils.dateTimestampToString(dateTimestamp, requireView())
+            UIConverterFieldUtils.dateTimestampToDateTimeString(dateTimestamp)
     }
 
     private fun updateTemperatures(temp: Double, feelsLike: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_temperature),
             getString(R.string.imperial_temperature)
         )
@@ -164,6 +166,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateWind(windDirection: Double, windSpeed: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_speed),
             getString(R.string.imperial_speed)
         )
@@ -179,10 +182,6 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
     private fun updateVisibility(visibilityDistance: Int) {
         val unitAbbreviation = getString(R.string.percentage)
         futureDetailVisibility.text = "Cloudiness, %: $visibilityDistance $unitAbbreviation"
-    }
-
-    private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
-        return if (viewModel.isMetric) metric else imperial
     }
 
     private suspend fun refreshWeather() {

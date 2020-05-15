@@ -5,7 +5,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-interface FutureForecastRepository : Repository{
+interface FutureForecastRepository : Repository {
     suspend fun getFutureWeather(
         today: LocalDate,
         isMetric: Boolean
@@ -15,4 +15,9 @@ interface FutureForecastRepository : Repository{
         dateTime: LocalDateTime,
         isMetric: Boolean
     ): LiveData<out FutureDayData>
+
+    suspend fun getFutureWeatherByStartAndEndDate(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): LiveData<List<out FutureDayData>>
 }

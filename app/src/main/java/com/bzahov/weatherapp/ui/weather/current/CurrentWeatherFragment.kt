@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
@@ -114,6 +115,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateTemperatures(temp: Double, feelsLike: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_temperature),
             getString(R.string.imperial_temperature)
         )
@@ -127,6 +129,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updatePrecipitation(precipitationVolume: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_precipitation),
             getString(R.string.imperial_precipitation)
         )
@@ -135,6 +138,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateWind(windDirection: String, windSpeed: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_speed),
             getString(R.string.imperial_speed)
         )
@@ -143,14 +147,11 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateVisibility(visibilityDistance: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            viewModel.isMetric,
             getString(R.string.metric_distance),
             getString(R.string.imperial_distance)
         )
         currentVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
-    }
-
-    private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
-        return if (viewModel.isMetric) metric else imperial
     }
 
     private suspend fun refreshWeather() {

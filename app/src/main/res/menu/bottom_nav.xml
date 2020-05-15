@@ -5,6 +5,11 @@
         android:icon="@drawable/ic_today"
         android:title="@string/menu_today"/>
     <item
+        android:id="@+id/oneDayWeatherFragment"
+        android:icon="@drawable/ic_today"
+        android:title="@string/menu_one_day"/>
+
+    <item
         android:id="@+id/FutureListWeatherFragment"
         android:icon="@drawable/ic_calendar_week"
         android:title="@string/menu_sevendays"/>

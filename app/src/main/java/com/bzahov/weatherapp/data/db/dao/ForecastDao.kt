@@ -29,6 +29,10 @@ interface ForecastDao{
     @Query("delete from forecast_day where date(dtTxt) < date(:firstDateToKeep)")
     fun deleteOldEntries(firstDateToKeep: LocalDate)
 
+    @Query("select * from forecast_day where date(dtTxt) BETWEEN date(:startDate) AND date(:endDate)")
+
+    fun getDetailedWeatherByStartEndDate(startDate: LocalDateTime, endDate: LocalDateTime): LiveData<List<FutureDayData>>
+
 //    @Transaction
 //    @Query("SELECT * FROM forecast_day where date(dtTxt) < date(:firstDateToKeep)")
 //    fun futureDayDataAndAllWeatherDetails(firstDateToKeep: LocalDate): LiveData<List<FutureDayAndWeatherDetails> >

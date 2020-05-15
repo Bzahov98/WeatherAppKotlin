@@ -1,6 +1,5 @@
 package com.bzahov.weatherapp.data.db.entity.forecast.model
 
-import androidx.annotation.Nullable
 import com.google.gson.annotations.SerializedName
 
 
@@ -9,7 +8,6 @@ data class City(
     val lon: Double,
     val name: String,
     val country: String,
-    @Nullable
     @SerializedName("city.id")
-    val openWeatherCityID: Int = 0 // openweatherCityID
+    val openWeatherCityID: Int? = 0 // openweatherCityID
 )

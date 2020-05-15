@@ -5,6 +5,7 @@ import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
@@ -37,7 +38,7 @@ class FutureWeatherItem(
 
     private fun updateIcon(view: View) {
         val iconNumber = weatherEntry.weatherDetails.last().icon
-        val iconUrl = UIConverterFieldUtils.getWeatherIconUrl(iconNumber, view)
+        val iconUrl = UIConverterFieldUtils.getOpenWeatherIconUrl(iconNumber)
         GlideApp.with(view)
             .load(iconUrl)
             .into(view.futureConditionIcon)
@@ -52,6 +53,7 @@ class FutureWeatherItem(
         val tempMax = weatherEntry.main.tempMax
 
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+            isMetric,
             ForecastApplication.getAppString(R.string.metric_temperature),
             ForecastApplication.getAppString(R.string.imperial_temperature)
         )
@@ -68,11 +70,7 @@ class FutureWeatherItem(
     }
 
     private fun updateDate(view: View) {
-        view.futureWeatherDate.text = UIConverterFieldUtils.dateTimestampToString(weatherEntry.dt,view)
-    }
-
-    private fun chooseLocalizedUnitAbbreviation(metric: String, imperial: String): String {
-        return if (isMetric) metric else imperial
+        view.futureWeatherDate.text = UIConverterFieldUtils.dateTimestampToDateTimeString(weatherEntry.dt)
     }
 }
 

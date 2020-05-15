@@ -57,21 +57,21 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private fun bindUI(): Job {
         Log.d(TAG, "bindUI")
         return launch {
-            val futureWeatherLiveData = viewModel.forecastWeather.await()
-            val weatherLocation = viewModel.weatherLocation.await()
+                val futureWeatherLiveData = viewModel.forecastWeather.await()
+                val weatherLocation = viewModel.weatherLocation.await()
 
-            Log.d(TAG, "buildUi $futureWeatherLiveData")
-            weatherLocation.observe(viewLifecycleOwner, Observer { location ->
-                if (location == null) return@Observer
-                updateLocation(location.name)
-                Log.d(TAG, "bindUI Update location with that data: $location")
-            })
+                Log.d(TAG, "buildUi $futureWeatherLiveData")
+                weatherLocation.observe(viewLifecycleOwner, Observer { location ->
+                    if (location == null) return@Observer
+                    updateLocation(location.name)
+                    Log.d(TAG, "bindUI Update location with that data: $location")
+                })
 
-            futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
-                Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?:"null"} \n")
-                if (it == null) return@Observer
-                updateUI(it)
-                initRecyclerView(it.toFutureWeatherItems())
+                futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
+                    Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?:"null"} \n")
+                    if (it == null) return@Observer
+                    updateUI(it)
+                    initRecyclerView(it.toFutureWeatherItems())
             })
         }
     }
@@ -103,7 +103,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun List<FutureDayData>.toFutureWeatherItems(): List<FutureWeatherItem> {
-        return this.filter { it.dtTxt.contains(getString(R.string.future_time_calibration)) }
+        return this.filter { it.dtTxt.contains(getString(R.string.default_future_time_calibration)) }
             .map { FutureWeatherItem(it, viewModel.isMetric) }
             .apply { }
     }

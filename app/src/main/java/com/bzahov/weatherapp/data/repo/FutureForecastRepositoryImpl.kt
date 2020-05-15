@@ -32,7 +32,7 @@ class FutureForecastRepositoryImpl(
     val requireRefreshOfData = true
 
     init {
-        futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever{
+        futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever {
             persistFetchedFutureWeather(it)
         }
     }
@@ -57,9 +57,20 @@ class FutureForecastRepositoryImpl(
         isMetric: Boolean
     ): LiveData<out FutureDayData> {
         Log.d(TAG, "")
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext forecastDao.getDetailedWeatherByDate(dateTime)
+        }
+    }
+
+    override suspend fun getFutureWeatherByStartAndEndDate(
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): LiveData<List<out FutureDayData>> {
+        Log.d(TAG, "")
+        return withContext(Dispatchers.IO) {
+            initWeatherData()
+            return@withContext forecastDao.getDetailedWeatherByStartEndDate(startDate,endDate)
         }
     }
 
@@ -75,8 +86,6 @@ class FutureForecastRepositoryImpl(
     }
 
 
-
-
     private suspend fun initWeatherData() {
 
         val lastWeatherLocation = weatherLocationDao.getLocationNotLive()
@@ -90,11 +99,17 @@ class FutureForecastRepositoryImpl(
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
         val thirtyMinAgo =
             ZonedDateTime.now().minusMinutes(0)//30
-        Log.e(TAG,"lastWeatherLocation == null ${lastWeatherLocation == null}" +
-                "|| locationProvider.hasLocationChanged(lastWeatherLocation) ${locationProvider.hasLocationChanged(lastWeatherLocation?:WeatherLocation())}" +
-                "|| lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(thirtyMinAgo)}" +
-                "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
-                "|| requireRefreshOfData $requireRefreshOfData")
+        Log.e(
+            TAG, "lastWeatherLocation == null ${lastWeatherLocation == null}" +
+                    "|| locationProvider.hasLocationChanged(lastWeatherLocation) ${locationProvider.hasLocationChanged(
+                        lastWeatherLocation ?: WeatherLocation()
+                    )}" +
+                    "|| lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(
+                        thirtyMinAgo
+                    )}" +
+                    "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
+                    "|| requireRefreshOfData $requireRefreshOfData"
+        )
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
                 || lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo)
@@ -106,18 +121,22 @@ class FutureForecastRepositoryImpl(
     private suspend fun fetchFutureWeather() {
 
         val unitSystem = unitSystemProvider.getUnitSystem().urlOpenWeatherToken
-        val lastPhysicalLocation = locationProvider.getLastPhysicalDeviceLocation()//WeatherLocation(City(34.2,32.12,"DebugCity",""))//weatherLocationDao.getLocation().value
+        val lastPhysicalLocation =
+            locationProvider.getLastPhysicalDeviceLocation()//WeatherLocation(City(34.2,32.12,"DebugCity",""))//weatherLocationDao.getLocation().value
 
         if (lastPhysicalLocation == null || !locationProvider.isDeviceLocationSelected()) {
             val location = locationProvider.getLocationString()
-            Log.d(TAG,"FetchFutureWeather with LocationString $location and unit $unitSystem")
+            Log.d(TAG, "FetchFutureWeather with LocationString $location and unit $unitSystem")
 
             futureWeatherNetworkDataSource.fetchForecastWeather(
                 location,
                 unitSystem
             )
         } else {
-            Log.d(TAG,"FetchFutureWeather with lat: ${lastPhysicalLocation.latitude} and lon: ${lastPhysicalLocation.longitude} and unit $unitSystem")
+            Log.d(
+                TAG,
+                "FetchFutureWeather with lat: ${lastPhysicalLocation.latitude} and lon: ${lastPhysicalLocation.longitude} and unit $unitSystem"
+            )
             futureWeatherNetworkDataSource.fetchForecastWeatherWithCoords(
                 lastPhysicalLocation.latitude,
                 lastPhysicalLocation.longitude,

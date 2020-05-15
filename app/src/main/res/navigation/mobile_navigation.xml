@@ -11,6 +11,11 @@
         android:label="current_weather_fragment"
         tools:layout="@layout/current_weather_fragment" />
     <fragment
+        android:id="@+id/oneDayWeatherFragment"
+        android:name="com.bzahov.weatherapp.ui.weather.oneday.OneDayWeatherFragment"
+        android:label="One Day Info"
+        tools:layout="@layout/item_one_day" />
+    <fragment
         android:id="@+id/FutureListWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherFragment"
         android:label="future_list_weather_fragment"

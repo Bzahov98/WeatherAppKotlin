@@ -15,6 +15,7 @@
         android:layout_height="match_parent"
         android:text="Future List"
         app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_future_weather"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Group

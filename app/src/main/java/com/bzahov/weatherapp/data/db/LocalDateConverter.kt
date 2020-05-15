@@ -12,7 +12,7 @@ public class LocalDateConverter() {
     @TypeConverter
     fun stringToDateTime(string: String?) = string?.let {
         val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_from_string_formatter_pattern))
+            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_from_string_pattern))
         //  val dateString = dateTime.format(dtFormatter)
         val result = LocalDateTime.parse(it, dtFormatter)
         return@let result
@@ -21,7 +21,7 @@ public class LocalDateConverter() {
     @TypeConverter
     fun dateTimeToString(dateTime: LocalDateTime?): String? {
         val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_from_string_formatter_pattern))
+            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_from_string_pattern))
         return dateTime?.format(dtFormatter)
     }
 
