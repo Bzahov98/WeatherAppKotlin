@@ -44,7 +44,7 @@ class CurrentForecastRepositoryImpl(
             initWeatherData(unitSystem)
                 return@withContext currentWeatherDao.getCurrentWeather()
         }
-        unitSystemProvider.notifyNoNeedToChangeUnitSystem()
+        //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
         return resultData
     }
 
@@ -84,7 +84,7 @@ class CurrentForecastRepositoryImpl(
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
                 || lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo)
-                || unitSystemProvider.hasUnitSystemChanged()
+                //|| unitSystemProvider.hasUnitSystemChanged()
                 || requireRefreshOfData
                 )
     }

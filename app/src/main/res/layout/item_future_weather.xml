@@ -39,7 +39,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="27sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineLeftVertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
             tools:text="23.0°C" />
@@ -52,8 +52,8 @@
             android:maxLines="1"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-            app:layout_constraintEnd_toStartOf="@+id/guideline4"
-            app:layout_constraintStart_toStartOf="@+id/guideline6"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
+            app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
             app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
             tools:text="Clear" />
 
@@ -68,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guidelineRightVertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.363"
             app:layout_constraintWidth_percent="0.15"
@@ -85,7 +85,7 @@
             android:text="@string/feels_like"
             android:textAlignment="viewStart"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="@+id/futureTemperature"
             app:layout_constraintTop_toBottomOf="@+id/futureTemperature" />
 
@@ -123,7 +123,7 @@
             android:text="Min:"
             android:textAlignment="viewStart"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="@+id/futureFeelsLike"
             app:layout_constraintTop_toBottomOf="@+id/futureFeelsLike" />
 
@@ -163,19 +163,19 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/futureFeelsLike"
             app:layout_constraintEnd_toEndOf="@+id/futureTemperature"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
             app:layout_constraintTop_toTopOf="@+id/futureFeelsLike"
             tools:text="23.0°C" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
+            android:id="@+id/guidelineRightVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.75" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline6"
+            android:id="@+id/guidelineLeftVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -189,14 +189,14 @@
             app:layout_constraintGuide_percent="0.125" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline7"
+            android:id="@+id/guidelineMiddleVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
+            android:id="@+id/guidelineVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

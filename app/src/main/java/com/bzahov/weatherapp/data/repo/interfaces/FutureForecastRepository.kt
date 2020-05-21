@@ -16,8 +16,13 @@ interface FutureForecastRepository : Repository {
         isMetric: Boolean
     ): LiveData<out FutureDayData>
 
+    suspend fun getFutureWeatherByDateTimestamp(
+        dateStamp: Long,
+        isMetric: Boolean
+    ): LiveData<out FutureDayData>
+
     suspend fun getFutureWeatherByStartAndEndDate(
-        startDate: LocalDateTime,
-        endDate: LocalDateTime
+        startDate: Long,
+        endDate: Long
     ): LiveData<List<out FutureDayData>>
 }

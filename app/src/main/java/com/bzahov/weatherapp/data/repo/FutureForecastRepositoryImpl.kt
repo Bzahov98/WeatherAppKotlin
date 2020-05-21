@@ -16,9 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
+import java.time.*
 
 private val TAG = "FutureRepositoryImpl"
 
@@ -29,7 +27,7 @@ class FutureForecastRepositoryImpl(
     private val unitSystemProvider: UnitProvider,
     private val futureWeatherNetworkDataSource: FutureWeatherNetworkDataSource
 ) : FutureForecastRepository {
-    val requireRefreshOfData = true
+    val requireRefreshOfData = false
 
     init {
         futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever {
@@ -63,9 +61,19 @@ class FutureForecastRepositoryImpl(
         }
     }
 
+    override suspend fun getFutureWeatherByDateTimestamp(
+        dateStamp: Long,
+        isMetric: Boolean
+    ): LiveData<out FutureDayData> {
+        return withContext(Dispatchers.IO) {
+            initWeatherData()
+            return@withContext forecastDao.getDetailedWeatherByDateTimestamp(dateStamp)
+        }
+    }
+
     override suspend fun getFutureWeatherByStartAndEndDate(
-        startDate: LocalDateTime,
-        endDate: LocalDateTime
+        startDate: Long,
+        endDate: Long
     ): LiveData<List<out FutureDayData>> {
         Log.d(TAG, "")
         return withContext(Dispatchers.IO) {
@@ -97,23 +105,23 @@ class FutureForecastRepositoryImpl(
     }
 
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
-        val thirtyMinAgo =
-            ZonedDateTime.now().minusMinutes(0)//30
+        val thirtySecAgo =
+            ZonedDateTime.now().minusSeconds(30)//30
         Log.e(
             TAG, "lastWeatherLocation == null ${lastWeatherLocation == null}" +
                     "|| locationProvider.hasLocationChanged(lastWeatherLocation) ${locationProvider.hasLocationChanged(
                         lastWeatherLocation ?: WeatherLocation()
                     )}" +
-                    "|| lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(
-                        thirtyMinAgo
+                    "|| lastWeatherLocation.zonedDateTime.isBefore(thirtySecAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(
+                        thirtySecAgo
                     )}" +
-                    "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
+                   // "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
                     "|| requireRefreshOfData $requireRefreshOfData"
         )
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
-                || lastWeatherLocation.zonedDateTime.isBefore(thirtyMinAgo)
-                || unitSystemProvider.hasUnitSystemChanged()
+                || lastWeatherLocation.zonedDateTime.isBefore(thirtySecAgo)
+                //|| unitSystemProvider.hasUnitSystemChanged()
                 || requireRefreshOfData
                 )
     }
@@ -149,6 +157,7 @@ class FutureForecastRepositoryImpl(
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 Log.d(TAG, "FetchedData: $fetchedFutureWeather")
+                //deleteOldEntities(fetchedFutureWeather)
                 forecastDao.insert(fetchedFutureWeather.list)
                 //forecastDao.insert(fetchedFutureWeather.list)
                 //weatherLocationDao.upsert(fetchedFutureWeather.city.name)
@@ -156,5 +165,14 @@ class FutureForecastRepositoryImpl(
                 Log.e(TAG, "$e")
             }
         }
+    }
+
+    private fun deleteOldEntities(fetchedFutureWeather: ForecastWeatherResponse) {
+        val firstDateToKeep = fetchedFutureWeather.list.first().dt
+        forecastDao.deleteOldEntries(
+            LocalDate.ofEpochDay(firstDateToKeep).atTime(LocalTime.MIN).toEpochSecond(
+                ZoneOffset.ofTotalSeconds(0)
+            )
+        )
     }
 }

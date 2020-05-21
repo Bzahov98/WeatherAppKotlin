@@ -1,7 +1,7 @@
 package com.bzahov.weatherapp.data.db
 
 import androidx.room.TypeConverter
-import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -12,16 +12,15 @@ public class LocalDateConverter() {
     @TypeConverter
     fun stringToDateTime(string: String?) = string?.let {
         val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_from_string_pattern))
+            DateTimeFormatter.ofPattern(getAppString(R.string.date_formatter_from_string_pattern))
         //  val dateString = dateTime.format(dtFormatter)
-        val result = LocalDateTime.parse(it, dtFormatter)
-        return@let result
+        return@let LocalDateTime.parse(it, dtFormatter)
     }
 
     @TypeConverter
     fun dateTimeToString(dateTime: LocalDateTime?): String? {
         val dtFormatter =
-            DateTimeFormatter.ofPattern(ForecastApplication.getAppString(R.string.date_formatter_from_string_pattern))
+            DateTimeFormatter.ofPattern(getAppString(R.string.date_formatter_from_string_pattern))
         return dateTime?.format(dtFormatter)
     }
 

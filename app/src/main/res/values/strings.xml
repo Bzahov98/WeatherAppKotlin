@@ -20,7 +20,7 @@
         <string name="image_weather_condition_description">Weather condition icon</string>
         // fragment descriptions (subtitle)
             <string name="current_weather_today">Today</string>
-            <string name="future_weather_five_days">Next 5 days</string>
+            <string name="future_weather_five_days_next">Next 5 days</string>
 
     // unit abbreviations
             <string name="percentage">%</string>
@@ -58,9 +58,24 @@
         <string name="date_formatter_from_string_pattern">yyyy-MM-d HH:mm:ss</string>
         <string name="date_formatter_pattern_hour_minutes_only" >HH:mm</string>
         <string name="date_formatter_pattern_day_month__only">EEE, MMM d</string>
-
     // others
+    <string name="weather_text_rain">Rain:</string>
+    <string name="weather_text_snow">Snow:</string>
+    <string name="weather_text_precipitation">Precipitation: </string>
+    <string name="weather_text_precipitation_snow">Precipitation in Snow:</string>
+    <string name="weather_text_precipitation_rain">Precipitation in Rain:</string>
+    <string name="weather_text_cloudiness">Cloudiness:</string>
+    <string name="weather_text_wind">\"Wind: "</string>
+    <string name="weather_text_feels_like">Feels like</string>
+    <string name="weather_text_visibility">Visibility: </string>
 
+
+    <string name="description_icon_day">DayIcon</string>
+    <string name="description_icon_night">NightIcon</string>
+    <string name="description_each_3_hours_of_day">Each 3 hours of day:</string>
+
+    <string name="tempView_title_day">Day Time</string>
+    <string name="tempView_title_night">Night Time</string>
 
 
 </resources>

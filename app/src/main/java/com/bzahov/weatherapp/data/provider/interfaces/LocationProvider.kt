@@ -11,4 +11,5 @@ interface LocationProvider {
     suspend fun getPreferredLocationString(): String
     fun isDeviceLocationSelected(): Boolean
     suspend fun getLastPhysicalDeviceLocation(): Location?
+    val offsetDateTime : Int
 }

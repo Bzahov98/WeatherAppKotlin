@@ -1,8 +1,6 @@
 package com.bzahov.weatherapp.ui.settings
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +13,10 @@ import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.provider.CUSTOM_LOCATION
 import com.bzahov.weatherapp.data.provider.UNIT_SYSTEM
 import com.bzahov.weatherapp.data.provider.USE_DEVICE_LOCATION
+import com.bzahov.weatherapp.internal.OtherUtils.Companion.isOnline
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
-
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
@@ -67,29 +66,28 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == UNIT_SYSTEM) {
             makeSelectablePreferences()
-
+            //if(viewModel.isMetric && sharedPreferences.get)
             Log.d(TAG, "notifyForUnitSystemChanged")
-            viewModel.notifyForUnitSystemChanged()
-
+            //viewModel.notifyForUnitSystemChanged()
+            launch {
+                viewModel.requestRefreshOfData();
+            }
+        }
+        if (key == CUSTOM_LOCATION || key == USE_DEVICE_LOCATION) {
+            launch {
+                viewModel.requestRefreshOfData();
+            }
         }
     }
 
     private fun makeSelectablePreferences() {
         val unitSystemPreference = preferenceManager.findPreference<ListPreference>(UNIT_SYSTEM)
-        unitSystemPreference?.isSelectable = isOnline()
+        unitSystemPreference?.isSelectable = isOnline(requireContext())
         val locationPreference =
             preferenceManager.findPreference<EditTextPreference>(CUSTOM_LOCATION)
-        locationPreference?.isSelectable = isOnline()
+        locationPreference?.isSelectable = isOnline(requireContext())
         val currentLocationPreference =
             preferenceManager.findPreference<SwitchPreference>(USE_DEVICE_LOCATION)
-        currentLocationPreference?.isSelectable = isOnline()
-    }
-
-    private fun isOnline(): Boolean {
-        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-        // QUESTION: deprecated?
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
+        currentLocationPreference?.isSelectable = isOnline(requireContext())
     }
 }

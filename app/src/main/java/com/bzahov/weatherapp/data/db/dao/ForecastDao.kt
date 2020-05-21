@@ -17,8 +17,11 @@ interface ForecastDao{
     @Query("select * from forecast_day where dtTxt = :date")
     fun getDetailedWeatherByDateString(date: String): LiveData<FutureDayData>
 
-    @Query("select * from forecast_day where date(dtTxt) = date(:date)")
-    fun getDetailedWeatherByDate(date: LocalDateTime): LiveData<FutureDayData>
+    @Query("select * from forecast_day where date(dtTxt) = date(:dateTime)")
+    fun getDetailedWeatherByDate(dateTime: LocalDateTime): LiveData<FutureDayData>
+
+    @Query("select * from forecast_day where dt = :dateStamp")
+    fun getDetailedWeatherByDateTimestamp(dateStamp: Long): LiveData<FutureDayData>
 
     @Query("select * from forecast_day where date(dtTxt) >= date(:startDate) ")
     fun getForecastWeather(startDate: LocalDate): LiveData<List<FutureDayData>>
@@ -26,12 +29,11 @@ interface ForecastDao{
     @Query("select count(futureID) from forecast_day where date(dtTxt) >= date(:startDate)")
     fun countFutureWeather(startDate: LocalDate): Int
 
-    @Query("delete from forecast_day where date(dtTxt) < date(:firstDateToKeep)")
-    fun deleteOldEntries(firstDateToKeep: LocalDate)
+    @Query("delete from forecast_day where dt < :firstDateToKeep")
+    fun deleteOldEntries(firstDateToKeep: Long)
 
-    @Query("select * from forecast_day where date(dtTxt) BETWEEN date(:startDate) AND date(:endDate)")
-
-    fun getDetailedWeatherByStartEndDate(startDate: LocalDateTime, endDate: LocalDateTime): LiveData<List<FutureDayData>>
+    @Query("select * from forecast_day where dt  BETWEEN :startDate AND :endDate")
+    fun getDetailedWeatherByStartEndDate(startDate: Long, endDate: Long): LiveData<List<FutureDayData>>
 
 //    @Transaction
 //    @Query("SELECT * FROM forecast_day where date(dtTxt) < date(:firstDateToKeep)")

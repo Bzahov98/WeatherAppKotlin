@@ -1,8 +1,8 @@
 package com.bzahov.weatherapp.data.network
 
 import android.content.Context
-import android.net.ConnectivityManager
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
+import com.bzahov.weatherapp.internal.OtherUtils.Companion.isOnline
 import com.bzahov.weatherapp.internal.exceptions.NoConnectivityException
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,16 +14,8 @@ class ConnectivityInterceptorImpl(
     private val appContext = context.applicationContext
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (!isOnline())
+        if (!isOnline(appContext))
             throw NoConnectivityException()
         return chain.proceed(chain.request())
-    }
-
-    private fun isOnline(): Boolean {
-        val connectivityManager = appContext.getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-        // QUESTION: deprecated?
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
     }
 }

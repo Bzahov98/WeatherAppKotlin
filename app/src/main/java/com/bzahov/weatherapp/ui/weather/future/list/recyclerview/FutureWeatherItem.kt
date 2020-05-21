@@ -1,12 +1,12 @@
 package com.bzahov.weatherapp.ui.weather.future.list.recyclerview
 
 import android.view.View
-import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
-import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_future_weather.view.*
@@ -27,24 +27,12 @@ class FutureWeatherItem(
         updateDate(view)
         updateTemperature(view)
         updateCondition(view)
-        updateIcon(view)
+        updateIcon(weatherEntry.weatherDetails.last().icon,view.futureConditionIcon)
     }
 
     private fun updateCondition(view: View) {
         view.futureConditionText.text = UIConverterFieldUtils.getAllDescriptionsString(weatherEntry.weatherDetails)
     }
-
-
-
-    private fun updateIcon(view: View) {
-        val iconNumber = weatherEntry.weatherDetails.last().icon
-        val iconUrl = UIConverterFieldUtils.getOpenWeatherIconUrl(iconNumber)
-        GlideApp.with(view)
-            .load(iconUrl)
-            .into(view.futureConditionIcon)
-    }
-
-
 
     private fun updateTemperature(view: View) {
         val temp = weatherEntry.main.temp
@@ -54,8 +42,8 @@ class FutureWeatherItem(
 
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
             isMetric,
-            ForecastApplication.getAppString(R.string.metric_temperature),
-            ForecastApplication.getAppString(R.string.imperial_temperature)
+            getAppString(R.string.metric_temperature),
+            getAppString(R.string.imperial_temperature)
         )
         view.futureTemperature.text = "${String.format("%.1f", temp)}$unitAbbreviation"
         view.futureFeelsLikeValue.text = "${String.format("%.1f", tempFeelsLike)}$unitAbbreviation"

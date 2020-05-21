@@ -1,283 +1,229 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/oneDayWeatherFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/oneDayWeatherFragment"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/oneDayMainInfo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    android:layout_height="wrap_content">
 
-
-        <TextView
-            android:id="@+id/oneDayWeatherDate"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="32dp"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
-            tools:text="1.1.2000" />
-
-        <TextView
-            android:id="@+id/oneDayTemperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:foregroundGravity="center"
-            android:text="0.0°C"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textSize="27sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
-            tools:text="23.0°C" />
-
-        <TextView
-                android:id="@+id/oneDayConditionText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-            app:layout_constraintEnd_toStartOf="@+id/guideline4"
-            app:layout_constraintStart_toStartOf="@+id/guideline6"
-            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
-            tools:text="Clear" />
-
-        <ImageView
-            android:id="@+id/oneDayConditionIcon"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.363"
-            app:layout_constraintWidth_percent="0.15"
-            tools:src="@drawable/ic_weather_sunny"
-            tools:tint="#f9a920" />
-
-        <TextView
-            android:id="@+id/oneDayFeelsLike"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-
-            android:foregroundGravity="center"
-            android:text="@string/feels_like"
-            android:textAlignment="viewStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
-            app:layout_constraintStart_toStartOf="@+id/oneDayTemperature"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayTemperature" />
-
-
-        <TextView
-            android:id="@+id/oneDayMaxTempText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="2dp"
-            android:foregroundGravity="center"
-            android:text="Max:"
-            android:textAlignment="viewStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/oneDayMinTemptText"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/oneDayMinTemptText"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayMinTemptText" />
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/oneDayMinMaxGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:constraint_referenced_ids="oneDayMinTemptText, oneDayMinTemp,oneDayMaxTempText, oneDayMaxTemp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/oneDayMinTemptText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="2dp"
-            android:foregroundGravity="center"
-            android:text="Min:"
-            android:textAlignment="viewStart"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
-            app:layout_constraintStart_toStartOf="@+id/oneDayFeelsLike"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayFeelsLike" />
-
-        <TextView
-            android:id="@+id/oneDayMinTemp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:foregroundGravity="center"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/oneDayFeelsLikeValue"
-            app:layout_constraintStart_toEndOf="@+id/oneDayMinTemptText"
-            app:layout_constraintTop_toTopOf="@+id/oneDayMinTemptText"
-            tools:text="22.0°C" />
-
-        <TextView
-            android:id="@+id/oneDayMaxTemp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:foregroundGravity="center"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/oneDayMinTemp"
-            app:layout_constraintStart_toEndOf="@+id/oneDayMaxTempText"
-            app:layout_constraintTop_toTopOf="@+id/oneDayMaxTempText"
-            tools:text="23.0°C" />
-
-        <TextView
-            android:id="@+id/oneDayFeelsLikeValue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:foregroundGravity="center"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/oneDayFeelsLike"
-            app:layout_constraintEnd_toEndOf="@+id/oneDayTemperature"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/oneDayFeelsLike"
-            tools:text="23.0°C" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineHorizont"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.125" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.13" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/oneDayHourlyInfo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/oneDayPerHourText"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/oneDayMainInfo"
             android:layout_width="match_parent"
-            android:text="Each 3 hours of day:"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/oneDayPerHourRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourText"
-            tools:itemCount="8"
-            tools:listitem="@layout/item_per_three_hours" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <!--<androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
->
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/oneDayGroupLoading"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            app:constraint_referenced_ids="oneDayProgressBarLoading, oneDayTextViewLoading"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ProgressBar
-            android:id="@+id/oneDayProgressBarLoading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:indeterminate="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/oneDayTextViewLoading"
+            <!--~~~~~~~~~~~~~~~~~Desciption and Day/Night icons~~~~~~~~~~~~~~~~~~~-->
+
+           <!-- <TextView
+                android:id="@+id/oneDayWeatherDate"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="32dp"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
+                tools:text="1.1.2000" />-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
+                app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--<TextView
+                android:id="@+id/oneDayConditionText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
+                app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
+                app:layout_constraintTop_toTopOf="@+id/guidelineHorizontalTop"
+                tools:text="Clear" />
+
+            <ImageView
+                android:id="@+id/oneDayConditionIcon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
+                tools:src="@drawable/ic_weather_sunny"
+                android:visibility="gone"
+                android:contentDescription="@string/description_icon_day"
+                tools:tint="#f9a920" />-->
+
+          <!--  <ImageView
+                android:id="@+id/oneNightConditionIcon"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
+                app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
+                tools:src="@drawable/nightclear"
+                android:contentDescription="@string/description_icon_night" />-->
+<!--~~~~~~~~~~~~~~~~~DayTimeText~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+            <include
+                android:id="@+id/oneDayTemperatureView"
+                layout="@layout/layout_temperature_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineLeftVertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/oneDayNightIconDescrView"
+                layout="@layout/layout_day_night_description_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/oneNightTemperatureView"
+                layout="@layout/layout_temperature_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guidelineRightVertical"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineRightVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.7" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineLeftVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.3" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineHorizontalTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.125" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineMiddleVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/oneDayHourlyInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textAlignment="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/loading_string"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/oneDayProgressBarLoading"
-            app:layout_constraintVertical_bias="0.0" />
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
-</LinearLayout>
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/oneDayPerHourText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/description_each_3_hours_of_day"
+                android:textAlignment="textStart"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/oneDayPerHourRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourText"
+                tools:itemCount="8"
+                tools:listitem="@layout/item_per_three_hours" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/oneDayGroupLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                app:constraint_referenced_ids="oneDayProgressBarLoading, oneDayTextViewLoading"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/oneDayProgressBarLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:indeterminate="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/oneDayTextViewLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/loading_string"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayProgressBarLoading"
+                app:layout_constraintVertical_bias="0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -22,7 +22,8 @@ class LocationProviderImpl(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     context: Context
 ) : PreferenceProvider(context), LocationProvider {
-
+    override val offsetDateTime: Int
+        get() = 10800
     override fun getLocationString(): String {
         return getCustomLocationName()!!
     }

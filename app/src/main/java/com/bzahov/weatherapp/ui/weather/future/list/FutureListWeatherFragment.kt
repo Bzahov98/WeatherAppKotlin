@@ -7,13 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.weather.future.list.recyclerview.FutureWeatherItem
 import com.xwray.groupie.GroupAdapter
@@ -38,11 +39,6 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.future_list_weather_fragment, container, false)
-        /*view.list_item.setOnClickListener{
-            val bla = "sa" + list_item.text
-            list_item.text = bla
-            launch { viewModel.requestRefreshOfData() }
-        }*/
         return view
     }
 
@@ -63,7 +59,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
                 Log.d(TAG, "buildUi $futureWeatherLiveData")
                 weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                     if (location == null) return@Observer
-                    updateLocation(location.name)
+                    updateLocation(location.name, requireActivity())
                     Log.d(TAG, "bindUI Update location with that data: $location")
                 })
 
@@ -95,8 +91,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun showWeatherDetail(/*dateTime: LocalDateTime*/string: String, view: View) {
-        val dtFormatter =
-            DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
+        val dtFormatter = DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
         //val dateString = dateTime.format(dtFormatter)
         val actionShowDetail =  FutureListWeatherFragmentDirections.actionShowDetail(string)// .onNestedPrePerformAccessibilityAction(view,)//.action(dateString)
         Navigation.findNavController(view).navigate(actionShowDetail)
@@ -110,18 +105,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateUI(allDays: List<FutureDayData>) {
         futureGroupLoading.visibility = View.GONE
-        //allDays.
-        updateActionBarDescription()
-
-    }
-
-    private fun updateLocation(location: String) {
-        (activity as? AppCompatActivity)?.supportActionBar?.title = location
-    }
-
-    private fun updateActionBarDescription() {
-        (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
-            getString(R.string.future_weather_five_days)
+        updateActionBarSubtitleWithResource(R.string.future_weather_five_days_next, requireActivity());
     }
 
     override fun onResume() {

@@ -5,13 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
@@ -58,7 +60,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
                 Log.e(TAG,"Location : $location")
-                updateLocation(location.name)
+                updateLocation(location.name, requireActivity())
                 Log.d(TAG, "Update location with that data: $location")
             })
 
@@ -73,7 +75,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     private fun updateUI(it: CurrentWeatherEntry) {
         currentGroupLoading.visibility = View.GONE
         updateCondition(it.weatherDescriptions.toString())
-        updateDateToToday()
+        updateActionBarSubtitleWithResource(R.string.current_weather_today,requireActivity())
         updatePrecipitation(it.precipation)
         updateTemperatures(it.temperature, it.feelslike)
         updateWind(it.dir, it.speed)
@@ -103,16 +105,6 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    // REWORK Return City object temporary FIX for: current location isn't changed and stay with name current_weather_fragment all city attributes are null
-    private fun updateLocation(location: String) {
-        (activity as? AppCompatActivity)?.supportActionBar?.title = location
-    }
-
-    private fun updateDateToToday() {
-        (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
-            getString(R.string.current_weather_today)
-    }
-
     private fun updateTemperatures(temp: Double, feelsLike: Double) {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
             viewModel.isMetric,
@@ -120,7 +112,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.imperial_temperature)
         )
         currentTextTemperature.text = "$temp$unitAbbreviation"
-        currentFeelsLikeTemperature.text = "Feels like $feelsLike$unitAbbreviation"
+        currentFeelsLikeTemperature.text = getString(R.string.weather_text_feels_like) +" $feelsLike$unitAbbreviation"
     }
 
     private fun updateCondition(condition: String) {
@@ -133,7 +125,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_precipitation),
             getString(R.string.imperial_precipitation)
         )
-        currentPrecipitation.text = "Precipitation: $precipitationVolume $unitAbbreviation"
+        currentPrecipitation.text = getString(R.string.weather_text_precipitation)+" $precipitationVolume $unitAbbreviation"
     }
 
     private fun updateWind(windDirection: String, windSpeed: Double) {
@@ -142,7 +134,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_speed),
             getString(R.string.imperial_speed)
         )
-        currentWind.text = "Wind: $windDirection, $windSpeed $unitAbbreviation"
+        currentWind.text = getAppString(R.string.weather_text_wind)+"$windDirection, $windSpeed $unitAbbreviation"
     }
 
     private fun updateVisibility(visibilityDistance: Double) {
@@ -151,7 +143,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             getString(R.string.metric_distance),
             getString(R.string.imperial_distance)
         )
-        currentVisibility.text = "Visibility: $visibilityDistance $unitAbbreviation"
+        currentVisibility.text = getAppString(R.string.weather_text_visibility)+ "$visibilityDistance $unitAbbreviation"
     }
 
     private suspend fun refreshWeather() {

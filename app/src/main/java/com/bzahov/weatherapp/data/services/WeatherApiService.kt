@@ -1,6 +1,6 @@
 package com.bzahov.weatherapp.data.services
 
-import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.network.RequestInterceptor
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
@@ -22,9 +22,9 @@ interface WeatherApiService {
     ) : Deferred<CurrentWeatherResponse>
     companion object{
         private const val TAG = "WeatherApiService"
-        private val API_KEY = ForecastApplication.getAppString(R.string.weather_stack_key)
-        private val API_URL = ForecastApplication.getAppString(R.string.weather_stack_url)
-        private val API_KEY_PARAM_NAME = ForecastApplication.getAppString(R.string.weather_stack_key_param)
+        private val API_KEY = getAppString(R.string.weather_stack_key)
+        private val API_URL = getAppString(R.string.weather_stack_url)
+        private val API_KEY_PARAM_NAME = getAppString(R.string.weather_stack_key_param)
 
         operator fun invoke(
             connectivityInterceptor: ConnectivityInterceptor

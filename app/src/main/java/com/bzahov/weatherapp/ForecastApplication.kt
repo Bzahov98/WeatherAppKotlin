@@ -79,7 +79,7 @@ class ForecastApplication : Application(), KodeinAware {
 
         //bind all fragment's view models
         bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance())}
-        bind() from provider { SettingsFragmentViewModelFactory(instance(),instance()) }
+        bind() from provider { SettingsFragmentViewModelFactory(instance(),instance(),instance()) }
         bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance()) }
         bind() from factory { detailDate: LocalDateTime -> FutureDetailWeatherViewModelFactory(detailDate,instance(),instance(),instance()) }
         bind() from provider { OneDayWeatherViewModelFactory(instance(),instance(),instance()) }
