@@ -10,7 +10,7 @@ import com.bzahov.weatherapp.internal.lazyDeferred
 abstract class FutureWeatherViewModel(
     private val forecastRepository: FutureForecastRepository,
     unitProvider: UnitProvider,
-    locationProvider: LocationProvider
+    private val locationProvider: LocationProvider
 ) : ViewModel() {
 
 
@@ -26,7 +26,10 @@ abstract class FutureWeatherViewModel(
         forecastRepository.getWeatherLocation()
     }
 
+    fun getTimeZoneOffsetInSeconds() = locationProvider.offsetDateTime
+
     suspend fun requestRefreshOfData() {
+        forecastRepository.requireRefreshOfData = true
         forecastRepository.requestRefreshOfData()
     }
 }

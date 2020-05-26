@@ -25,7 +25,7 @@ class FutureListWeatherViewModel(
 
     val forecastWeather by lazyDeferred {
         Log.d(TAG,"forecastWeatherDefered")
-        forecastRepository.getFutureWeather(LocalDate.now(),isMetric)
+        forecastRepository.getFutureWeather(LocalDate.now())
     }
 
     val weatherLocation by lazyDeferred {

@@ -14,7 +14,7 @@ import androidx.navigation.Navigation
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
-import com.bzahov.weatherapp.data.provider.TAG
+import com.bzahov.weatherapp.internal.OtherUtils.Companion.isDayTime
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
@@ -31,16 +31,12 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
-
+    private val TAG = "OneDayWeatherFragment"
     private lateinit var allWeatherData: List<FutureDayData>
     private lateinit var allDayWeatherData: List<FutureDayData>
-    private lateinit var allNightweatherData: List<FutureDayData>
+    private lateinit var allNightWeatherData: List<FutureDayData>
 
     private lateinit var viewModel: OneDayWeatherViewModel
     override val kodein by closestKodein()
@@ -83,22 +79,17 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
                 if (it == null) return@Observer
 
                 allWeatherData = it
-                /*if (allWeatherDataForCurrentDay.isEmpty()) {
-                     launch {
-                        viewModel.requestRefreshOfData()
-                    }
-                    return@Observer
-                }*/
                 if (allWeatherData.isNullOrEmpty()) {
                     Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
                     launch {
                         viewModel.requestRefreshOfData()
                     }
                     return@Observer
-                }
+                } else {
 
-                updateUI(it)
-                initRecyclerView(it.toHourInfoItems())
+                    updateUI()
+                    initRecyclerView(toHourInfoItems())
+                }
             })
         }
     }
@@ -117,64 +108,58 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
                 "Clicked: ${itemDetail.dtTxt}",
                 Toast.LENGTH_SHORT
             ).show()
-            Log.e(TAG, "\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
+            Log.e(TAG, "GroupAdapter.setOnItemClickListener ${itemDetail}\n")
             showHourInfoDetails(itemDetail.dtTxt, view)
         }
     }
 
     private fun showHourInfoDetails(dtTxt: String, view: View) {
-        val dtFormatter =
-            DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
-        //val dateString = dateTime.format(dtFormatter)
         val actionShowDetail =
-            OneDayWeatherFragmentDirections.actionShowDetail(dtTxt)// .onNestedPrePerformAccessibilityAction(view,)//.action(dateString)
+            OneDayWeatherFragmentDirections.actionShowDetail(dtTxt)
         Navigation.findNavController(view).navigate(actionShowDetail)
     }
 
-    private fun List<FutureDayData>.toHourInfoItems(): List<HourInfoItem> {
-        val dayForShow =
-            LocalDate.now().dayOfMonth.toString()
-        val monthForShow =
-            LocalDate.now().month.toString()
-        Log.d(
-            TAG,
-            "random dt_text: ${this.last().dtTxt} and contains phase: >>$dayForShow:$monthForShow<</n"
-        )
-        ///allWeatherDataForCurrentDay = this.filter { it.dtTxt.contains("$dayForShow:$monthForShow") }
-        if (viewModel.hasUnitSystemChanged()) {
-            /*launch {
-                viewModel.requestRefreshOfData()
-                viewModel.unitProvider.notifyNoNeedToChangeUnitSystem()
-            }*/
-        }
+    private fun toHourInfoItems(): List<HourInfoItem> {
         return allWeatherData.map {
-            HourInfoItem(it, viewModel.isMetric)
+            HourInfoItem(it, viewModel.isMetric, viewModel.getTimeZoneOffsetInSeconds())
         }.apply { }
     }
 
-    private fun updateUI(it: List<FutureDayData>) {
+    private fun updateUI() {
         oneDayGroupLoading.visibility = View.GONE
-        updateActionBarDescription()
         updateDayTemperatures(requireView().oneDayTemperatureView)
         updateNightTemperatures(requireView().oneNightTemperatureView)
+        updateActionBarDescription()
         updateConditionIconsView(requireView().oneDayNightIconDescrView)
 
     }
 
     private fun updateConditionIconsView(view: View) {
-        val dayWeatherDetailsLast = allDayWeatherData.first().weatherDetails.first()
-        val nightWeatherDetailsLast = allNightweatherData.first().weatherDetails.first()
-        view.iconDayViewConditionText.text = dayWeatherDetailsLast.description
-        view.iconNightViewConditionText.text = dayWeatherDetailsLast.description
-        val nightIconNumber = dayWeatherDetailsLast.icon
-        val dayIconNumber = nightWeatherDetailsLast.icon
-        updateIcon(nightIconNumber, view.iconViewNightConditionIcon)
-        updateIcon(dayIconNumber, view.iconViewDayConditionIcon)
+        if (allDayWeatherData.isNotEmpty()) {
+            val dayWeatherDetailsLast = allDayWeatherData.random().weatherDetails.random()
+            view.iconDayViewConditionText.text = dayWeatherDetailsLast.description
+
+            val dayIconNumber = dayWeatherDetailsLast.icon
+            updateIcon(dayIconNumber, view.iconViewDayConditionIcon)
+        } else {
+            Log.e(TAG, "allDayWeatherData is EMPTY")
+        }
+        if (allNightWeatherData.isNotEmpty()) {
+            val nightWeatherDetailsLast = allNightWeatherData.last().weatherDetails.random()
+            val nightIconNumber = nightWeatherDetailsLast.icon
+
+            view.iconNightViewConditionText.text = nightWeatherDetailsLast.description
+            updateIcon(nightIconNumber, view.iconViewNightConditionIcon)
+
+        } else {
+            Log.e(TAG, "allNightWeatherData is EMPTY")
+            view.iconNightViewConditionText.text = getString(R.string.error_no_info)
+        }
     }
 
 
     private fun updateDayTemperatures(view: View) {
-        allDayWeatherData = allWeatherData.filter(isDayTime())
+        allDayWeatherData = allWeatherData.filter(isDayTime(viewModel.getTimeZoneOffsetInSeconds()))
 
         view.tempViewTittleText.text =
             ForecastApplication.getAppString(R.string.tempView_title_day)
@@ -182,11 +167,12 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateNightTemperatures(view: View) {
-        allNightweatherData = allWeatherData.filterNot(isDayTime())
+        allNightWeatherData =
+            allWeatherData.filterNot(isDayTime(viewModel.getTimeZoneOffsetInSeconds()))
         view.tempViewTittleText.text =
             ForecastApplication.getAppString(R.string.tempView_title_night)
 
-        fillTempViews(allNightweatherData, view)
+        fillTempViews(allNightWeatherData, view)
     }
 
     private fun fillTempViews(data: List<FutureDayData>, view: View) {
@@ -221,34 +207,19 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         return result
     }
 
-    private fun isDayTime(): (FutureDayData) -> Boolean {
-        return {
-            // REWORK Fix Offset
-            val currentDay = LocalDateTime.ofEpochSecond(it.dt, 0, ZoneOffset.ofTotalSeconds(0))
-            currentDay.isAfter(currentDay.withHour(8)).and(
-                currentDay.isBefore(currentDay.withHour(20))
-            )
-        }
-    }
-
-
     private fun updateActionBarDescription() {
 
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle =
-            UIConverterFieldUtils.dateTimestampToDateString(allWeatherData[0].dt)
+            UIConverterFieldUtils.dateTimestampToDateString(
+                allWeatherData[0].dt,
+                viewModel.getTimeZoneOffsetInSeconds()
+            )
     }
 
     override fun onResume() {
         super.onResume()
         bindUI()
     }
-
-    private fun updateDate() {
-        /*oneDayWeatherDate.text =
-            UIConverterFieldUtils.dateTimestampToDateString(allWeatherDataForCurrentDay.get(1).dt)
-*/
-    }
-
 }
 
 class MinMaxAvgTemp() {

@@ -23,11 +23,8 @@ class OneDayWeatherViewModel(
         resetStartEndDates()
     }
 
-    lateinit var startDateQuery: LocalDateTime /*= LocalDate.now().atStartOfDay() // LocalDateTime.now().minusHours(2).minusMinutes(55)*/
-    private lateinit var endDateQuery: LocalDateTime/*= LocalDate.now().atTime(LocalTime.MAX).minusMinutes(4)/*LocalDateTime = LocalDateTime.of(
-        startDateQuery.toLocalDate(),
-        LocalDate.now().atTime(LocalTime.MAX).toLocalTime()*/
-      // LocalDate.now().atTime(LocalTime.MAX)*/
+    lateinit var startDateQuery: LocalDateTime
+    private lateinit var endDateQuery: LocalDateTime
 
     val weather by lazyDeferred {
         Log.e(
@@ -41,7 +38,7 @@ class OneDayWeatherViewModel(
             )
         )
         val endDateLong =
-            endDateQuery.toEpochSecond(ZoneOffset.ofTotalSeconds(locationProvider.offsetDateTime))
+            endDateQuery.minusSeconds(1).toEpochSecond(ZoneOffset.ofTotalSeconds(locationProvider.offsetDateTime))
 
         return@lazyDeferred forecastRepository.getFutureWeatherByStartAndEndDate(
             startDateLong,
@@ -49,19 +46,9 @@ class OneDayWeatherViewModel(
         )
     }
 
-    fun resetStartEndDates() {
-
-        startDateQuery = LocalDate.now().plusDays(1).atStartOfDay()
-
-
-        endDateQuery = LocalDate.now().atTime(LocalTime.MIDNIGHT).plusDays(2)
+    fun resetStartEndDates(addAdditionDays : Long = 1L) {
+        startDateQuery = LocalDate.now().plusDays(addAdditionDays).atStartOfDay()
+        endDateQuery = LocalDate.now().atTime(LocalTime.MIDNIGHT).plusDays(addAdditionDays+1)
         Log.e(TAG, "resetDates with startDate $startDateQuery and endDate $endDateQuery\n")
     }
-    /*fun resetStartEndDates() {
-        Log.e(TAG, "resetDates with startDate $startDateQuery and endDate $endDateQuery")
-        startDateQuery = LocalDateTime.now().minusHours(2).minusMinutes(55)
-        endDateQuery = LocalDate.now().atTime(LocalTime.MAX)
-    }*/
-
-    fun hasUnitSystemChanged() = unitProvider.hasUnitSystemChanged()
 }

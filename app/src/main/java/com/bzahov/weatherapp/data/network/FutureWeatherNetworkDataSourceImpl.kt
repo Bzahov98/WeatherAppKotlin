@@ -16,6 +16,7 @@ class FutureWeatherNetworkDataSourceImpl(
     override val downloadedFutureWeather: LiveData<ForecastWeatherResponse>
         get() = downloadedFutureWeatherMutable
 private val TAG = "TAG_fetchForecastWeather"
+
     override suspend fun fetchForecastWeather(location: String, unit: String) {
         try {
             val fetchedForecastWeather = weatherApiService
@@ -23,7 +24,7 @@ private val TAG = "TAG_fetchForecastWeather"
                 .await()
             downloadedFutureWeatherMutable.postValue(fetchedForecastWeather)
 
-            Log.d(TAG, "fetchForecastWeather ( $location, null, null,  $unit)\nResponce: $fetchedForecastWeather \n")
+            Log.d(TAG, "fetchForecastWeather ( $location, null, null,  $unit)\nResponse: $fetchedForecastWeather \n")
         } catch (ignored: NoConnectivityException) {
             Log.e(TAG, "No Internet Connection:")
         }
@@ -37,7 +38,7 @@ private val TAG = "TAG_fetchForecastWeather"
 
             downloadedFutureWeatherMutable.postValue(fetchedForecastWeather)
 
-            Log.d(TAG, "fetchForecastWeatherWithCoords ( null, $lat, $lon,  $unit)  responce: $fetchedForecastWeather \n")
+            Log.d(TAG, "fetchForecastWeatherWithCoords ( null, $lat, $lon,  $unit)  response: $fetchedForecastWeather \n")
         } catch (ignored: NoConnectivityException) {
             Log.e(TAG, "No Internet Connection:")
         }
@@ -51,7 +52,7 @@ private val TAG = "TAG_fetchForecastWeather"
                 .await()
             downloadedFutureWeatherMutable.postValue(fetchedForecastWeather)
 
-            Log.d(TAG, "fetchForecastWeatherWithLocation ( null, ${locationCity.lat}, ${locationCity.lon},  $unit)  responce: $fetchedForecastWeather \n")
+            Log.d(TAG, "fetchForecastWeatherWithLocation ( null, ${locationCity.lat}, ${locationCity.lon},  $unit)  response: $fetchedForecastWeather \n")
         } catch (ignored: NoConnectivityException) {
             Log.e(TAG, "No Internet Connection:")
         }

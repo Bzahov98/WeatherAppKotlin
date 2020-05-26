@@ -14,15 +14,12 @@ class CurrentWeatherViewModel(
 ) : ViewModel() {
 
     private val unitSystem = unitProvider.getUnitSystem()
-   // private val locationSystem = locationProvider.getLocation()
 
     val isMetric: Boolean
         get() = unitSystem == UnitSystem.METRIC
-//    val location: String
-//        get() = locationSystem
 
     val weather by lazyDeferred {
-        currentForecastRepository.getCurrentWeather(isMetric)
+        currentForecastRepository.getCurrentWeather()
     }
 
     val weatherLocation by lazyDeferred{

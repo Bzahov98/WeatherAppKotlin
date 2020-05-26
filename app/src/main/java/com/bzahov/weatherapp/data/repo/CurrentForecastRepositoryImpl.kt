@@ -12,7 +12,6 @@ import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
 import com.bzahov.weatherapp.data.response.current.CurrentWeatherResponse
-import com.bzahov.weatherapp.internal.enums.UnitSystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,7 +28,8 @@ class CurrentForecastRepositoryImpl(
     private val unitSystemProvider: UnitProvider,
     private val currentWeatherNetworkDataSource: CurrentWeatherNetworkDataSource
 ) : CurrentForecastRepository {
-    val requireRefreshOfData = false
+    override var requireRefreshOfData = false
+
     init {
         currentWeatherNetworkDataSource.downloadedCurrentWeather.observeForever {
             persistFetchedCurrentWeather(it)
@@ -37,15 +37,12 @@ class CurrentForecastRepositoryImpl(
     }
 
 
-    override suspend fun getCurrentWeather( isMetric: Boolean )
+    override suspend fun getCurrentWeather()
             : LiveData<out CurrentWeatherEntry> { // REWORK i can remove that :)
-        val resultData  = withContext(Dispatchers.IO) {
-            val unitSystem = UnitSystem.getUrlToken(isMetric) // Rework maybe rework it  i can remove that :)
-            initWeatherData(unitSystem)
-                return@withContext currentWeatherDao.getCurrentWeather()
+        return withContext(Dispatchers.IO) {
+            initWeatherData()
+            return@withContext currentWeatherDao.getCurrentWeather()
         }
-        //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
-        return resultData
     }
 
 
@@ -60,18 +57,21 @@ class CurrentForecastRepositoryImpl(
             try {
                 currentWeatherDao.upsert(fetchedWeather.currentWeatherEntry)
                 weatherLocationDao.upsert(fetchedWeather.location)
+            } catch (e: NullPointerException) {
+                locationProvider.resetCustomLocationToDefault()
+                requireRefreshOfData = true
             } catch (e: SQLiteException) {
                 Log.e(TAG, "$e")
             }
         }
     }
-    // REWORK i can remove that and remove unitSystem param:)
-    private suspend fun initWeatherData(unitSystem: String) {
+
+    private suspend fun initWeatherData() {
 
         val lastWeatherLocation = weatherLocationDao.getLocationNotLive()
         if (isFetchNeeded(lastWeatherLocation)
         ) {
-            fetchCurrentWeather(unitSystem)
+            fetchCurrentWeather()
         } else {
             Log.e(TAG, "don't fetch data from api")
         } // don't fetch data
@@ -79,7 +79,7 @@ class CurrentForecastRepositoryImpl(
 
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
         val thirtyMinAgo =
-            ZonedDateTime.now().minusMinutes(1)//30
+            ZonedDateTime.now().minusSeconds(SECONDS_BETWEEN_REFRESH)//30
 
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
@@ -89,16 +89,16 @@ class CurrentForecastRepositoryImpl(
                 )
     }
 
-    private suspend fun fetchCurrentWeather(unitSystem: String) {
+    private suspend fun fetchCurrentWeather() {
 
         currentWeatherNetworkDataSource.fetchCurrentWeather(
             locationProvider.getPreferredLocationString(),
-            unitSystem
+            unitSystemProvider.getUnitSystem().urlToken
         )
     }
 
-    override suspend fun requestRefreshOfData(){
-        fetchCurrentWeather(unitSystemProvider.getUnitSystem().urlToken)
+    override suspend fun requestRefreshOfData() {
+        fetchCurrentWeather()
     }
 }
 

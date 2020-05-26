@@ -21,7 +21,7 @@ interface OpenWeatherApiService {
         @Query("q") location: String? ,
         @Query("lat") lat: Double? ,
         @Query("lon") lon: Double? ,
-        @Query("units") unit: String = "metric"
+        @Query("units") unit: String = getAppString(R.string.default_open_unit_system)
     ) : Deferred<ForecastWeatherResponse>
     companion object{
         private const val TAG = "OpenWeatherApiService"
@@ -38,21 +38,19 @@ interface OpenWeatherApiService {
                 .addInterceptor(connectivityInterceptor)
                 .build()
 
-            val create = Retrofit.Builder()
+
+            return Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(API_URL)
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(OpenWeatherApiService::class.java)
-
-
-            return create
         }
         suspend fun test(create:OpenWeatherApiService){
-            val list = create.getForecastWeatherAsync("Sofia",null,null).await().toString()
+            val list = create.getForecastWeatherAsync(getAppString(R.string.default_location),null,null).await().toString()
             val list2 = create.getForecastWeatherAsync(null,42.2,23.2).await().toString()
-            Log.e("SSS", "RRR $list")
+            Log.e("SSS", "RRR $list RRR $list2")
         }
     }
 }

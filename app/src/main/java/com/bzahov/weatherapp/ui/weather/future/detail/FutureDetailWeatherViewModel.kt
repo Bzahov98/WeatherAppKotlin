@@ -15,20 +15,19 @@ class FutureDetailWeatherViewModel(
     unitProvider: UnitProvider,
     locationProvider: LocationProvider
 ) : FutureWeatherViewModel(forecastRepository,unitProvider,locationProvider) {
-    val TAG = "FutureDetailWeatherViewModel"
+    private val TAG = "FutureDetailWeatherViewModel"
+    private var detailDateTimeStamp: Long = 0L
 
     init {
         resetStartEndDates()
     }
 
-    private fun resetStartEndDates() {
-        detailDateTimeStapm = detailDate.toEpochSecond(ZoneOffset.ofTotalSeconds(0))
+    val weather by lazyDeferred {
+        Log.e(TAG,"getFutureWeatherByDate with detailDate $detailDateTimeStamp")
+        return@lazyDeferred forecastRepository.getFutureWeatherByDateTimestamp(detailDateTimeStamp)
     }
 
-    var detailDateTimeStapm: Long = 0
-
-    val weather by lazyDeferred {
-            Log.e(TAG,"getFutureWeatherByDate with detailDate $detailDateTimeStapm")
-         return@lazyDeferred forecastRepository.getFutureWeatherByDateTimestamp(detailDateTimeStapm, super.isMetric)
+    private fun resetStartEndDates() {
+        detailDateTimeStamp = detailDate.toEpochSecond(ZoneOffset.ofTotalSeconds(getTimeZoneOffsetInSeconds()))
     }
 }

@@ -13,7 +13,6 @@ public class LocalDateConverter() {
     fun stringToDateTime(string: String?) = string?.let {
         val dtFormatter =
             DateTimeFormatter.ofPattern(getAppString(R.string.date_formatter_from_string_pattern))
-        //  val dateString = dateTime.format(dtFormatter)
         return@let LocalDateTime.parse(it, dtFormatter)
     }
 

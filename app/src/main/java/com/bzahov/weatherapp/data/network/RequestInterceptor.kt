@@ -4,7 +4,6 @@ import android.util.Log
 import okhttp3.Interceptor
 
 class RequestInterceptor() {
-
     companion object {
 
         private val TAG = "RequestInterceptor"

@@ -4,16 +4,20 @@ import android.view.View
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateWind
+import com.bzahov.weatherapp.internal.enums.WindDirections
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_per_three_hours.view.*
 
 data class HourInfoItem(
     val weatherEntry: FutureDayData,
-    val isMetric: Boolean
+    val isMetric: Boolean,
+    val timeZoneOffsetInSeconds : Int = 0
 ) : Item() {
 
     override fun getLayout() = R.layout.item_per_three_hours
@@ -28,11 +32,18 @@ data class HourInfoItem(
     private fun updateViewData(view: View) {
         updateHourText(view)
         updateIcon(weatherEntry.weatherDetails.last().icon,view.perThreeHoursIcon)
+        updateWindUI(weatherEntry.wind,view)
         updateTemperature(view)
     }
 
+    private fun updateWindUI(wind: Wind, view: View) {
+        val windDirection = WindDirections.getWindDirectionByDouble(wind.deg)
+        view.perThreeHoursIcon.setImageResource(windDirection.image)
+        updateWind(wind,isMetric,view.perThreeHoursWindSpeedInfo)
+    }
+
     private fun updateHourText(view: View) {
-        view.perThreeHoursHourInfo.text = UIConverterFieldUtils.dateTimestampToTimeString(weatherEntry.dt)
+        view.perThreeHoursHourInfo.text = UIConverterFieldUtils.dateTimestampToTimeString(weatherEntry.dt, timeZoneOffsetInSeconds )
     }
 
     private fun updateTemperature(view: View) {

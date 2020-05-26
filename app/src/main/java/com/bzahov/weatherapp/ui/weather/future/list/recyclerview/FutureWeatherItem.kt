@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.item_future_weather.view.*
 
 class FutureWeatherItem(
     val weatherEntry: FutureDayData,
-    val isMetric: Boolean
+    val isMetric: Boolean,
+    val timeZoneOffsetInSeconds : Int = 0
 ) : Item() {
     override fun getLayout() = R.layout.item_future_weather
     override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -58,7 +59,7 @@ class FutureWeatherItem(
     }
 
     private fun updateDate(view: View) {
-        view.futureWeatherDate.text = UIConverterFieldUtils.dateTimestampToDateTimeString(weatherEntry.dt)
+        view.futureWeatherDate.text = UIConverterFieldUtils.dateTimestampToDateTimeString(weatherEntry.dt,timeZoneOffsetInSeconds)
     }
 }
 

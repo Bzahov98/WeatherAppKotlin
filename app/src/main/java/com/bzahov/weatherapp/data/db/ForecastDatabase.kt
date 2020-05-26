@@ -16,7 +16,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
 
 @Database(
     entities = [CurrentWeatherEntry::class, WeatherLocation::class, FutureDayData::class, WeatherDetails::class],
-    version =13,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(DateConverters::class, LocalDateConverter::class)
@@ -37,13 +37,8 @@ abstract class ForecastDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 ForecastDatabase::class.java, "forecast.db"
-               // ForecastDatabase::class.java, "weatherApp.db"
             )
                 .fallbackToDestructiveMigration()
                 .build()
-
-
     }
-
-
 }

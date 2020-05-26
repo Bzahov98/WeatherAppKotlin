@@ -8,6 +8,10 @@ data class City(
     val lon: Double,
     val name: String,
     val country: String,
+    val timezone: Int,
+    val population : Long?,
+    val sunrise : Long?,
+    val sunset : Long?,
     @SerializedName("city.id")
     val openWeatherCityID: Int? = 0 // openweatherCityID
 )

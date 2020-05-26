@@ -7,27 +7,38 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.current.WeatherLocation
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.internal.asDeferred
 import com.bzahov.weatherapp.internal.exceptions.LocationPermissionNotGrantedException
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlin.math.abs
 
 
 const val CUSTOM_LOCATION = "CUSTOM_LOCATION"
 const val USE_DEVICE_LOCATION = "USE_DEVICE_LOCATION"
+const val DEFAULT_TIMEZONE_OFFSET = 0
 
 class LocationProviderImpl(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
-    context: Context
+    val context: Context
 ) : PreferenceProvider(context), LocationProvider {
-    override val offsetDateTime: Int
-        get() = 10800
+
+    override var offsetDateTime: Int = DEFAULT_TIMEZONE_OFFSET
+
+    override fun resetCustomLocationToDefault() {
+        val defaultLocation = ForecastApplication.getAppString(R.string.default_location)
+        preferences.edit().putString(CUSTOM_LOCATION,
+            defaultLocation
+        ).apply()
+        Log.e(TAG,"Wrong Location! Reset custom location to default: $defaultLocation")
+    }
+
     override fun getLocationString(): String {
         return getCustomLocationName()!!
     }
-
 
     override suspend fun hasLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {
         val deviceLocationChanged = try {
@@ -52,7 +63,6 @@ class LocationProviderImpl(
                     TAG,
                     ">>>getPreferredLocationString 2)new location is: ${deviceLocation.latitude},${deviceLocation.longitude} "
                 )
-                // return getLocationStringBasedOnProvider(deviceLocation)
                 return "${deviceLocation.latitude},${deviceLocation.longitude}"
             } catch (e: LocationPermissionNotGrantedException) {
                 Log.d(
@@ -64,10 +74,6 @@ class LocationProviderImpl(
         } else
             Log.d(TAG, "getPreferredLocationString 4)new location is: $customLocationName")
         return customLocationName
-    }
-
-    private fun getLocationStringBasedOnProvider(deviceLocation: Location): String {
-        return if (isUsingDeviceLocation()) "${deviceLocation.latitude},${deviceLocation.longitude}" else "lat=${deviceLocation.latitude}&lon=${deviceLocation.longitude}"
     }
 
     override fun isDeviceLocationSelected(): Boolean {
@@ -82,10 +88,8 @@ class LocationProviderImpl(
             ?: return false
 
         val comparisonThreshold = 0.03
-        val result =
-            Math.abs(deviceLocation.latitude - lastWeatherLocation.lat) > comparisonThreshold &&
-                    Math.abs(deviceLocation.longitude - lastWeatherLocation.lon) > comparisonThreshold
-        return result
+        return abs(deviceLocation.latitude - lastWeatherLocation.lat) > comparisonThreshold &&
+                abs(deviceLocation.longitude - lastWeatherLocation.lon) > comparisonThreshold
     }
 
     private fun hasCustomLocationChanged(lastWeatherLocation: WeatherLocation): Boolean {

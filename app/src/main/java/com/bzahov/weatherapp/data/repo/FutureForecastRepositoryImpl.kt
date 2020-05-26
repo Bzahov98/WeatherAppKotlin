@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import java.time.*
 
 private val TAG = "FutureRepositoryImpl"
+const val SECONDS_BETWEEN_REFRESH = 30L
 
 class FutureForecastRepositoryImpl(
     private val forecastDao: ForecastDao,
@@ -27,7 +28,8 @@ class FutureForecastRepositoryImpl(
     private val unitSystemProvider: UnitProvider,
     private val futureWeatherNetworkDataSource: FutureWeatherNetworkDataSource
 ) : FutureForecastRepository {
-    val requireRefreshOfData = false
+
+    override var requireRefreshOfData = false
 
     init {
         futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever {
@@ -35,12 +37,10 @@ class FutureForecastRepositoryImpl(
         }
     }
 
-    // REWORK maybe remove isMetric it  i can remove that :)
     override suspend fun getFutureWeather(
-        today: LocalDate,
-        isMetric: Boolean
-    ): LiveData<List<out FutureDayData>> {
-        Log.d(TAG, "")
+        today: LocalDate
+    ): LiveData<List<FutureDayData>> {
+        Log.d(TAG, "getFutureWeather")
         //unitSystemProvider.notifyNoNeedToChangeUnitSystem()
         return withContext(Dispatchers.IO) {
             initWeatherData()
@@ -51,10 +51,9 @@ class FutureForecastRepositoryImpl(
     }
 
     override suspend fun getFutureWeatherByDate(
-        dateTime: LocalDateTime,
-        isMetric: Boolean
-    ): LiveData<out FutureDayData> {
-        Log.d(TAG, "")
+        dateTime: LocalDateTime
+    ): LiveData<FutureDayData> {
+        Log.d(TAG, "getFutureWeatherByDate")
         return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext forecastDao.getDetailedWeatherByDate(dateTime)
@@ -62,9 +61,8 @@ class FutureForecastRepositoryImpl(
     }
 
     override suspend fun getFutureWeatherByDateTimestamp(
-        dateStamp: Long,
-        isMetric: Boolean
-    ): LiveData<out FutureDayData> {
+        dateStamp: Long
+    ): LiveData<FutureDayData> {
         return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext forecastDao.getDetailedWeatherByDateTimestamp(dateStamp)
@@ -74,11 +72,11 @@ class FutureForecastRepositoryImpl(
     override suspend fun getFutureWeatherByStartAndEndDate(
         startDate: Long,
         endDate: Long
-    ): LiveData<List<out FutureDayData>> {
-        Log.d(TAG, "")
+    ): LiveData<List<FutureDayData>> {
+        Log.d(TAG, "getFutureWeatherByStartAndEndDate")
         return withContext(Dispatchers.IO) {
             initWeatherData()
-            return@withContext forecastDao.getDetailedWeatherByStartEndDate(startDate,endDate)
+            return@withContext forecastDao.getDetailedWeatherByStartEndDate(startDate, endDate)
         }
     }
 
@@ -101,12 +99,13 @@ class FutureForecastRepositoryImpl(
             fetchFutureWeather()
         } else {
             Log.e(TAG, "don't fetch data from api")
-        } // don't fetch data
+        }
     }
 
     private suspend fun isFetchNeeded(lastWeatherLocation: WeatherLocation?): Boolean {
+
         val thirtySecAgo =
-            ZonedDateTime.now().minusSeconds(30)//30
+            ZonedDateTime.now().minusSeconds(SECONDS_BETWEEN_REFRESH)//30
         Log.e(
             TAG, "lastWeatherLocation == null ${lastWeatherLocation == null}" +
                     "|| locationProvider.hasLocationChanged(lastWeatherLocation) ${locationProvider.hasLocationChanged(
@@ -115,13 +114,11 @@ class FutureForecastRepositoryImpl(
                     "|| lastWeatherLocation.zonedDateTime.isBefore(thirtySecAgo) ${lastWeatherLocation?.zonedDateTime?.isBefore(
                         thirtySecAgo
                     )}" +
-                   // "|| unitSystemProvider.hasUnitSystemChanged() ${unitSystemProvider.hasUnitSystemChanged()}" +
                     "|| requireRefreshOfData $requireRefreshOfData"
         )
         return (lastWeatherLocation == null
                 || locationProvider.hasLocationChanged(lastWeatherLocation)
                 || lastWeatherLocation.zonedDateTime.isBefore(thirtySecAgo)
-                //|| unitSystemProvider.hasUnitSystemChanged()
                 || requireRefreshOfData
                 )
     }
@@ -130,8 +127,7 @@ class FutureForecastRepositoryImpl(
 
         val unitSystem = unitSystemProvider.getUnitSystem().urlOpenWeatherToken
         val lastPhysicalLocation =
-            locationProvider.getLastPhysicalDeviceLocation()//WeatherLocation(City(34.2,32.12,"DebugCity",""))//weatherLocationDao.getLocation().value
-
+            locationProvider.getLastPhysicalDeviceLocation()
         if (lastPhysicalLocation == null || !locationProvider.isDeviceLocationSelected()) {
             val location = locationProvider.getLocationString()
             Log.d(TAG, "FetchFutureWeather with LocationString $location and unit $unitSystem")
@@ -157,10 +153,13 @@ class FutureForecastRepositoryImpl(
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 Log.d(TAG, "FetchedData: $fetchedFutureWeather")
-                //deleteOldEntities(fetchedFutureWeather)
+                deleteOldEntities(fetchedFutureWeather)
                 forecastDao.insert(fetchedFutureWeather.list)
+                locationProvider.offsetDateTime = fetchedFutureWeather.city.timezone
                 //forecastDao.insert(fetchedFutureWeather.list)
                 //weatherLocationDao.upsert(fetchedFutureWeather.city.name)
+            } catch (e: NullPointerException) {
+                locationProvider.resetCustomLocationToDefault()
             } catch (e: SQLiteException) {
                 Log.e(TAG, "$e")
             }
@@ -171,7 +170,7 @@ class FutureForecastRepositoryImpl(
         val firstDateToKeep = fetchedFutureWeather.list.first().dt
         forecastDao.deleteOldEntries(
             LocalDate.ofEpochDay(firstDateToKeep).atTime(LocalTime.MIN).toEpochSecond(
-                ZoneOffset.ofTotalSeconds(0)
+                ZoneOffset.ofTotalSeconds(locationProvider.offsetDateTime)
             )
         )
     }

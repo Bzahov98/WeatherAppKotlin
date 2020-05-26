@@ -7,22 +7,19 @@ import java.time.LocalDateTime
 
 interface FutureForecastRepository : Repository {
     suspend fun getFutureWeather(
-        today: LocalDate,
-        isMetric: Boolean
-    ): LiveData<List<out FutureDayData>>
+        today: LocalDate
+    ): LiveData<List<FutureDayData>>
 
     suspend fun getFutureWeatherByDate(
-        dateTime: LocalDateTime,
-        isMetric: Boolean
-    ): LiveData<out FutureDayData>
+        dateTime: LocalDateTime
+    ): LiveData<FutureDayData>
 
     suspend fun getFutureWeatherByDateTimestamp(
-        dateStamp: Long,
-        isMetric: Boolean
-    ): LiveData<out FutureDayData>
+        dateStamp: Long
+    ): LiveData<FutureDayData>
 
     suspend fun getFutureWeatherByStartAndEndDate(
         startDate: Long,
         endDate: Long
-    ): LiveData<List<out FutureDayData>>
+    ): LiveData<List<FutureDayData>>
 }

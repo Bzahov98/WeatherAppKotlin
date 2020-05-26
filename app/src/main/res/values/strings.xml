@@ -76,6 +76,7 @@
 
     <string name="tempView_title_day">Day Time</string>
     <string name="tempView_title_night">Night Time</string>
+    <string name="error_no_info">No information</string>
 
 
 </resources>

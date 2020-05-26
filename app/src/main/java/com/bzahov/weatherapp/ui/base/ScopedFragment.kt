@@ -7,8 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-abstract  class     ScopedFragment : Fragment() , CoroutineScope{
-    private lateinit var job : Job // QUESTION: job
+abstract  class ScopedFragment : Fragment() , CoroutineScope{
+    private lateinit var job : Job
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
 
@@ -21,5 +21,4 @@ abstract  class     ScopedFragment : Fragment() , CoroutineScope{
         super.onDestroy()
         job.cancel()
     }
-
 }

@@ -21,7 +21,7 @@ class CurrentWeatherNetworkDataSourceImpl(
                 .await()
                 downloadedCurrentWeatherMutable.postValue(fetchedCurrentWeather)
 
-            Log.d("TAG_connectivity", "$fetchedCurrentWeather")
+            //Log.d("TAG_connectivity", "CURRENT WEATHER: \n$fetchedCurrentWeather\n")
         }catch (ignored: NoConnectivityException){
             Log.e("TagConnectivity","No Internet Connection:")
         }

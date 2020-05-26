@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
-import java.time.format.DateTimeFormatter
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private val TAG = "FutureDetailWeatherFragment"
@@ -53,21 +52,28 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private fun bindUI(): Job {
         Log.d(TAG, "bindUI")
         return launch {
-                val futureWeatherLiveData = viewModel.forecastWeather.await()
-                val weatherLocation = viewModel.weatherLocation.await()
+            val futureWeatherLiveData = viewModel.forecastWeather.await()
+            val weatherLocation = viewModel.weatherLocation.await()
 
-                Log.d(TAG, "buildUi $futureWeatherLiveData")
-                weatherLocation.observe(viewLifecycleOwner, Observer { location ->
-                    if (location == null) return@Observer
-                    updateLocation(location.name, requireActivity())
-                    Log.d(TAG, "bindUI Update location with that data: $location")
-                })
+            Log.d(TAG, "buildUi $futureWeatherLiveData")
+            weatherLocation.observe(viewLifecycleOwner, Observer { location ->
+                if (location == null) return@Observer
+                updateLocation(location.name, requireActivity())
+                Log.d(TAG, "bindUI Update location with that data: $location")
+            })
 
-                futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
-                    Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?:"null"} \n")
-                    if (it == null) return@Observer
-                    updateUI(it)
+            futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
+                Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?: "null"} \n")
+                if (it.isNullOrEmpty()) {
+                    Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
+                    launch {
+                        viewModel.requestRefreshOfData()
+                    }
+                    return@Observer
+                } else {
+                    updateUI()
                     initRecyclerView(it.toFutureWeatherItems())
+                }
             })
         }
     }
@@ -82,18 +88,20 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
 
         groupAdapter.setOnItemClickListener { item, view ->
-            Toast.makeText(this@FutureListWeatherFragment.context, "Clicked: ${item.itemCount}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@FutureListWeatherFragment.context,
+                "Clicked: ${item.itemCount}",
+                Toast.LENGTH_SHORT
+            ).show()
 
             val itemDetail = (item as FutureWeatherItem).weatherEntry
-            Log.e(TAG,"\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
+            Log.e(TAG, "\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
             showWeatherDetail(itemDetail.dtTxt, view)
         }
     }
 
-    private fun showWeatherDetail(/*dateTime: LocalDateTime*/string: String, view: View) {
-        val dtFormatter = DateTimeFormatter.ofPattern(view.context.getString(R.string.date_formatter_pattern))
-        //val dateString = dateTime.format(dtFormatter)
-        val actionShowDetail =  FutureListWeatherFragmentDirections.actionShowDetail(string)// .onNestedPrePerformAccessibilityAction(view,)//.action(dateString)
+    private fun showWeatherDetail(string: String, view: View) {
+        val actionShowDetail = FutureListWeatherFragmentDirections.actionShowDetail(string)
         Navigation.findNavController(view).navigate(actionShowDetail)
     }
 
@@ -103,9 +111,12 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             .apply { }
     }
 
-    private fun updateUI(allDays: List<FutureDayData>) {
+    private fun updateUI() {
         futureGroupLoading.visibility = View.GONE
-        updateActionBarSubtitleWithResource(R.string.future_weather_five_days_next, requireActivity());
+        updateActionBarSubtitleWithResource(
+            R.string.future_weather_five_days_next,
+            requireActivity()
+        );
     }
 
     override fun onResume() {

@@ -3,6 +3,7 @@ package com.bzahov.weatherapp.internal
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
+import com.bzahov.weatherapp.internal.enums.WindDirections
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -18,34 +19,38 @@ class UIConverterFieldUtils {
                     )
         }
 
-        fun dateTimestampToDateTimeString(dtTimestamp: Long): String {
+        fun dateTimestampToDateTimeString(dtTimestamp: Long, offsetTotalSeconds: Int = 0): String {
             val dtPattern = getAppString(R.string.date_formatter_pattern)
-            return dateTimestampToString(dtTimestamp, dtPattern)
+            return dateTimestampToString(dtTimestamp, offsetTotalSeconds, dtPattern)
         }
 
 
-        fun dateTimestampToTimeString(dtTimestamp: Long): String {
+        fun dateTimestampToTimeString(dtTimestamp: Long, offsetTotalSeconds: Int = 0): String {
             val dtPattern = getAppString(R.string.date_formatter_pattern_hour_minutes_only)
-            return dateTimestampToString(dtTimestamp, dtPattern)
+            return dateTimestampToString(dtTimestamp, offsetTotalSeconds, dtPattern)
         }
 
-        fun dateTimestampToDateString(dtTimestamp: Long): String {
+        fun dateTimestampToDateString(dtTimestamp: Long, offsetTotalSeconds: Int = 0): String {
             val dtPattern = getAppString(R.string.date_formatter_pattern_day_month__only)
-            return dateTimestampToString(dtTimestamp, dtPattern)
+            return dateTimestampToString(dtTimestamp, offsetTotalSeconds, dtPattern)
         }
 
-        // REWORK: Fix ZoneId.systemDefault() to real data zone
-        fun dateTimestampToString(dtTimestamp: Long, pattern: String): String {
-            val dtFormatter = DateTimeFormatter.ofPattern(
-                pattern
-            )
+        fun dateTimestampToString(
+            dtTimestamp: Long,
+            offsetTotalSeconds: Int = 0,
+            pattern: String
+        ): String {
+            val dtFormatter = DateTimeFormatter.ofPattern(pattern)
             val dateTime =
-                LocalDateTime.ofInstant(Instant.ofEpochSecond(dtTimestamp), ZoneOffset.ofTotalSeconds(0))
+                LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(dtTimestamp),
+                    ZoneOffset.ofTotalSeconds(offsetTotalSeconds)
+                )
             return dateTime.format(dtFormatter)
         }
 
         fun getAllDescriptionsString(weatherDetails: List<WeatherDetails>): String {
-            var cond = StringBuilder()
+            val cond = StringBuilder()
             weatherDetails.forEach() { cond.append(it.description).append(" ") }
             return cond.toString()
         }
@@ -59,8 +64,10 @@ class UIConverterFieldUtils {
         }
 
         fun convertWindDirectionToString(windDirection: Double): String {
-            //REWORK: calculate wind direction to string with position
-            return windDirection.toString()
+            return WindDirections.getDescriptionStringByDouble(windDirection)
+        }
+        fun convertWindDirectionToShortString(windDirection: Double): String {
+            return WindDirections.getShortDescriptionStringByDouble(windDirection)
         }
     }
 }

@@ -17,10 +17,6 @@ class SettingsFragmentViewModel(
     val isMetric: Boolean
         get() = unitSystem == UnitSystem.METRIC
 
-    fun notifyForUnitSystemChanged(){
-        unitProvider.notifyUnitSystemChanged()
-    }
-
     suspend fun requestRefreshOfData(){
         Log.d("SettingsFragmentViewModel","requestRefreshOfData")
         currentForecastRepository.requestRefreshOfData()

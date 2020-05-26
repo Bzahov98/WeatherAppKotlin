@@ -87,12 +87,12 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         futureDetailGroupLoading.visibility = View.GONE
         updateCondition(it.weatherDetails)
         updateActionBarSubtitle(
-            dateTimestampToDateTimeString(it.dt),
+            dateTimestampToDateTimeString(it.dt,viewModel.getTimeZoneOffsetInSeconds()),
             (activity as AppCompatActivity)
         )
         updatePrecipitation(it)
         updateTemperatures(it.main.temp, it.main.feelsLike)
-        updateWind(it.wind.deg, it.wind.speed, viewModel.isMetric, futureDetailWind)
+        updateWind(it.wind, viewModel.isMetric, futureDetailWind)
         updateVisibility(it.clouds.all)
         updateBackground(it)
         updateIcon(it.weatherDetails.last().icon, futureDetailIConditionIcon)
