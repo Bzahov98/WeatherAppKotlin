@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.internal.OtherUtils.Companion.isDayTime
@@ -153,7 +154,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
 
         } else {
             Log.e(TAG, "allNightWeatherData is EMPTY")
-            view.iconNightViewConditionText.text = getString(R.string.error_no_info)
+            view.iconNightViewConditionText.text = getAppString(R.string.error_no_info)
         }
     }
 
@@ -178,8 +179,8 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     private fun fillTempViews(data: List<FutureDayData>, view: View) {
         val unitAbbreviation = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
             viewModel.isMetric,
-            getString(R.string.metric_temperature),
-            getString(R.string.imperial_temperature)
+            getAppString(R.string.metric_temperature),
+            getAppString(R.string.imperial_temperature)
         )
         val calculatedData: MinMaxAvgTemp = calculateMinMaxAvgTemp(data)
         view.tempViewMaxTemp.text = calculatedData.maxTemp.toString()

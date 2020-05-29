@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.internal.glide.GlideApp
@@ -53,13 +50,12 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun bindUI(): Job {
         return launch {
-            val currentWeatherLiveData = viewModel.weather.await()
+            viewModel.getCurrentWeather()
+            val currentWeatherLiveData = viewModel.uiViewsState
             val weatherLocation = viewModel.weatherLocation.await()
-            // REWORK Return City object temporary FIX for: current location isn't changed and stay with name current_weather_fragment all city attributes are null
 
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                Log.e(TAG,"Location : $location")
                 updateLocation(location.name, requireActivity())
                 Log.d(TAG, "Update location with that data: $location")
             })
@@ -72,23 +68,24 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateUI(it: CurrentWeatherEntry) {
+    private fun updateUI(it: CurrentWeatherState) {
         currentGroupLoading.visibility = View.GONE
-        updateCondition(it.weatherDescriptions.toString())
+        updateCondition(it.currentCondition)
         updateActionBarSubtitleWithResource(R.string.current_weather_today,requireActivity())
-        updatePrecipitation(it.precipation)
-        updateTemperatures(it.temperature, it.feelslike)
-        updateWind(it.dir, it.speed)
-        updateVisibility(it.visibility)
-        updateBackground(it)
+        updatePrecipitation(it.currentPrecipitation)
+        updateTemperatures(it.currentTemperature, it.currentFeelsLikeTemperature)
+        updateWind(it.currentWind)
+        updateVisibility(it.currentVisibility)
+        updateBackground(it.isDay)
+        // TODO put it into viewModel
         GlideApp.with(this)
-            .load(it.weatherIcons.last())
+            .load(it.weatherData.weatherIcons.last())
             .into(currentIConditionIcon)
     }
 
     // Rework change background with proper color to match to all pictures background
-    private fun updateBackground(it: CurrentWeatherEntry) {
-        if (it.isDay == getString(R.string.weather_stack_is_day)) {
+    private fun updateBackground(isDay: Boolean) {
+        if (isDay) {
             currentWeatherFragment.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
@@ -105,45 +102,25 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateTemperatures(temp: Double, feelsLike: Double) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
-            getString(R.string.metric_temperature),
-            getString(R.string.imperial_temperature)
-        )
-        currentTextTemperature.text = "$temp$unitAbbreviation"
-        currentFeelsLikeTemperature.text = getString(R.string.weather_text_feels_like) +" $feelsLike$unitAbbreviation"
+    private fun updateTemperatures(temp: String, feelsLike: String) {
+        currentTextTemperature.text = temp
+        currentFeelsLikeTemperature.text = feelsLike
     }
 
     private fun updateCondition(condition: String) {
-        currentTextCondition.text = condition.removePrefix("[").removeSuffix("]")
+        currentTextCondition.text = condition
     }
 
-    private fun updatePrecipitation(precipitationVolume: Double) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
-            getString(R.string.metric_precipitation),
-            getString(R.string.imperial_precipitation)
-        )
-        currentPrecipitation.text = getString(R.string.weather_text_precipitation)+" $precipitationVolume $unitAbbreviation"
+    private fun updatePrecipitation(precipitationVolume: String) {
+        currentPrecipitation.text = precipitationVolume
     }
 
-    private fun updateWind(windDirection: String, windSpeed: Double) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
-            getString(R.string.metric_speed),
-            getString(R.string.imperial_speed)
-        )
-        currentWind.text = getAppString(R.string.weather_text_wind)+"$windDirection, $windSpeed $unitAbbreviation"
+    private fun updateWind(windText: String) {
+        currentWind.text = windText
     }
 
-    private fun updateVisibility(visibilityDistance: Double) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
-            getString(R.string.metric_distance),
-            getString(R.string.imperial_distance)
-        )
-        currentVisibility.text = getAppString(R.string.weather_text_visibility)+ "$visibilityDistance $unitAbbreviation"
+    private fun updateVisibility(visibilityText: String) {
+        currentVisibility.text = visibilityText
     }
 
     private suspend fun refreshWeather() {

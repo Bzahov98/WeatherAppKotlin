@@ -27,7 +27,7 @@ class OneDayWeatherViewModel(
     private lateinit var endDateQuery: LocalDateTime
 
     val weather by lazyDeferred {
-        Log.e(
+        Log.d(
             TAG,
             "getFutureWeatherByDateTime with startDate $startDateQuery and endDate $endDateQuery"
         )
@@ -45,10 +45,11 @@ class OneDayWeatherViewModel(
             endDateLong
         )
     }
-
+    // REWORK: now show data for the next day (additionDays = 1)
+    //  (if current data for today is fetched after one time, entities before that time missing )
     fun resetStartEndDates(addAdditionDays : Long = 1L) {
         startDateQuery = LocalDate.now().plusDays(addAdditionDays).atStartOfDay()
         endDateQuery = LocalDate.now().atTime(LocalTime.MIDNIGHT).plusDays(addAdditionDays+1)
-        Log.e(TAG, "resetDates with startDate $startDateQuery and endDate $endDateQuery\n")
+        Log.d(TAG, "resetDates with startDate $startDateQuery and endDate $endDateQuery\n")
     }
 }

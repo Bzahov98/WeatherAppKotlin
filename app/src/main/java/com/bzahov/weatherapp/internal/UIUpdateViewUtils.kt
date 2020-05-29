@@ -36,7 +36,7 @@ class UIUpdateViewUtils{
             )
             windTextView.text =
                 getAppString(R.string.weather_text_wind) +
-                        " ${WindDirections.getShortDescriptionStringByDouble(
+                        "${WindDirections.getShortDescriptionStringByDouble(
                             wind.deg
                 )}, ${wind.speed} $unitAbbreviation"
         }

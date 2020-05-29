@@ -27,6 +27,7 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
+    private lateinit var allWeatherData: List<FutureDayData>
     private val TAG = "FutureDetailWeatherFragment"
     override val kodein by closestKodein()
     private val viewModelFactory: FutureListWeatherViewModelFactory by instance<FutureListWeatherViewModelFactory>()

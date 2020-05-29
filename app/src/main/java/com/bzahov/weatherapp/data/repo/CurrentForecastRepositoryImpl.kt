@@ -38,7 +38,7 @@ class CurrentForecastRepositoryImpl(
 
 
     override suspend fun getCurrentWeather()
-            : LiveData<out CurrentWeatherEntry> { // REWORK i can remove that :)
+            : LiveData<CurrentWeatherEntry> { // REWORK i can remove that :)
         return withContext(Dispatchers.IO) {
             initWeatherData()
             return@withContext currentWeatherDao.getCurrentWeather()
