@@ -5,7 +5,11 @@ import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.current.CurrentWeatherEntry
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 
-data class CurrentWeatherState(val weatherData: CurrentWeatherEntry, val isMetric: Boolean) {
+data class CurrentWeatherState(
+    val weatherData: CurrentWeatherEntry,
+    val isMetric: Boolean,
+    val viewModel: CurrentWeatherViewModel
+) {
 
     lateinit var currentVisibility: String
     lateinit var currentCondition: String

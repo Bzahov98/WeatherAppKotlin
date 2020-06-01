@@ -18,7 +18,6 @@ class CurrentWeatherViewModel(
 ) : ViewModel() {
 
     private val unitSystem = unitProvider.getUnitSystem()
-
     val isMetric: Boolean
         get() = unitSystem == UnitSystem.METRIC
 
@@ -31,7 +30,7 @@ class CurrentWeatherViewModel(
     suspend fun getCurrentWeather() {
         weather = currentForecastRepository.getCurrentWeather()
         uiViewsState = Transformations.map(weather){
-            CurrentWeatherState(it,isMetric)
+            CurrentWeatherState(it,isMetric,this)
         }
     }
 

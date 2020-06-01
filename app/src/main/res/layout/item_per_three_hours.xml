@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -53,6 +53,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@+id/perThreeHoursTemperature"
             app:layout_constraintStart_toStartOf="@+id/perThreeHoursTemperature"
+            app:srcCompat="@drawable/wind_north_east5"
             tools:srcCompat="@drawable/wind_north_east5" />
 
         <TextView
