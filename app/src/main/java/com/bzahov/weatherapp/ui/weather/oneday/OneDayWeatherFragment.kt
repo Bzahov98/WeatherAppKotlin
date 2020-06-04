@@ -171,7 +171,6 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateActionBarDescription(subtitle: String) {
-
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = subtitle
     }
 

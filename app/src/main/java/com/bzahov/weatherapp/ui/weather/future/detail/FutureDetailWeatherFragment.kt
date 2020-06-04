@@ -12,15 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.LocalDateConverter
-import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
-import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.dateTimestampToDateTimeString
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateWind
 import com.bzahov.weatherapp.internal.exceptions.DateNotFoundException
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.future_detail_weather_fragment.*
@@ -57,13 +50,13 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
 
         viewModel = ViewModelProvider(this, viewModelFactoryInstanceFactory(date))
             .get(FutureDetailWeatherViewModel::class.java)
-//
         bindUI()
     }
 
     private fun bindUI(): Job {
         return launch {
-            val futureDetailWeatherLiveData = viewModel.weather.await()
+            viewModel.getDetailData()
+            val futureDetailWeatherLiveData = viewModel.uiViewsState
             val weatherLocation = viewModel.weatherLocation.await()
             // REWORK Return City object temporary FiX for: futureDetail location isn't changed and stay with name futureDetail_weather_fragment all city attributes are null
 
@@ -82,25 +75,27 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateUI(it: FutureDayData) {
+    private fun updateUI(it: FutureDetailState) {
         Log.d(TAG, "UpdateUI for FutureDayData with: \n $it \n")
         futureDetailGroupLoading.visibility = View.GONE
-        updateCondition(it.weatherDetails)
-        updateActionBarSubtitle(
-            dateTimestampToDateTimeString(it.dt,viewModel.getTimeZoneOffsetInSeconds()),
-            (activity as AppCompatActivity)
-        )
-        updatePrecipitation(it)
-        updateTemperatures(it.main.temp, it.main.feelsLike)
-        updateWind(it.wind, viewModel.isMetric, futureDetailWind)
-        updateVisibility(it.clouds.all)
-        updateBackground(it)
-        updateIcon(it.weatherDetails.last().icon, futureDetailIConditionIcon)
+        updateCondition(it.weatherConditionText)
+        updateActionBarSubtitle(it.detailSubtitle)
+        updatePrecipitation(it.rainPrecipitationText)
+        updateTemperatures(it.detailTemperatureText,it.detailFeelsLikeTemperatureText)
+        futureDetailWind.text = it.detailWindText
+        updateVisibility(it.detailVisibilityText)
+        updateBackground(it.isDay)
+        updateIcon(it.iconNumber, futureDetailIConditionIcon)
     }
 
+
+    private fun updateActionBarSubtitle(subtitle: String) {
+
+        (activity as? AppCompatActivity)?.supportActionBar?.subtitle = subtitle
+    }
     // Rework change background with proper color to match to all pictures background
-    private fun updateBackground(it: FutureDayData) {
-        if (it.sys.pod == getString(R.string.weather_open_is_day)) {
+    private fun updateBackground(isDay: Boolean) {
+        if (isDay) {
             futureDetailWeatherFragment.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
@@ -117,53 +112,21 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateTemperatures(temp: Double, feelsLike: Double) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
-            getString(R.string.metric_temperature),
-            getString(R.string.imperial_temperature)
-        )
-        futureDetailTextTemperature.text = "$temp$unitAbbreviation"
-        futureDetailFeelsLikeTemperature.text =
-            getString(R.string.feels_like).plus("$feelsLike$unitAbbreviation")
+    private fun updateTemperatures(tempText: String, feelsLikeText: String) {
+        futureDetailTextTemperature.text = tempText
+        futureDetailFeelsLikeTemperature.text = feelsLikeText
     }
 
-    private fun updateCondition(weatherDescriptionList: List<WeatherDetails>) {
-        futureDetailTextCondition.text =
-            UIConverterFieldUtils.getAllDescriptionsString(weatherDescriptionList)
+    private fun updateCondition(condition: String) {
+        futureDetailTextCondition.text = condition
     }
 
-    private fun updatePrecipitation(dayInfo: FutureDayData) {
-        // always in mm
-        val unitAbbreviation = getString(R.string.metric_precipitation)
-        val snowVolume3h = dayInfo.snow?.precipitationsForLast3hours
-        val rainVolume3h = dayInfo.rain?.precipitationsForLast3hours
-
-        if (snowVolume3h ?: 0.0 > 0 && rainVolume3h ?: 0.0 > 0) {
-            futureDetailRainPrecipitation.text =
-                getString(R.string.weather_text_rain) +
-                        " $rainVolume3h $unitAbbreviation, " +
-                        getString(
-                            R.string.weather_text_snow
-                        ) +
-                        ": $snowVolume3h"
-            return
-        }
-        if (snowVolume3h ?: 0.0 > 0) {
-            futureDetailRainPrecipitation.text =
-                getString(R.string.weather_text_precipitation_snow) + " $snowVolume3h $unitAbbreviation"
-        }
-        if (rainVolume3h ?: 0.0 > 0) {
-            futureDetailRainPrecipitation.text =
-                getString(R.string.weather_text_precipitation_rain) + "$rainVolume3h $unitAbbreviation"
-        }
-
+    private fun updatePrecipitation(precipitationText: String) {
+        futureDetailRainPrecipitation.text = precipitationText
     }
 
-    private fun updateVisibility(visibilityDistance: Int) {
-        val unitAbbreviation = getString(R.string.percentage)
-        futureDetailVisibility.text =
-            getString(R.string.weather_text_cloudiness) + " $visibilityDistance $unitAbbreviation"
+    private fun updateVisibility(visibilityDistanceText: String) {
+        futureDetailVisibility.text = visibilityDistanceText
     }
 
     private suspend fun refreshWeather() {

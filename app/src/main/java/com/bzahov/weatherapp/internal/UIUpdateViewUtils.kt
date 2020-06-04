@@ -13,42 +13,52 @@ import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.convertWin
 import com.bzahov.weatherapp.internal.glide.GlideApp
 
 @SuppressLint("SetTextI18n")
-class UIUpdateViewUtils{
-    companion object{
-        fun updateWind(wind: Wind, isMetric:Boolean, windTextView : TextView) {
+class UIUpdateViewUtils {
+    companion object {
+        fun updateWind(wind: Wind, isMetric: Boolean, windTextView: TextView) {
+
+            windTextView.text =
+                calcWind(wind, isMetric, false)
+        }
+
+        fun updateWindShort(wind: Wind, isMetric: Boolean, windTextView: TextView) {
+
+            windTextView.text =
+                calcWind(wind, isMetric, true)
+        }
+
+        fun calcWind(
+            wind: Wind, isMetric: Boolean, isShortVersion: Boolean
+        ): String {
             val unitAbbreviation = chooseLocalizedUnitAbbreviation(
                 isMetric,
                 getAppString(R.string.metric_speed),
                 getAppString(R.string.imperial_speed)
             )
-            windTextView.text =
-                getAppString(R.string.weather_text_wind) +
-                        " ${convertWindDirectionToString(
-                            wind.deg
-                )}, ${wind.speed} $unitAbbreviation"
+
+            var convertWindDirectionToString = ""
+            if (!isShortVersion) {
+                convertWindDirectionToString = convertWindDirectionToString(
+                    wind.deg
+                )
+            }
+            return getAppString(R.string.weather_text_wind) +
+                    " $convertWindDirectionToString, ${wind.speed} $unitAbbreviation"
         }
-        fun updateWindShort(wind: Wind, isMetric:Boolean, windTextView : TextView) {
-            val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-                isMetric,
-                getAppString(R.string.metric_speed),
-                getAppString(R.string.imperial_speed)
-            )
-            windTextView.text =
-                getAppString(R.string.weather_text_wind) + " ${wind.speed} $unitAbbreviation"
-        }
-        fun updateLocation(location: String, activity : FragmentActivity) {
+
+        fun updateLocation(location: String, activity: FragmentActivity) {
             (activity as AppCompatActivity).supportActionBar?.title = location
         }
 
         fun updateActionBarSubtitleWithResource(resourceInt: Int, activity: FragmentActivity) {
-            updateActionBarSubtitle(getAppString(resourceInt),activity)
+            updateActionBarSubtitle(getAppString(resourceInt), activity)
         }
 
-        fun updateActionBarSubtitle(text:String, activity: FragmentActivity) {
+        fun updateActionBarSubtitle(text: String, activity: FragmentActivity) {
             (activity as AppCompatActivity).supportActionBar?.subtitle = text
         }
 
-        fun updateIcon(iconNumber: String,iconView : ImageView) {
+        fun updateIcon(iconNumber: String, iconView: ImageView) {
             val iconUrl = UIConverterFieldUtils.getOpenWeatherIconUrl(iconNumber)
             GlideApp.with(iconView.rootView)
                 .load(iconUrl)

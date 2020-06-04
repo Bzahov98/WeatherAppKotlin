@@ -15,7 +15,7 @@ import java.time.LocalTime
 import java.time.ZoneOffset
 
 class OneDayWeatherViewModel(
-    private val forecastRepository: FutureForecastRepository,
+    forecastRepository: FutureForecastRepository,
     val unitProvider: UnitProvider,
     private val locationProvider: LocationProvider
 ) : FutureWeatherViewModel(forecastRepository, unitProvider, locationProvider) {
@@ -51,7 +51,7 @@ class OneDayWeatherViewModel(
             startDateLong,
             endDateLong
         )
-
+        requestRefreshOfData()
         uiViewsState = Transformations.map(weather){
             OneDayWeatherState(it,isMetric,this)
         }

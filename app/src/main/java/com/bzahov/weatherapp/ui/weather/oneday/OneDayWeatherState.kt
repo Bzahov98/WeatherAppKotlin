@@ -1,5 +1,6 @@
 package com.bzahov.weatherapp.ui.weather.oneday
 
+import android.util.Log
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
@@ -16,19 +17,23 @@ data class OneDayWeatherState(
 //    lateinit var allNightWeatherData: List<FutureDayData>
     lateinit var oneDaySubtitle: String
     lateinit var hourInfoItemsList: List<HourInfoItem>
-    var minMaxAvgTemp: MinMaxAvgTemp
-    var allDayWeatherAndAverageData: MinMaxAvgTemp
-    var allNightWeatherAndAverageData: MinMaxAvgTemp
+    lateinit var minMaxAvgTemp: MinMaxAvgTemp
+    lateinit var allDayWeatherAndAverageData: MinMaxAvgTemp
+    lateinit var allNightWeatherAndAverageData: MinMaxAvgTemp
 
     init {
+        if (weatherData.isNullOrEmpty()) {
+            Log.e("OneDayWeatherState", "weather data is empty")
+        } else {
+            convertToHourInfoItems()
+            filterAllDayData()
+            filterAllNightData()
+            minMaxAvgTemp = MinMaxAvgTemp(weatherData, viewModel.isMetric)
+            allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), viewModel.isMetric)
+            allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), viewModel.isMetric)
 
-        calculateSubtitle()
-        convertToHourInfoItems()
-        filterAllDayData()
-        filterAllNightData()
-        minMaxAvgTemp = MinMaxAvgTemp(weatherData, viewModel.isMetric)
-        allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), viewModel.isMetric)
-        allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), viewModel.isMetric)
+            calculateSubtitle()
+        }
     }
 
     private fun filterAllDayData() =

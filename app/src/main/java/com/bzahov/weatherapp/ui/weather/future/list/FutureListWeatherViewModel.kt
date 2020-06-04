@@ -1,7 +1,10 @@
 package com.bzahov.weatherapp.ui.weather.future.list
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
@@ -23,16 +26,28 @@ class FutureListWeatherViewModel(
     val location: String
         get() = locationSystem
 
-    val forecastWeather by lazyDeferred {
+    lateinit var weather: LiveData<List<FutureDayData>>
+    private val _uiViewsState = MutableLiveData<FutureListState>()
+    var uiViewsState: LiveData<FutureListState> = _uiViewsState
+
+    /*val forecastWeather by lazyDeferred {
         Log.d(TAG,"forecastWeatherDefered")
         forecastRepository.getFutureWeather(LocalDate.now())
-    }
+    }*/
 
     val weatherLocation by lazyDeferred {
         forecastRepository.getWeatherLocation()
     }
 
     suspend fun requestRefreshOfData() {
+        forecastRepository.requireRefreshOfData = true
         forecastRepository.requestRefreshOfData()
+    }
+
+    suspend fun getFutureListData() {
+        weather = forecastRepository.getFutureWeather(LocalDate.now())
+        uiViewsState = Transformations.map(weather) {
+            FutureListState(it, isMetric, this)
+        }
     }
 }

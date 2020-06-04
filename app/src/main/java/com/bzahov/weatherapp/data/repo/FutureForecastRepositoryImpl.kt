@@ -29,7 +29,7 @@ class FutureForecastRepositoryImpl(
     private val futureWeatherNetworkDataSource: FutureWeatherNetworkDataSource
 ) : FutureForecastRepository {
 
-    override var requireRefreshOfData = false
+    override var requireRefreshOfData = true
 
     init {
         futureWeatherNetworkDataSource.downloadedFutureWeather.observeForever {
@@ -76,7 +76,9 @@ class FutureForecastRepositoryImpl(
         Log.d(TAG, "getFutureWeatherByStartAndEndDate")
         return withContext(Dispatchers.IO) {
             initWeatherData()
-            return@withContext forecastDao.getDetailedWeatherByStartEndDate(startDate, endDate)
+            val detailedWeatherByStartEndDate =
+                forecastDao.getDetailedWeatherByStartEndDate(startDate, endDate)
+            return@withContext detailedWeatherByStartEndDate
         }
     }
 
@@ -136,6 +138,7 @@ class FutureForecastRepositoryImpl(
                 location,
                 unitSystem
             )
+            requireRefreshOfData = false
         } else {
             Log.d(
                 TAG,
@@ -167,9 +170,9 @@ class FutureForecastRepositoryImpl(
     }
 
     private fun deleteOldEntities(fetchedFutureWeather: ForecastWeatherResponse) {
-        val firstDateToKeep = fetchedFutureWeather.list.first().dt
+        val firstDateToKeep = LocalDate.now().minusDays(3).toEpochDay()
         forecastDao.deleteOldEntries(
-            LocalDate.ofEpochDay(firstDateToKeep).atTime(LocalTime.MIN).toEpochSecond(
+            LocalDate.ofEpochDay(firstDateToKeep).minusDays(1).atTime(LocalTime.MIN).toEpochSecond(
                 ZoneOffset.ofTotalSeconds(locationProvider.offsetDateTime)
             )
         )

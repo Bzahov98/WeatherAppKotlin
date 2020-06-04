@@ -53,7 +53,8 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private fun bindUI(): Job {
         Log.d(TAG, "bindUI")
         return launch {
-            val futureWeatherLiveData = viewModel.forecastWeather.await()
+            viewModel.getFutureListData()
+            val futureWeatherLiveData = viewModel.uiViewsState
             val weatherLocation = viewModel.weatherLocation.await()
 
             Log.d(TAG, "buildUi $futureWeatherLiveData")
@@ -65,15 +66,15 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
 
             futureWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?: "null"} \n")
-                if (it.isNullOrEmpty()) {
+                if (it == null) {
                     Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
                     launch {
                         viewModel.requestRefreshOfData()
                     }
                     return@Observer
                 } else {
-                    updateUI()
-                    initRecyclerView(it.toFutureWeatherItems())
+                    updateUI(it)
+                    initRecyclerView(it.weatherItems)
                 }
             })
         }
@@ -106,13 +107,9 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         Navigation.findNavController(view).navigate(actionShowDetail)
     }
 
-    private fun List<FutureDayData>.toFutureWeatherItems(): List<FutureWeatherItem> {
-        return this.filter { it.dtTxt.contains(getString(R.string.default_future_time_calibration)) }
-            .map { FutureWeatherItem(it, viewModel.isMetric) }
-            .apply { }
-    }
 
-    private fun updateUI() {
+
+    private fun updateUI(it: FutureListState) {
         futureGroupLoading.visibility = View.GONE
         updateActionBarSubtitleWithResource(
             R.string.future_weather_five_days_next,

@@ -8,7 +8,7 @@ import com.bzahov.weatherapp.internal.enums.UnitSystem
 import com.bzahov.weatherapp.internal.lazyDeferred
 
 abstract class FutureWeatherViewModel(
-    private val forecastRepository: FutureForecastRepository,
+    val forecastRepository: FutureForecastRepository,
     unitProvider: UnitProvider,
     private val locationProvider: LocationProvider
 ) : ViewModel() {
