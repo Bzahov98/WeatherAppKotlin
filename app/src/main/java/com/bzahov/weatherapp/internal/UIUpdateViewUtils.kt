@@ -9,7 +9,7 @@ import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.convertWindDirectionToString
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.convertDoubleToWindDirectionString
 import com.bzahov.weatherapp.internal.glide.GlideApp
 
 @SuppressLint("SetTextI18n")
@@ -18,17 +18,17 @@ class UIUpdateViewUtils {
         fun updateWind(wind: Wind, isMetric: Boolean, windTextView: TextView) {
 
             windTextView.text =
-                calcWind(wind, isMetric, false)
+                calculateWindDirectionToString(wind, isMetric)
         }
 
         fun updateWindShort(wind: Wind, isMetric: Boolean, windTextView: TextView) {
 
             windTextView.text =
-                calcWind(wind, isMetric, true)
+                calculateWindDirectionToString(wind, isMetric, true)
         }
 
-        fun calcWind(
-            wind: Wind, isMetric: Boolean, isShortVersion: Boolean
+        fun calculateWindDirectionToString(
+            wind: Wind, isMetric: Boolean, isShortVersion: Boolean = false
         ): String {
             val unitAbbreviation = chooseLocalizedUnitAbbreviation(
                 isMetric,
@@ -38,7 +38,7 @@ class UIUpdateViewUtils {
 
             var convertWindDirectionToString = ""
             if (!isShortVersion) {
-                convertWindDirectionToString = convertWindDirectionToString(
+                convertWindDirectionToString = convertDoubleToWindDirectionString(
                     wind.deg
                 )
             }

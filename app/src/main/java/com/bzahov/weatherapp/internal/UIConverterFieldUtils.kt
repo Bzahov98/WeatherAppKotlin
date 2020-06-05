@@ -63,11 +63,15 @@ class UIConverterFieldUtils {
             return if (isMetricUnit) metricAbbr else imperialAbbr
         }
 
-        fun convertWindDirectionToString(windDirection: Double): String {
+        fun convertDoubleToWindDirectionString(windDirection: Double): String {
             return WindDirections.getDescriptionStringByDouble(windDirection)
         }
+
         fun convertWindDirectionToShortString(windDirection: Double): String {
             return WindDirections.getShortDescriptionStringByDouble(windDirection)
         }
+
+        fun convertDoubleValueAndAbbreviationToString(tempMin: Double, unitAbbreviation: String) =
+            "${String.format("%.1f", tempMin)}$unitAbbreviation"
     }
 }

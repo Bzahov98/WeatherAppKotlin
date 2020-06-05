@@ -22,8 +22,8 @@ enum class WindDirections(val description: String,val shortName : String, val ra
             return when (windDirection) {
                 in NORTH_EAST.range -> NORTH_EAST //   0 and 90
                 in SOUTH_EAST.range -> SOUTH_EAST //  90 and 180
-                in SOUTH_WEST.range -> SOUTH_WEST //  90 and 180
-                in NORTH_WEST.range -> NORTH_WEST //  90 and 180
+                in SOUTH_WEST.range -> SOUTH_WEST //  180 and 269
+                in NORTH_WEST.range -> NORTH_WEST //  270 and 359
                 else -> NOT_FOUND
             }
         }

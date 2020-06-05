@@ -32,6 +32,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
     private val viewModelFactory: FutureListWeatherViewModelFactory by instance<FutureListWeatherViewModelFactory>()
     private lateinit var viewModel: FutureListWeatherViewModel
+    private lateinit var groupAdapter: GroupAdapter<ViewHolder>
 
 
     override fun onCreateView(
@@ -46,8 +47,8 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(FutureListWeatherViewModel::class.java)
+        initRecyclerView()
         bindUI()
-
     }
 
     private fun bindUI(): Job {
@@ -74,19 +75,22 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
                     return@Observer
                 } else {
                     updateUI(it)
-                    initRecyclerView(it.weatherItems)
+                    updateRecyclerViewData(it.weatherItems)
                 }
             })
         }
     }
 
-    private fun initRecyclerView(items: List<FutureWeatherItem>) {
-        val groupAdapter = GroupAdapter<ViewHolder>().apply {
-            this.addAll(items)
-        }
+    private fun updateRecyclerViewData(weatherItems: List<FutureWeatherItem>) {
+        groupAdapter.clear()
+        groupAdapter.apply { groupAdapter.addAll(weatherItems) }
+        groupAdapter.notifyDataSetChanged()
+    }
+
+    private fun initRecyclerView() {
         futureRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
-            adapter = groupAdapter
+            groupAdapter
         }
 
         groupAdapter.setOnItemClickListener { item, view ->
@@ -106,7 +110,6 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         val actionShowDetail = FutureListWeatherFragmentDirections.actionShowDetail(string)
         Navigation.findNavController(view).navigate(actionShowDetail)
     }
-
 
 
     private fun updateUI(it: FutureListState) {

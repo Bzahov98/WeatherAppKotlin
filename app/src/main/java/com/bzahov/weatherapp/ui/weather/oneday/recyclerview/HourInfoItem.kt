@@ -5,8 +5,9 @@ import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.convertDoubleValueAndAbbreviationToString
+import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.dateTimestampToTimeString
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateWindShort
 import com.bzahov.weatherapp.internal.enums.WindDirections
@@ -38,13 +39,12 @@ data class HourInfoItem(
 
     private fun updateWindUI(wind: Wind, view: View) {
         val windDirection = WindDirections.getWindDirectionByDouble(wind.deg)
-        // FIX ME setImageResource don't update image with anything
-        view.perThreeHoursIcon.setImageResource(windDirection.image)
+        view.perThreeHoursWindIcon.setImageResource(windDirection.image)
         updateWindShort(wind,isMetric,view.perThreeHoursWindSpeedInfo)
     }
 
     private fun updateHourText(view: View) {
-        view.perThreeHoursHourInfo.text = UIConverterFieldUtils.dateTimestampToTimeString(weatherEntry.dt, timeZoneOffsetInSeconds )
+        view.perThreeHoursHourInfo.text = dateTimestampToTimeString(weatherEntry.dt, timeZoneOffsetInSeconds )
     }
 
     private fun updateTemperature(view: View) {
@@ -53,6 +53,6 @@ data class HourInfoItem(
             getAppString(R.string.metric_temperature),
             getAppString(R.string.imperial_temperature)
         )
-        view.perThreeHoursTemperature.text = "${String.format("%.1f", weatherEntry.main.temp)}$unitAbbreviation"
+        view.perThreeHoursTemperature.text = convertDoubleValueAndAbbreviationToString(weatherEntry.main.temp,unitAbbreviation)
     }
 }

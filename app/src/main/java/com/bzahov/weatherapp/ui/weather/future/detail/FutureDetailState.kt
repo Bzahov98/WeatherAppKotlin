@@ -6,7 +6,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.WeatherDetails
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.calcWind
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.calculateWindDirectionToString
 
 data class FutureDetailState(
     val weatherData: FutureDayData,
@@ -23,6 +23,7 @@ data class FutureDetailState(
     var rainPrecipitationText: String = ""
     lateinit var detailSubtitle: String
     lateinit var weatherConditionText: String
+
     init {
         calculateSubtitle()
         calculateCondition(weatherData.weatherDetails)
@@ -70,7 +71,7 @@ data class FutureDetailState(
                         ) +
                         ": $snowVolume3h"
             return
-        }else rainPrecipitationText = "No precipitations"
+        } else rainPrecipitationText = "No precipitations"
         if (snowVolume3h ?: 0.0 > 0) {
             rainPrecipitationText =
                 getAppString(R.string.weather_text_precipitation_snow) + " $snowVolume3h $unitAbbreviation"
@@ -92,7 +93,8 @@ data class FutureDetailState(
         detailFeelsLikeTemperatureText =
             getAppString(R.string.feels_like).plus("${weatherData.main.feelsLike}$unitAbbreviation")
     }
-    private fun calculateWind(){
-       detailWindText = calcWind(weatherData.wind,isMetric,false)
+
+    private fun calculateWind() {
+        detailWindText = calculateWindDirectionToString(weatherData.wind, isMetric, false)
     }
 }

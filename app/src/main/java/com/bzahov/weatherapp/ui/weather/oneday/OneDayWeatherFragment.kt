@@ -31,19 +31,17 @@ import org.kodein.di.generic.instance
 
 class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     private val TAG = "OneDayWeatherFragment"
-//    private lateinit var allWeatherData: List<FutureDayData>
-//    private lateinit var allDayWeatherData: List<FutureDayData>
-//    private lateinit var allNightWeatherData: List<FutureDayData>
 
-    private lateinit var viewModel: OneDayWeatherViewModel
     override val kodein by closestKodein()
+    private lateinit var viewModel: OneDayWeatherViewModel
+
     private val viewModelFactory: OneDayWeatherViewModelFactory by instance<OneDayWeatherViewModelFactory>()
+    private lateinit var groupAdapter: GroupAdapter<ViewHolder>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val inflate = inflater.inflate(R.layout.item_one_day, container, false)
-        return inflate
+        return inflater.inflate(R.layout.item_one_day, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,6 +50,8 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(OneDayWeatherViewModel::class.java)
         viewModel.resetStartEndDates()
+
+        initRecyclerView()
     }
 
     override fun onAttachFragment(childFragment: Fragment) {
@@ -86,16 +86,20 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
                 } else {
 */
                 updateUI(it)
-                initRecyclerView(it.hourInfoItemsList)
+                updateRecyclerViewData(it.hourInfoItemsList)
 //                }
             })
         }
     }
 
-    private fun initRecyclerView(toHourInfoItems: List<HourInfoItem>) {
-        val groupAdapter = GroupAdapter<ViewHolder>().apply {
-            this.addAll(toHourInfoItems)
-        }
+    private fun updateRecyclerViewData(hourInfoItemsList: List<HourInfoItem>) {
+        groupAdapter.clear()
+        groupAdapter.apply { groupAdapter.addAll(hourInfoItemsList) }
+        groupAdapter.notifyDataSetChanged()
+    }
+
+    private fun initRecyclerView() {
+        groupAdapter = GroupAdapter<ViewHolder>()
         oneDayPerHourRecyclerView.apply {
             adapter = groupAdapter
         }
@@ -130,7 +134,6 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
             it.allNightWeatherAndAverageData,
             requireView().oneDayNightIconDescrView
         )
-
     }
 
     private fun updateConditionIconsView(
@@ -147,9 +150,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         val nightIconNumber = allNightWeatherAndAverageData.iconConditionID
         view.iconNightViewConditionText.text = allNightWeatherAndAverageData.iconViewConditionText
         updateIcon(nightIconNumber, view.iconViewNightConditionIcon)
-
     }
-
 
     private fun updateDayTemperatures(calculatedDayData: MinMaxAvgTemp, view: View) {
         view.tempViewTittleText.text = getAppString(R.string.tempView_title_day)
@@ -162,12 +163,10 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun fillTempViews(calculatedData: MinMaxAvgTemp, view: View) {
-
         view.tempViewMaxTemp.text = calculatedData.maxTempText
         view.tempViewMinTemp.text = calculatedData.minTempText
         view.tempViewTemperature.text = calculatedData.averageTempText
         view.tempViewFeelsLike.text = calculatedData.averageFeelLikeTempText
-
     }
 
     private fun updateActionBarDescription(subtitle: String) {

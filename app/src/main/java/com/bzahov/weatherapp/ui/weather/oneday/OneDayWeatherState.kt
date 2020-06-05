@@ -13,8 +13,6 @@ data class OneDayWeatherState(
     val isMetric: Boolean,
     val viewModel: OneDayWeatherViewModel
 ) {
-    //    lateinit var allDayWeatherData: List<FutureDayData>
-//    lateinit var allNightWeatherData: List<FutureDayData>
     lateinit var oneDaySubtitle: String
     lateinit var hourInfoItemsList: List<HourInfoItem>
     lateinit var minMaxAvgTemp: MinMaxAvgTemp
@@ -31,7 +29,6 @@ data class OneDayWeatherState(
             minMaxAvgTemp = MinMaxAvgTemp(weatherData, viewModel.isMetric)
             allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), viewModel.isMetric)
             allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), viewModel.isMetric)
-
             calculateSubtitle()
         }
     }
@@ -58,8 +55,8 @@ data class OneDayWeatherState(
 }
 
 class MinMaxAvgTemp(
-    val dataSource: List<FutureDayData>,
-    val isMetric: Boolean
+    private val dataSource: List<FutureDayData>,
+   private val isMetric: Boolean
 ) {
 
     private val unitAbbreviation: String = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
@@ -97,24 +94,23 @@ class MinMaxAvgTemp(
         calculateMinMaxAvgTemp()
         averageTemp = calculateAvrTemp()
         averageFeelLikeTemp = calculateAvrFeelsTemp()
-
     }
 
-    fun calculateAvrTemp(): Double {
+    private fun calculateAvrTemp(): Double {
         if (avgCount == 0) {
             return 0.0
         }
         return avgSumTemp / avgCount
     }
 
-    fun calculateAvrFeelsTemp(): Double {
+    private fun calculateAvrFeelsTemp(): Double {
         if (avgCount == 0) {
             return 0.0
         }
         return avgSumFeelsTemp / avgCount
     }
 
-    fun calculateMinMaxAvgTemp() {
+    private fun calculateMinMaxAvgTemp() {
         dataSource.forEach {
             avgCount++
             avgSumTemp += it.main.temp

@@ -36,14 +36,6 @@ class FutureDetailWeatherViewModel(
     suspend fun getDetailData() {
         weather = forecastRepository.getFutureWeatherByDateTimestamp(detailDateTimeStamp)
         uiViewsState = Transformations.map(weather) {
-          /*  if (it == null) {
-
-//                GlobalScope.launch(Dispatchers.IO) {
-//
-//                    requestRefreshOfData()
-//                }
-                return@map
-            }*/
             FutureDetailState(it, isMetric, this)
         }
     }
