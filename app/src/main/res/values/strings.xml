@@ -4,6 +4,7 @@
     //default settings and values
         <string name="default_location">Plovdiv</string>
         <string name="default_future_time_calibration">12:00:00</string>
+        <string name="default_future_time_short_calibration">12:00</string>
 
     //default unit systems
         <string name="default_stack_unit_system">m</string>
@@ -61,9 +62,14 @@
     // others
     <string name="weather_text_rain">Rain:</string>
     <string name="weather_text_snow">Snow:</string>
+    <string name="weather_text_sleet">Sleet:</string>
+    <string name="weather_text_none">None:</string>
+
     <string name="weather_text_precipitation">Precipitation: </string>
+    <string name="weather_text_precipitation_sleet">Mix Precipitation in Sleet:</string>
     <string name="weather_text_precipitation_snow">Precipitation in Snow:</string>
     <string name="weather_text_precipitation_rain">Precipitation in Rain:</string>
+    <string name="weather_text_precipitation_none">None Precipitations</string>
     <string name="weather_text_cloudiness">Cloudiness:</string>
     <string name="weather_text_wind">\"Wind: "</string>
     <string name="weather_text_feels_like">Feels like</string>
@@ -77,6 +83,11 @@
     <string name="tempView_title_day">Day Time</string>
     <string name="tempView_title_night">Night Time</string>
     <string name="error_no_info">No information</string>
+    <string name="menu_refresh">Refresh Data</string>
+
+    <string name="warning_device_offline">Your device is offline, can\'t update data</string>
+    <string name="snackbar_updation_weather_data">Updating Weather Data</string>
+    <string name="tools_default_temp">23.0 C</string>
 
 
 </resources>

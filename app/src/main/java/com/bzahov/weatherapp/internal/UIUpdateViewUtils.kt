@@ -1,6 +1,8 @@
 package com.bzahov.weatherapp.internal
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.provider.Settings
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,8 @@ import com.bzahov.weatherapp.data.db.entity.forecast.model.Wind
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.chooseLocalizedUnitAbbreviation
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils.Companion.convertDoubleToWindDirectionString
 import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 
 @SuppressLint("SetTextI18n")
 class UIUpdateViewUtils {
@@ -37,13 +41,15 @@ class UIUpdateViewUtils {
             )
 
             var convertWindDirectionToString = ""
+            var windString = ""
             if (!isShortVersion) {
+                windString = getAppString(R.string.weather_text_wind) + " "
                 convertWindDirectionToString = convertDoubleToWindDirectionString(
                     wind.deg
-                )
+                ) + ", "
             }
-            return getAppString(R.string.weather_text_wind) +
-                    " $convertWindDirectionToString, ${wind.speed} $unitAbbreviation"
+            return windString +
+                    "$convertWindDirectionToString${wind.speed} $unitAbbreviation"
         }
 
         fun updateLocation(location: String, activity: FragmentActivity) {
@@ -63,6 +69,21 @@ class UIUpdateViewUtils {
             GlideApp.with(iconView.rootView)
                 .load(iconUrl)
                 .into(iconView)
+        }
+        fun showSnackBarMessage(message: String, activity: FragmentActivity?, isSuccessful: Boolean = true) {
+            val bottomNavView: BottomNavigationView = activity?.findViewById(R.id.bottom_nav)!!
+            val snackbar = Snackbar.make(bottomNavView, message, Snackbar.LENGTH_LONG).apply {
+                anchorView = bottomNavView
+            }
+            if (!isSuccessful) {
+                snackbar.setAction("Open Network Panel") {
+                    val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS)
+                    activity.startActivity(intent)
+                }
+            } else {
+                snackbar.setAction("Dismiss") { snackbar.dismiss() }
+            }
+            snackbar.show()
         }
     }
 }

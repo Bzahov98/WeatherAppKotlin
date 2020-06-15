@@ -11,7 +11,7 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.calculateWindD
 data class FutureDetailState(
     val weatherData: FutureDayData,
     val isMetric: Boolean,
-    val viewModel: FutureDetailWeatherViewModel
+    val timeZoneOffsetInSeconds: Int
 ) {
 
     var isDay: Boolean = false
@@ -52,7 +52,7 @@ data class FutureDetailState(
     private fun calculateSubtitle() {
         detailSubtitle = UIConverterFieldUtils.dateTimestampToDateString(
             weatherData.dt,
-            viewModel.getTimeZoneOffsetInSeconds()
+            timeZoneOffsetInSeconds
         )
     }
 
@@ -85,7 +85,7 @@ data class FutureDetailState(
 
     private fun calculateTemperature() {
         val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            viewModel.isMetric,
+            isMetric,
             getAppString(R.string.metric_temperature),
             getAppString(R.string.imperial_temperature)
         )

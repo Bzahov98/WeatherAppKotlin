@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="32dp"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +84,7 @@
             android:foregroundGravity="center"
             android:text="@string/feels_like"
             android:textAlignment="viewStart"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="@+id/futureTemperature"
             app:layout_constraintTop_toBottomOf="@+id/futureTemperature" />
@@ -99,7 +99,7 @@
             android:foregroundGravity="center"
             android:text="Max:"
             android:textAlignment="viewStart"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintEnd_toEndOf="@+id/futureMinTemptText"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/futureMinTemptText"
@@ -122,7 +122,7 @@
             android:foregroundGravity="center"
             android:text="Min:"
             android:textAlignment="viewStart"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
             app:layout_constraintStart_toStartOf="@+id/futureFeelsLike"
             app:layout_constraintTop_toBottomOf="@+id/futureFeelsLike" />
@@ -134,7 +134,7 @@
 
             android:foregroundGravity="center"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintEnd_toEndOf="@+id/futureFeelsLikeValue"
             app:layout_constraintStart_toEndOf="@+id/futureMinTemptText"
             app:layout_constraintTop_toTopOf="@+id/futureMinTemptText"
@@ -147,7 +147,7 @@
 
             android:foregroundGravity="center"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintEnd_toEndOf="@+id/futureMinTemp"
             app:layout_constraintStart_toEndOf="@+id/futureMaxTempText"
             app:layout_constraintTop_toTopOf="@+id/futureMaxTempText"
@@ -160,7 +160,7 @@
 
             android:foregroundGravity="center"
             android:textAlignment="center"
-            android:textSize="12sp"
+            android:textSize="@dimen/normal_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/futureFeelsLike"
             app:layout_constraintEnd_toEndOf="@+id/futureTemperature"
             app:layout_constraintStart_toStartOf="@+id/guidelineVertical"

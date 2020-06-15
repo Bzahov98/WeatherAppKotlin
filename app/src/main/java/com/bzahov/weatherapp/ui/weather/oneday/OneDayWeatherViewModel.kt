@@ -53,7 +53,7 @@ class OneDayWeatherViewModel(
         )
         requestRefreshOfData()
         uiViewsState = Transformations.map(weather){
-            OneDayWeatherState(it,isMetric,this)
+            OneDayWeatherState(it,isMetric,getTimeZoneOffsetInSeconds())
         }
     }
 

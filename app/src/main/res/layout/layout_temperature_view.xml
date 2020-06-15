@@ -60,7 +60,7 @@
         android:foregroundGravity="center"
         android:text="@string/feels_like"
         android:textAlignment="viewStart"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
         app:layout_constraintTop_toBottomOf="@+id/tempViewTemperature" />
 
@@ -74,7 +74,7 @@
         android:foregroundGravity="center"
         android:text="Max:"
         android:textAlignment="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tempViewMinTemptText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tempViewMinTemptText"
@@ -96,7 +96,7 @@
         android:foregroundGravity="center"
         android:text="Min:"
         android:textAlignment="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
         app:layout_constraintStart_toStartOf="@+id/tempViewFeelsLikeText"
         app:layout_constraintTop_toBottomOf="@+id/tempViewFeelsLikeText" />
@@ -108,7 +108,7 @@
 
         android:foregroundGravity="center"
         android:textAlignment="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tempViewFeelsLike"
         app:layout_constraintStart_toEndOf="@+id/tempViewMinTemptText"
         app:layout_constraintTop_toTopOf="@+id/tempViewMinTemptText"
@@ -121,7 +121,7 @@
 
         android:foregroundGravity="center"
         android:textAlignment="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tempViewMinTemp"
         app:layout_constraintStart_toEndOf="@+id/tempViewMaxTempText"
         app:layout_constraintTop_toTopOf="@+id/tempViewMaxTempText"
@@ -134,7 +134,7 @@
 
         android:foregroundGravity="center"
         android:textAlignment="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/tempViewFeelsLikeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineVertical"

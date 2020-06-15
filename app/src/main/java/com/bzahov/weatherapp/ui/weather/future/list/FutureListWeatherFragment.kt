@@ -11,8 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.internal.OtherUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.ui.base.ScopedFragment
@@ -20,6 +24,7 @@ import com.bzahov.weatherapp.ui.weather.future.list.recyclerview.FutureWeatherIt
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.future_list_weather_fragment.*
+import kotlinx.android.synthetic.main.future_list_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
@@ -33,6 +38,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     private val viewModelFactory: FutureListWeatherViewModelFactory by instance<FutureListWeatherViewModelFactory>()
     private lateinit var viewModel: FutureListWeatherViewModel
     private lateinit var groupAdapter: GroupAdapter<ViewHolder>
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
 
     override fun onCreateView(
@@ -40,7 +46,13 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.future_list_weather_fragment, container, false)
+        mSwipeRefreshLayout = view.futureListWeatherFragmentSwipe
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRefresherLayout()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -49,6 +61,25 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             .get(FutureListWeatherViewModel::class.java)
         initRecyclerView()
         bindUI()
+    }
+
+    private fun initRefresherLayout() {
+        mSwipeRefreshLayout.isRefreshing = true
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mSwipeRefreshLayout.isRefreshing = false
+            if (OtherUtils.isOnline(requireContext())) {
+                Log.d(TAG, "Updating Weather Data")
+                UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
+                launch { viewModel.requestRefreshOfData() }
+            } else {
+                Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    requireActivity(),
+                    false
+                )
+            }
+        }
     }
 
     private fun bindUI(): Job {
@@ -81,16 +112,11 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun updateRecyclerViewData(weatherItems: List<FutureWeatherItem>) {
-        groupAdapter.clear()
-        groupAdapter.apply { groupAdapter.addAll(weatherItems) }
-        groupAdapter.notifyDataSetChanged()
-    }
-
     private fun initRecyclerView() {
+        groupAdapter = GroupAdapter<ViewHolder>()
         futureRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
-            groupAdapter
+            adapter = groupAdapter
         }
 
         groupAdapter.setOnItemClickListener { item, view ->
@@ -106,6 +132,13 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
+    private fun updateRecyclerViewData(weatherItems: List<FutureWeatherItem>) {
+        groupAdapter.clear()
+        groupAdapter.apply { groupAdapter.addAll(weatherItems) }
+        groupAdapter.notifyDataSetChanged()
+    }
+
+
     private fun showWeatherDetail(string: String, view: View) {
         val actionShowDetail = FutureListWeatherFragmentDirections.actionShowDetail(string)
         Navigation.findNavController(view).navigate(actionShowDetail)
@@ -114,6 +147,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateUI(it: FutureListState) {
         futureGroupLoading.visibility = View.GONE
+        mSwipeRefreshLayout.isRefreshing = false
         updateActionBarSubtitleWithResource(
             R.string.future_weather_five_days_next,
             requireActivity()
