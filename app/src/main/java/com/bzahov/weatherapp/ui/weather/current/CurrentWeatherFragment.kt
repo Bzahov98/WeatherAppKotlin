@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
+import com.bzahov.weatherapp.internal.OtherUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.internal.glide.GlideApp
@@ -27,6 +31,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
     private val viewModelFactory: CurrentWeatherViewModelFactory by instance<CurrentWeatherViewModelFactory>()
     private lateinit var viewModel: CurrentWeatherViewModel
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +39,34 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.current_weather_fragment, container, false)
+        //showSnackBarMessage("Swipe down to refresh data")
 
-        view.currentFeelsLikeTemperature.setOnClickListener {
-            launch {   refreshWeather() }
-        }
+        mSwipeRefreshLayout = view.currentWeatherFragmentSwipe
+            /*view.setOnTouchListener { v: View, m: MotionEvent ->
+                // Perform tasks here
+                when (m.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        if (isOnline(requireContext())) {
+                            Log.d(TAG, "Updating Weather Data")
+                            showSnackBarMessage("Updating Weather Data")
+                            launch { refreshWeather() }
+                            true
+                        } else {
+                            Log.e(TAG, "Your device is offline can't update data")
+                            showSnackBarMessage("Your device is offline, can't update data", false)
+                            true
+                        }
+                    }
+                    else -> false
+                }
+            }*/
+
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRefresherLayout()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -68,10 +96,13 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
+
     private fun updateUI(it: CurrentWeatherState) {
         currentGroupLoading.visibility = View.GONE
+        mSwipeRefreshLayout.isRefreshing = false
+
         updateCondition(it.currentCondition)
-        updateActionBarSubtitleWithResource(R.string.current_weather_today,requireActivity())
+        updateActionBarSubtitleWithResource(R.string.current_weather_today, requireActivity())
         updatePrecipitation(it.currentPrecipitation)
         updateTemperatures(it.currentTemperature, it.currentFeelsLikeTemperature)
         updateWind(it.currentWind)
@@ -81,6 +112,25 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         GlideApp.with(this)
             .load(it.weatherData.weatherIcons.last())
             .into(currentIConditionIcon)
+    }
+
+    private fun initRefresherLayout() {
+        mSwipeRefreshLayout.isRefreshing = true
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mSwipeRefreshLayout.isRefreshing = false
+            if (OtherUtils.isOnline(requireContext())) {
+                Log.d(TAG, "Updating Weather Data")
+                UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
+                launch { viewModel.requestRefreshOfData() }
+            } else {
+                Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    requireActivity(),
+                    false
+                )
+            }
+        }
     }
 
     // Rework change background with proper color to match to all pictures background

@@ -14,7 +14,7 @@ import com.bzahov.weatherapp.internal.lazyDeferred
 class CurrentWeatherViewModel(
     private val currentForecastRepository: CurrentForecastRepository,
     unitProvider: UnitProvider,
-    locationProvider: LocationProvider
+     val locationProvider: LocationProvider
 ) : ViewModel() {
 
     private val unitSystem = unitProvider.getUnitSystem()
@@ -30,7 +30,7 @@ class CurrentWeatherViewModel(
     suspend fun getCurrentWeather() {
         weather = currentForecastRepository.getCurrentWeather()
         uiViewsState = Transformations.map(weather){
-            CurrentWeatherState(it,isMetric,this)
+            CurrentWeatherState(it,isMetric,locationProvider.offsetDateTime)
         }
     }
 

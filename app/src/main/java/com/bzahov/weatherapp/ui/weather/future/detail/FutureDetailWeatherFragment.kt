@@ -10,21 +10,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.LocalDateConverter
+import com.bzahov.weatherapp.internal.OtherUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.internal.exceptions.DateNotFoundException
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.future_detail_weather_fragment.*
+import kotlinx.android.synthetic.main.future_detail_weather_fragment.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.factory
 import java.time.LocalDateTime
+
 @SuppressLint("SetTextI18n")
 class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private val TAG = "FutureDetailWeatherFragment"
     override val kodein by closestKodein()
 
@@ -37,7 +45,14 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.future_detail_weather_fragment, container, false)
+        val view = inflater.inflate(R.layout.future_detail_weather_fragment, container, false)
+        mSwipeRefreshLayout = view.futureDetailWeatherFragmentSwipe
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRefresherLayout()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,7 +61,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         val date = LocalDateConverter().stringToDateTime(safeArgs?.dateString)
             ?: throw DateNotFoundException()
 
-        Log.e(TAG,"received ${safeArgs?.dateString}safeargs: $date")
+        Log.e(TAG, "received ${safeArgs?.dateString}safeargs: $date")
 
         viewModel = ViewModelProvider(this, viewModelFactoryInstanceFactory(date))
             .get(FutureDetailWeatherViewModel::class.java)
@@ -77,22 +92,46 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun updateUI(it: FutureDetailState) {
         Log.d(TAG, "UpdateUI for FutureDayData with: \n $it \n")
+        mSwipeRefreshLayout.isRefreshing = false
         futureDetailGroupLoading.visibility = View.GONE
         updateCondition(it.weatherConditionText)
         updateActionBarSubtitle(it.detailSubtitle)
         updatePrecipitation(it.rainPrecipitationText)
-        updateTemperatures(it.detailTemperatureText,it.detailFeelsLikeTemperatureText)
+        updateTemperatures(it.detailTemperatureText, it.detailFeelsLikeTemperatureText)
         futureDetailWind.text = it.detailWindText
         updateVisibility(it.detailVisibilityText)
         updateBackground(it.isDay)
         updateIcon(it.iconNumber, futureDetailIConditionIcon)
     }
 
+    private fun initRefresherLayout() {
+
+        mSwipeRefreshLayout.isRefreshing = true
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mSwipeRefreshLayout.isRefreshing = false
+            if (OtherUtils.isOnline(requireContext())) {
+                Log.d(TAG, getAppString(R.string.snackbar_updation_weather_data))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    getAppString(R.string.snackbar_updation_weather_data),
+                    requireActivity()
+                )
+                launch { viewModel.requestRefreshOfData() }
+            } else {
+                Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    requireActivity(),
+                    false
+                )
+            }
+        }
+    }
 
     private fun updateActionBarSubtitle(subtitle: String) {
 
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = subtitle
     }
+
     // Rework change background with proper color to match to all pictures background
     private fun updateBackground(isDay: Boolean) {
         if (isDay) {

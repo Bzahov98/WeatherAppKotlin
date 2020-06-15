@@ -11,8 +11,9 @@ import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem
 data class OneDayWeatherState(
     val weatherData: List<FutureDayData>,
     val isMetric: Boolean,
-    val viewModel: OneDayWeatherViewModel
+    val timeZoneOffsetInSeconds: Int
 ) {
+    lateinit var currentPrecipitationText: String
     lateinit var oneDaySubtitle: String
     lateinit var hourInfoItemsList: List<HourInfoItem>
     lateinit var minMaxAvgTemp: MinMaxAvgTemp
@@ -26,31 +27,40 @@ data class OneDayWeatherState(
             convertToHourInfoItems()
             filterAllDayData()
             filterAllNightData()
-            minMaxAvgTemp = MinMaxAvgTemp(weatherData, viewModel.isMetric)
-            allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), viewModel.isMetric)
-            allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), viewModel.isMetric)
+            minMaxAvgTemp = MinMaxAvgTemp(weatherData, isMetric)
+            allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), isMetric)
+            allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), isMetric)
             calculateSubtitle()
         }
     }
 
     private fun filterAllDayData() =
-        weatherData.filter(OtherUtils.isDayTime(viewModel.getTimeZoneOffsetInSeconds()))
+        weatherData.filter(OtherUtils.isDayTime(timeZoneOffsetInSeconds))
 
 
     private fun filterAllNightData() =
-        weatherData.filterNot(OtherUtils.isDayTime(viewModel.getTimeZoneOffsetInSeconds()))
+        weatherData.filterNot(OtherUtils.isDayTime(timeZoneOffsetInSeconds))
 
     private fun convertToHourInfoItems() {
         hourInfoItemsList = weatherData.map {
-            HourInfoItem(it, viewModel.isMetric, viewModel.getTimeZoneOffsetInSeconds())
+            HourInfoItem(it, isMetric, timeZoneOffsetInSeconds)
         }.apply { }
     }
 
     private fun calculateSubtitle() {
         oneDaySubtitle = UIConverterFieldUtils.dateTimestampToDateString(
             weatherData[0].dt,
-            viewModel.getTimeZoneOffsetInSeconds()
+            timeZoneOffsetInSeconds
         )
+    }
+    private fun calculatePrecipitation(precipitationVolume: Double) {
+        val unitAbbreviation = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
+            isMetric,
+            getAppString(R.string.metric_precipitation),
+            getAppString(R.string.imperial_precipitation)
+        )
+        currentPrecipitationText =
+            getAppString(R.string.weather_text_precipitation) + " $precipitationVolume $unitAbbreviation"
     }
 }
 

@@ -28,15 +28,11 @@ class FutureDetailWeatherViewModel(
 
     private val _uiViewsState = MutableLiveData<FutureDetailState>()
     var uiViewsState: LiveData<FutureDetailState> = _uiViewsState
-    /*val weather by lazyDeferred {
-        Log.e(TAG,"getFutureWeatherByDate with detailDate $detailDateTimeStamp")
-        return@lazyDeferred forecastRepository.getFutureWeatherByDateTimestamp(detailDateTimeStamp)
-    }*/
 
     suspend fun getDetailData() {
         weather = forecastRepository.getFutureWeatherByDateTimestamp(detailDateTimeStamp)
         uiViewsState = Transformations.map(weather) {
-            FutureDetailState(it, isMetric, this)
+            FutureDetailState(it, isMetric, getTimeZoneOffsetInSeconds())
         }
     }
 

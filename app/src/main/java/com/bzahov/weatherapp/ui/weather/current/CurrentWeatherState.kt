@@ -8,7 +8,7 @@ import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 data class CurrentWeatherState(
     val weatherData: CurrentWeatherEntry,
     val isMetric: Boolean,
-    val viewModel: CurrentWeatherViewModel
+    val offsetInSeconds: Int
 ) {
 
     lateinit var currentVisibility: String
