@@ -11,12 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.internal.OtherUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
+import com.bzahov.weatherapp.ui.base.states.EmptyState
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
@@ -84,16 +84,43 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                updateLocation(location.name, requireActivity())
+                updateActionBarTitle(location.name, requireActivity())
                 Log.d(TAG, "Update location with that data: $location")
             })
 
             currentWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 if (it == null) return@Observer
-                updateUI(it)
-                Log.d(TAG, "Update UI with that data: $it")
+
+                when(it){
+                    is CurrentWeatherState -> {
+                        Log.d(TAG, "Update UI with that data: $it")
+                        updateUI(it)
+                    }
+                    is EmptyState -> {
+                        updateEmptyStateUI(it)
+                        Log.e(TAG, "Update UI with EMPTY STATE $it")
+                    }
+                    else ->{
+                        Log.e(TAG, "Found UNKNOWN STATE $it")
+                    }
+                }
+
             })
         }
+    }
+
+    private fun updateEmptyStateUI(it: EmptyState) {
+        updateCondition(it.warningString )
+        updateActionBarSubtitleWithResource(R.string.current_weather_today, requireActivity())
+        updatePrecipitation(it.errorString )
+        updateTemperatures(it.errorString ,it.errorString )
+        updateWind(it.errorString )
+        updateVisibility(it.errorString )
+        //updateBackground(it.isDay)
+        // TODO put it into viewModel
+        GlideApp.with(this)
+            .load(it.errorIconID)
+            .into(currentIConditionIcon)
     }
 
 
@@ -110,7 +137,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         updateBackground(it.isDay)
         // TODO put it into viewModel
         GlideApp.with(this)
-            .load(it.weatherData.weatherIcons.last())
+            .load(it.iconStringID)
             .into(currentIConditionIcon)
     }
 
@@ -118,7 +145,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         mSwipeRefreshLayout.isRefreshing = true
         mSwipeRefreshLayout.setOnRefreshListener {
             mSwipeRefreshLayout.isRefreshing = false
-            if (OtherUtils.isOnline(requireContext())) {
+            if (viewModel.isOnline()) {
                 Log.d(TAG, "Updating Weather Data")
                 UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
                 launch { viewModel.requestRefreshOfData() }

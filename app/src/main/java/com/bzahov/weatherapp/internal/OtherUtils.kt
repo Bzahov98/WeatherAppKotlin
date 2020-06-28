@@ -1,20 +1,11 @@
 package com.bzahov.weatherapp.internal
 
-import android.content.Context
-import android.net.ConnectivityManager
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class OtherUtils {
     companion object{
-        fun isOnline(context: Context): Boolean {
-            val connectivityManager =context.getSystemService(Context.CONNECTIVITY_SERVICE)
-                    as ConnectivityManager
-            // QUESTION: deprecated?
-            val networkInfo = connectivityManager.activeNetworkInfo
-            return networkInfo != null && networkInfo.isConnected
-        }
 
         fun isDayTime(timeOffset: Int = 0): (FutureDayData) -> Boolean {
             return {

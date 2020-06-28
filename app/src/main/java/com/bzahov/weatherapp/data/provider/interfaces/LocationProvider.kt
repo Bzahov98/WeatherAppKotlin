@@ -9,6 +9,7 @@ interface LocationProvider {
     fun getLocationString(): String
     fun isDeviceLocationSelected(): Boolean
     fun resetCustomLocationToDefault()
+    fun isLocationEnabled(): Boolean
 
     suspend fun hasLocationChanged(lastWeatherLocation: WeatherLocation): Boolean
     suspend fun getPreferredLocationString(): String

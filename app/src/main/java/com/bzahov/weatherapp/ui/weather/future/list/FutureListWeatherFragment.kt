@@ -13,13 +13,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
-import com.bzahov.weatherapp.internal.OtherUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.ui.base.ScopedFragment
+import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.future.list.recyclerview.FutureWeatherItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -32,7 +33,6 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
-    private lateinit var allWeatherData: List<FutureDayData>
     private val TAG = "FutureDetailWeatherFragment"
     override val kodein by closestKodein()
     private val viewModelFactory: FutureListWeatherViewModelFactory by instance<FutureListWeatherViewModelFactory>()
@@ -67,9 +67,12 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         mSwipeRefreshLayout.isRefreshing = true
         mSwipeRefreshLayout.setOnRefreshListener {
             mSwipeRefreshLayout.isRefreshing = false
-            if (OtherUtils.isOnline(requireContext())) {
-                Log.d(TAG, "Updating Weather Data")
-                UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
+            if (viewModel.isOnline()) {
+                Log.d(TAG, getAppString(R.string.loading_updateting_data))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    getAppString(R.string.loading_updateting_data),
+                    requireActivity()
+                )
                 launch { viewModel.requestRefreshOfData() }
             } else {
                 Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
@@ -92,7 +95,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             Log.d(TAG, "buildUi $futureWeatherLiveData")
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                updateLocation(location.name, requireActivity())
+                updateActionBarTitle(location.name, requireActivity())
                 Log.d(TAG, "bindUI Update location with that data: $location")
             })
 
@@ -105,11 +108,31 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
                     }
                     return@Observer
                 } else {
-                    updateUI(it)
-                    updateRecyclerViewData(it.weatherItems)
+                    when (it) {
+                        is FutureListState -> {
+                            Log.d(TAG, "Update UI with that data: $it")
+                            updateUI(it)
+                            updateRecyclerViewData(it.weatherItems)
+                        }
+                        is EmptyState -> {
+                            updateEmptyStateUI(it)
+                            Log.e(TAG, "Update UI with EMPTY STATE $it")
+                        }
+                        else -> {
+                            Log.e(TAG, "Found UNKNOWN STATE $it")
+                        }
+                    }
                 }
             })
         }
+    }
+
+    private fun updateEmptyStateUI(it: EmptyState) {
+        updateActionBarTitle("Loading...", requireActivity())
+        updateActionBarSubtitle(
+            it.warningString,
+            requireActivity()
+        );
     }
 
     private fun initRecyclerView() {

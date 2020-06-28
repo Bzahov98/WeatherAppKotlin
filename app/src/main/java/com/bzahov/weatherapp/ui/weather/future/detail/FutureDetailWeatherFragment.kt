@@ -15,12 +15,13 @@ import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.LocalDateConverter
-import com.bzahov.weatherapp.internal.OtherUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.internal.exceptions.DateNotFoundException
+import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
+import com.bzahov.weatherapp.ui.base.states.EmptyState
 import kotlinx.android.synthetic.main.future_detail_weather_fragment.*
 import kotlinx.android.synthetic.main.future_detail_weather_fragment.view.*
 import kotlinx.coroutines.Job
@@ -78,16 +79,41 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
                 Log.e(TAG, "Location : $location")
-                updateLocation(location.name, requireActivity())
+                updateActionBarTitle(location.name, requireActivity())
                 Log.d(TAG, "Update location with that data: $location")
             })
 
             futureDetailWeatherLiveData.observe(viewLifecycleOwner, Observer {
-                Log.d(TAG, "UpdateUI for FutureDayData with: \n ${it ?: "null"} \n")
                 if (it == null) return@Observer
-                updateUI(it)
+
+                when(it){
+                    is FutureDetailState -> {
+                        Log.d(TAG, "Update UI with that data: $it")
+                        updateUI(it)
+                    }
+                    is EmptyState -> {
+                        updateEmptyStateUI(it)
+                        Log.e(TAG, "Update UI with EMPTY STATE $it")
+                    }
+                    else ->{
+                        Log.e(TAG, "Found UNKNOWN STATE $it")
+                    }
+                }
             })
         }
+    }
+
+    private fun updateEmptyStateUI(it: EmptyState) {
+        updateCondition(it.warningString)
+        updateActionBarSubtitle(it.errorString)
+        updatePrecipitation(it.errorString)
+        updateTemperatures(it.errorString, it.errorString)
+        futureDetailWind.text = it.errorString
+        updateVisibility(it.errorString)
+
+        GlideApp.with(this)
+            .load(it.errorIconID)
+            .into(futureDetailIConditionIcon)
     }
 
     private fun updateUI(it: FutureDetailState) {
@@ -109,7 +135,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
         mSwipeRefreshLayout.isRefreshing = true
         mSwipeRefreshLayout.setOnRefreshListener {
             mSwipeRefreshLayout.isRefreshing = false
-            if (OtherUtils.isOnline(requireContext())) {
+            if (viewModel.isOnline()) {
                 Log.d(TAG, getAppString(R.string.snackbar_updation_weather_data))
                 UIUpdateViewUtils.showSnackBarMessage(
                     getAppString(R.string.snackbar_updation_weather_data),

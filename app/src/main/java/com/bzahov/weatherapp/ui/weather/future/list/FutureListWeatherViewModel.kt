@@ -1,21 +1,26 @@
 package com.bzahov.weatherapp.ui.weather.future.list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.data.provider.interfaces.InternetProvider
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.internal.enums.UnitSystem
 import com.bzahov.weatherapp.internal.lazyDeferred
+import com.bzahov.weatherapp.ui.base.states.AbstractState
+import com.bzahov.weatherapp.ui.base.states.EmptyState
 import java.time.LocalDate
 private const val TAG = "FutureListWeatherViewModel"
 class FutureListWeatherViewModel(
     private val forecastRepository: FutureForecastRepository,
     unitProvider: UnitProvider,
-    locationProvider: LocationProvider
+    locationProvider: LocationProvider,
+    private val internetProvider: InternetProvider
 ) : ViewModel() {
 
     private val unitSystem = unitProvider.getUnitSystem()
@@ -27,8 +32,8 @@ class FutureListWeatherViewModel(
         get() = locationSystem
 
     lateinit var weather: LiveData<List<FutureDayData>>
-    private val _uiViewsState = MutableLiveData<FutureListState>()
-    var uiViewsState: LiveData<FutureListState> = _uiViewsState
+    private val _uiViewsState = MutableLiveData<AbstractState>()
+    var uiViewsState: LiveData<AbstractState> = _uiViewsState
 
     /*val forecastWeather by lazyDeferred {
         Log.d(TAG,"forecastWeatherDefered")
@@ -46,8 +51,17 @@ class FutureListWeatherViewModel(
 
     suspend fun getFutureListData() {
         weather = forecastRepository.getFutureWeather(LocalDate.now())
+//        if(weather.value == null ){
+//            Log.e(TAG,"getFutureListData List<FutureDayData> is null")
+//            return
+//        }
         uiViewsState = Transformations.map(weather) {
-            FutureListState(it, isMetric, this)
+            if (weather.value == null) {
+                Log.e(TAG, "getCurrentWeather CurrentWeatherEntry is null")
+                EmptyState()
+            } else
+            FutureListState(it, isMetric)
         }
     }
+    fun isOnline(): Boolean  = internetProvider.isNetworkConnected
 }

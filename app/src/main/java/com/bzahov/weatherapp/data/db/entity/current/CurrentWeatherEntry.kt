@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.bzahov.weatherapp.data.db.DateConverters
+import com.bzahov.weatherapp.data.db.entity.WeatherEntity
 import com.google.gson.annotations.SerializedName
 
 const val CURRENT_WEATHER_ID = 0
@@ -41,7 +42,7 @@ data class CurrentWeatherEntry(
 
     @SerializedName("wind_speed")
     val speed: Double
-) {
+) : WeatherEntity {
     @PrimaryKey(autoGenerate = false)
     var id: Int =
         CURRENT_WEATHER_ID // we have only 1 instance in db

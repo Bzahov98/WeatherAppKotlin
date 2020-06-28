@@ -88,6 +88,8 @@
     <string name="warning_device_offline">Your device is offline, can\'t update data</string>
     <string name="snackbar_updation_weather_data">Updating Weather Data</string>
     <string name="tools_default_temp">23.0 C</string>
+    <string name="no_data_warning">No Data</string>
+    <string name="loading_updateting_data">Updating Weather Data</string>
 
 
 </resources>

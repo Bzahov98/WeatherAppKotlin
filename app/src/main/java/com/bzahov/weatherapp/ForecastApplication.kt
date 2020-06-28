@@ -11,8 +11,10 @@ import com.bzahov.weatherapp.data.network.FutureWeatherNetworkDataSourceImpl
 import com.bzahov.weatherapp.data.network.intefaces.ConnectivityInterceptor
 import com.bzahov.weatherapp.data.network.intefaces.CurrentWeatherNetworkDataSource
 import com.bzahov.weatherapp.data.network.intefaces.FutureWeatherNetworkDataSource
+import com.bzahov.weatherapp.data.provider.InternetProviderImpl
 import com.bzahov.weatherapp.data.provider.LocationProviderImpl
 import com.bzahov.weatherapp.data.provider.UnitProviderImpl
+import com.bzahov.weatherapp.data.provider.interfaces.InternetProvider
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.CurrentForecastRepositoryImpl
@@ -21,7 +23,7 @@ import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.data.services.OpenWeatherApiService
 import com.bzahov.weatherapp.data.services.WeatherApiService
-import com.bzahov.weatherapp.ui.settings.SettingsFragmentViewModelFactory
+import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.detail.FutureDetailWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherViewModelFactory
@@ -46,7 +48,7 @@ class ForecastApplication : Application(), KodeinAware {
         bind() from singleton { instance<ForecastDatabase>().currentLocationDao() }
         bind() from singleton { instance<ForecastDatabase>().forecastDao() } // for forecast
 
-        bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
+        bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance(),instance()) }
         // bind different weather api services
         bind() from singleton {
             WeatherApiService(
@@ -62,6 +64,22 @@ class ForecastApplication : Application(), KodeinAware {
         bind<CurrentForecastRepository>() with singleton { CurrentForecastRepositoryImpl(instance(), instance(),instance(),instance(),instance()) }
         bind<FutureForecastRepository>() with singleton {
             FutureForecastRepositoryImpl(
+                instance(), instance(), instance(), instance(), instance()
+            )
+        }
+
+        // bind all providers
+        bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
+        bind<LocationProvider>() with singleton{ LocationProviderImpl(instance(),instance()) }
+        bind<InternetProvider>() with singleton{ InternetProviderImpl(instance()) }
+
+        //bind location providers
+        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
+
+        //bind all fragment's view models
+        bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance(),instance())}
+        bind() from provider {
+            SettingsFragmentViewModelFactory(
                 instance(),
                 instance(),
                 instance(),
@@ -69,20 +87,9 @@ class ForecastApplication : Application(), KodeinAware {
                 instance()
             )
         }
-
-        // bind all providers
-        bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
-        bind<LocationProvider>() with singleton{ LocationProviderImpl(instance(),instance()) }
-
-        //bind location providers
-        bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
-
-        //bind all fragment's view models
-        bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance())}
-        bind() from provider { SettingsFragmentViewModelFactory(instance(),instance(),instance()) }
-        bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance()) }
-        bind() from factory { detailDate: LocalDateTime -> FutureDetailWeatherViewModelFactory(detailDate,instance(),instance(),instance()) }
-        bind() from provider { OneDayWeatherViewModelFactory(instance(),instance(),instance()) }
+        bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance(),instance()) }
+        bind() from factory { detailDate: LocalDateTime -> FutureDetailWeatherViewModelFactory(detailDate,instance(),instance(),instance(),instance()) }
+        bind() from provider { OneDayWeatherViewModelFactory(instance(),instance(),instance(), instance()) }
         //bind() from factory { startDate: LocalDateTime, endDate: LocalDateTime -> OneDayWeatherViewModelFactory(startDate,endDate,instance(),instance(),instance()) }
 
     }

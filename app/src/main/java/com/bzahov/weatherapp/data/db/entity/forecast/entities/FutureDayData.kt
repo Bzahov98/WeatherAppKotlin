@@ -3,6 +3,7 @@ package com.bzahov.weatherapp.data.db.entity.forecast.entities
 
 import androidx.room.*
 import com.bzahov.weatherapp.data.db.DateConverters
+import com.bzahov.weatherapp.data.db.entity.WeatherEntity
 import com.bzahov.weatherapp.data.db.entity.forecast.model.*
 import com.google.gson.annotations.SerializedName
 
@@ -44,6 +45,6 @@ data class FutureDayData(
 
     @Embedded(prefix = "snow_")
     val snow: Snow?
-)
+): WeatherEntity
 
 //@Entity(foreignKeys = [ForeignKey(entity = WeatherDetails::class,childColumns = ["futureDetailsID"],parentColumns = ["futureID"],onDelete = ForeignKey.CASCADE)])

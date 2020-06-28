@@ -14,11 +14,11 @@ import androidx.navigation.Navigation
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.internal.OtherUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateLocation
 import com.bzahov.weatherapp.ui.base.ScopedFragment
+import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -59,10 +59,9 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun initRefresherLayout() {
         mSwipeRefreshLayout.isRefreshing = true
-
         mSwipeRefreshLayout.setOnRefreshListener {
             mSwipeRefreshLayout.isRefreshing = false
-            if (OtherUtils.isOnline(requireContext())) {
+            if (viewModel.isOnline()) {
                 Log.d(TAG, "Updating Weather Data")
                 UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
                 launch { viewModel.requestRefreshOfData() }
@@ -101,24 +100,65 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
             Log.d(TAG, "buildUi $oneDayWeatherLiveData")
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
-                updateLocation(location.name, requireActivity())
+                updateActionBarTitle(location.name, requireActivity())
                 Log.d(TAG, "bindUI Update location with that data: $location")
             })
 
             oneDayWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?: "null"} \n")
-                if (it == null) {
+              /*  if (it == null) {
                     Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
                     launch {
                         viewModel.requestRefreshOfData()
                     }
                     return@Observer
-                } else {
-                    updateUI(it)
-                    updateRecyclerViewData(it.hourInfoItemsList)
-                }
+                } else {*/
+                    when (it) {
+                        null ->{
+
+                            Log.e(TAG, "State is null, Update UI with EMPTY STATE $it")
+                            updateEmptyStateUI(it)
+                        }
+                        is OneDayWeatherState -> {
+                            Log.d(TAG, "Update UI with that data: $it")
+                            updateUI(it)
+                            updateRecyclerViewData(it.hourInfoItemsList)
+                        }
+                        is EmptyState -> {
+                            Log.e(TAG, "Update UI with EMPTY STATE $it")
+                            updateEmptyStateUI(it)
+                        }
+                        else -> {
+                            Log.e(TAG, "Found UNKNOWN STATE $it")
+                            updateEmptyStateUI(null)
+                        }
+                    }
+                //}
             })
         }
+    }
+
+    private fun updateEmptyStateUI( it: EmptyState?) {
+
+        var warningString = getAppString(R.string.no_data_warning)
+        var errorString = getAppString(R.string.no_data_warning)
+
+        if(it != null){
+            warningString = it.warningString
+            errorString = it.errorString
+        }
+        updateActionBarTitle("Loading...",requireActivity())
+        updateActionBarDescription(warningString)
+//        updateDayTemperatures(
+//            null,
+//            requireView().oneDayTemperatureView,
+//            errorString
+//        )
+//        updateNightTemperatures(
+//            null,
+//            requireView().oneNightTemperatureView,
+//            errorString
+//        )
     }
 
     private fun updateUI(it: OneDayWeatherState) {
@@ -187,17 +227,36 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         updateIcon(nightIconNumber, view.iconViewNightConditionIcon)
     }
 
-    private fun updateDayTemperatures(calculatedDayData: MinMaxAvgTemp, view: View) {
+    private fun updateDayTemperatures(calculatedDayData: MinMaxAvgTemp?, view: View, errorString: String = "") {
         view.tempViewTittleText.text = getAppString(R.string.tempView_title_day)
+        if (calculatedDayData == null) {
+            fillTempViews(null, view.oneNightTemperatureView,errorString)
+            return
+        } else
         fillTempViews(calculatedDayData, view.oneDayTemperatureView)
     }
 
-    private fun updateNightTemperatures(calculatedNightData: MinMaxAvgTemp, view: View) {
+    private fun updateNightTemperatures(calculatedNightData: MinMaxAvgTemp?, view: View, errorString: String = "") {
         view.tempViewTittleText.text = getAppString(R.string.tempView_title_night)
-        fillTempViews(calculatedNightData, view.oneNightTemperatureView)
+        if (calculatedNightData == null) {
+            fillTempViews(null, view.oneNightTemperatureView,errorString)
+            return
+        } else
+            fillTempViews(calculatedNightData, view.oneNightTemperatureView)
     }
 
-    private fun fillTempViews(calculatedData: MinMaxAvgTemp, view: View) {
+    private fun fillTempViews(
+        calculatedData: MinMaxAvgTemp?,
+        view: View,
+        errorString: String = ""
+    ) {
+        if (calculatedData == null) {
+            view.tempViewMaxTemp.text = errorString
+            view.tempViewMinTemp.text = errorString
+            view.tempViewTemperature.text = errorString
+            view.tempViewFeelsLike.text = errorString
+            return
+        }
         view.tempViewMaxTemp.text = calculatedData.maxTempText
         view.tempViewMinTemp.text = calculatedData.minTempText
         view.tempViewTemperature.text = calculatedData.averageTempText

@@ -3,6 +3,7 @@ package com.bzahov.weatherapp.data.db.entity.current
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.bzahov.weatherapp.data.db.entity.WeatherEntity
 import com.google.gson.annotations.SerializedName
 import java.time.Instant
 import java.time.ZoneId
@@ -27,7 +28,7 @@ data class WeatherLocation(
     val timezoneId: String,
     @SerializedName("utc_offset")
     val utcOffset: String
-){
+): WeatherEntity {
     constructor() : this(0.0,0.0,"TEST","TEEST","TEST","TEST",21312321,"TEST","TESR")
     //constructor(name : String,country: String,lat: Double,lon: Double) : this()
     @PrimaryKey(autoGenerate = false)

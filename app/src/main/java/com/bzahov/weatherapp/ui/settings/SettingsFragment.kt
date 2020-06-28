@@ -3,6 +3,9 @@ package com.bzahov.weatherapp.ui.settings
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.EditTextPreference
@@ -13,8 +16,9 @@ import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.provider.CUSTOM_LOCATION
 import com.bzahov.weatherapp.data.provider.UNIT_SYSTEM
 import com.bzahov.weatherapp.data.provider.USE_DEVICE_LOCATION
-import com.bzahov.weatherapp.internal.OtherUtils.Companion.isOnline
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
+import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModel
+import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -22,7 +26,7 @@ import org.kodein.di.generic.instance
 
 private const val TAG = "SettingsFragment"
 
-class SettingsFragment : ScopedPreferenceCompatFragment(),
+class SettingsFragment() : ScopedPreferenceCompatFragment(),
     SharedPreferences.OnSharedPreferenceChangeListener, KodeinAware {
 
     override val kodein by closestKodein()
@@ -31,7 +35,15 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
-        makeSelectablePreferences()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -40,6 +52,8 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = null
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(SettingsFragmentViewModel::class.java)
+
+        makeSelectablePreferences()
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
@@ -82,12 +96,19 @@ class SettingsFragment : ScopedPreferenceCompatFragment(),
 
     private fun makeSelectablePreferences() {
         val unitSystemPreference = preferenceManager.findPreference<ListPreference>(UNIT_SYSTEM)
-        unitSystemPreference?.isSelectable = isOnline(requireContext())
-        val locationPreference =
-            preferenceManager.findPreference<EditTextPreference>(CUSTOM_LOCATION)
-        locationPreference?.isSelectable = isOnline(requireContext())
+        unitSystemPreference?.isSelectable = viewModel.isOnline()
         val currentLocationPreference =
             preferenceManager.findPreference<SwitchPreference>(USE_DEVICE_LOCATION)
-        currentLocationPreference?.isSelectable = isOnline(requireContext())
+
+        val isOnlineAndHaveLocation = viewModel.isOnline() && viewModel.isLocationEnabled()
+
+        currentLocationPreference?.isSelectable = isOnlineAndHaveLocation
+        val locationPreference: EditTextPreference? = preferenceManager.findPreference<EditTextPreference>(CUSTOM_LOCATION)
+
+        if (!viewModel.isLocationEnabled() && viewModel.isOnline()) {
+            locationPreference?.isSelectable = true
+        } else {
+            locationPreference?.isSelectable = viewModel.isOnline()
+        }
     }
 }

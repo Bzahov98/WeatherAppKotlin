@@ -5,6 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.bzahov.weatherapp.ForecastApplication
@@ -118,6 +121,23 @@ class LocationProviderImpl(
         else
             throw LocationPermissionNotGrantedException()).await()
     }
+
+    override fun isLocationEnabled(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            // This is new method provided in API 28
+            val lm =
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            lm.isLocationEnabled
+        } else {
+            // This is Deprecated in API 28
+            val mode: Int = Settings.Secure.getInt(
+                context.contentResolver, Settings.Secure.LOCATION_MODE,
+                Settings.Secure.LOCATION_MODE_OFF
+            )
+            mode != Settings.Secure.LOCATION_MODE_OFF
+        }
+    }
+
 
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(

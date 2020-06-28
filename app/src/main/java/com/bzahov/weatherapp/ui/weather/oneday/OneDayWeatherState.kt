@@ -6,37 +6,50 @@ import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import com.bzahov.weatherapp.internal.OtherUtils
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
+import com.bzahov.weatherapp.ui.base.states.AbstractWeatherState
 import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem
 
+private val TAG = "OneDayWeatherState"
+
 data class OneDayWeatherState(
-    val weatherData: List<FutureDayData>,
-    val isMetric: Boolean,
-    val timeZoneOffsetInSeconds: Int
-) {
-    lateinit var currentPrecipitationText: String
-    lateinit var oneDaySubtitle: String
+    override val weatherData: List<FutureDayData>,
+    override val isMetric: Boolean,
+    override val timeZoneOffsetInSeconds: Int
+) : AbstractWeatherState(weatherData, isMetric, timeZoneOffsetInSeconds) {
+
+    var currentPrecipitationText: String = errorString
+    var oneDaySubtitle: String = errorString
     lateinit var hourInfoItemsList: List<HourInfoItem>
     lateinit var minMaxAvgTemp: MinMaxAvgTemp
     lateinit var allDayWeatherAndAverageData: MinMaxAvgTemp
     lateinit var allNightWeatherAndAverageData: MinMaxAvgTemp
 
     init {
-        if (weatherData.isNullOrEmpty()) {
-            Log.e("OneDayWeatherState", "weather data is empty")
-        } else {
-            convertToHourInfoItems()
-            filterAllDayData()
-            filterAllNightData()
-            minMaxAvgTemp = MinMaxAvgTemp(weatherData, isMetric)
-            allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), isMetric)
-            allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), isMetric)
-            calculateSubtitle()
-        }
+        initData()
+    }
+
+    override fun calculateData() {
+        convertToHourInfoItems()
+        filterAllDayData()
+        filterAllNightData()
+        minMaxAvgTemp = MinMaxAvgTemp(weatherData, isMetric)
+        allDayWeatherAndAverageData = MinMaxAvgTemp(filterAllDayData(), isMetric)
+        allNightWeatherAndAverageData = MinMaxAvgTemp(filterAllNightData(), isMetric)
+        calculateSubtitle()
+    }
+
+    override fun setDefaultErrorData() {
+        Log.e(TAG, errorString)
+        currentPrecipitationText = errorString
+        oneDaySubtitle = errorString
+        hourInfoItemsList = emptyList()
+        minMaxAvgTemp = MinMaxAvgTemp()
+        allDayWeatherAndAverageData = MinMaxAvgTemp()
+        allNightWeatherAndAverageData = MinMaxAvgTemp()
     }
 
     private fun filterAllDayData() =
         weatherData.filter(OtherUtils.isDayTime(timeZoneOffsetInSeconds))
-
 
     private fun filterAllNightData() =
         weatherData.filterNot(OtherUtils.isDayTime(timeZoneOffsetInSeconds))
@@ -53,6 +66,7 @@ data class OneDayWeatherState(
             timeZoneOffsetInSeconds
         )
     }
+
     private fun calculatePrecipitation(precipitationVolume: Double) {
         val unitAbbreviation = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
             isMetric,
@@ -66,14 +80,15 @@ data class OneDayWeatherState(
 
 class MinMaxAvgTemp(
     private val dataSource: List<FutureDayData>,
-   private val isMetric: Boolean
+    isMetric: Boolean
 ) {
+    constructor() : this(emptyList(), true)
 
-    private val unitAbbreviation: String = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
-        isMetric,
-        getAppString(R.string.metric_temperature),
-        getAppString(R.string.imperial_temperature)
-    )
+
+    private var avgSumTemp: Double = 0.0
+    private var avgSumFeelsTemp: Double = 0.0
+    private var avgCount: Int = 0
+
     var minTemp: Double = 100.0
     val minTempText
         get() = String.format("%.1f $unitAbbreviation", minTemp)
@@ -90,34 +105,40 @@ class MinMaxAvgTemp(
     val averageFeelLikeTempText
         get() = String.format("%.1f $unitAbbreviation", averageFeelLikeTemp)
 
-    private var avgSumTemp: Double = 0.0
-    private var avgSumFeelsTemp: Double = 0.0
-    private var avgCount: Int = 0
-
-    val iconViewConditionText
-        get() = dataSource.random().weatherDetails.random().description
-
-    val iconConditionID
-        get() = dataSource.random().weatherDetails.random().icon
-
-    init {
-        calculateMinMaxAvgTemp()
-        averageTemp = calculateAvrTemp()
-        averageFeelLikeTemp = calculateAvrFeelsTemp()
-    }
-
-    private fun calculateAvrTemp(): Double {
-        if (avgCount == 0) {
-            return 0.0
+    val iconViewConditionText: String
+        get() {
+            return if (dataSource.isNotEmpty()) {
+                dataSource.random().weatherDetails.random().description
+            } else {
+                getAppString(R.string.no_data_warning)
+            }
         }
-        return avgSumTemp / avgCount
-    }
+
+    val iconConditionID: String
+        get() {
+            return if (dataSource.isNotEmpty()) {
+                dataSource.random().weatherDetails.random().icon
+            } else {
+                getAppString(R.string.no_data_warning)
+            }
+        }
 
     private fun calculateAvrFeelsTemp(): Double {
         if (avgCount == 0) {
             return 0.0
         }
         return avgSumFeelsTemp / avgCount
+    }
+
+    init {
+        if (dataSource.isNotEmpty()) {
+            calculateMinMaxAvgTemp()
+            averageTemp = calculateAvrTemp()
+            averageFeelLikeTemp = calculateAvrFeelsTemp()
+        } else {
+            Log.e(TAG, "MinMaxAvgTemp list is empty")
+        }
+
     }
 
     private fun calculateMinMaxAvgTemp() {
@@ -134,4 +155,17 @@ class MinMaxAvgTemp(
             }
         }
     }
+
+    private fun calculateAvrTemp(): Double {
+        if (avgCount == 0) {
+            return 0.0
+        }
+        return avgSumTemp / avgCount
+    }
+
+    private val unitAbbreviation: String = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
+        isMetric,
+        getAppString(R.string.metric_temperature),
+        getAppString(R.string.imperial_temperature)
+    )
 }

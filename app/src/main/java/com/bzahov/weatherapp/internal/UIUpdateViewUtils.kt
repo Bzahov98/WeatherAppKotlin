@@ -52,7 +52,7 @@ class UIUpdateViewUtils {
                     "$convertWindDirectionToString${wind.speed} $unitAbbreviation"
         }
 
-        fun updateLocation(location: String, activity: FragmentActivity) {
+        fun updateActionBarTitle(location: String, activity: FragmentActivity) {
             (activity as AppCompatActivity).supportActionBar?.title = location
         }
 

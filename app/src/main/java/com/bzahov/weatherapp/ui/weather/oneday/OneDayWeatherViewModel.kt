@@ -5,10 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
+import com.bzahov.weatherapp.data.provider.interfaces.InternetProvider
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.data.provider.interfaces.UnitProvider
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
-import com.bzahov.weatherapp.ui.base.FutureWeatherViewModel
+import com.bzahov.weatherapp.ui.base.states.AbstractState
+import com.bzahov.weatherapp.ui.base.states.EmptyState
+import com.bzahov.weatherapp.ui.base.viewmodels.FutureWeatherViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -17,8 +20,9 @@ import java.time.ZoneOffset
 class OneDayWeatherViewModel(
     forecastRepository: FutureForecastRepository,
     val unitProvider: UnitProvider,
-    private val locationProvider: LocationProvider
-) : FutureWeatherViewModel(forecastRepository, unitProvider, locationProvider) {
+    private val locationProvider: LocationProvider,
+    private val internetProvider: InternetProvider
+) : FutureWeatherViewModel(forecastRepository, unitProvider, internetProvider, locationProvider) {
     lateinit var startDateQuery: LocalDateTime
     private lateinit var endDateQuery: LocalDateTime
     val TAG = "OneDayWeatherViewModel"
@@ -29,8 +33,8 @@ class OneDayWeatherViewModel(
 
     lateinit var weather: LiveData<List<FutureDayData>>
 
-    private val _uiViewsState = MutableLiveData<OneDayWeatherState>()
-    var uiViewsState: LiveData<OneDayWeatherState> = _uiViewsState
+    private val _uiViewsState = MutableLiveData<AbstractState>()
+    var uiViewsState: LiveData<AbstractState> = _uiViewsState
 
     suspend fun getOneDayData() {
         Log.d(
@@ -52,8 +56,17 @@ class OneDayWeatherViewModel(
             endDateLong
         )
         requestRefreshOfData()
-        uiViewsState = Transformations.map(weather){
-            OneDayWeatherState(it,isMetric,getTimeZoneOffsetInSeconds())
+//        if(weather.value == null ){
+//            Log.e(TAG,"getOneDayData List<FutureDayData> is null")
+//            return
+//        }
+        uiViewsState = Transformations.map(weather) {
+
+            if (weather.value == null) {
+                Log.e(TAG, "getCurrentWeather CurrentWeatherEntry is null")
+                EmptyState()
+            } else
+            OneDayWeatherState(it, isMetric, getTimeZoneOffsetInSeconds())
         }
     }
 
