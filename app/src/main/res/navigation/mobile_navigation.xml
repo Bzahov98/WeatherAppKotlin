@@ -20,7 +20,7 @@
             app:destination="@id/futureDetailWeatherFragment" />
     </fragment>
     <fragment
-        android:id="@+id/FutureListWeatherFragment"
+        android:id="@+id/futureListWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherFragment"
         android:label="future_list_weather_fragment"
         tools:layout="@layout/future_list_weather_fragment" >

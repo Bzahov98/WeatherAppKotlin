@@ -1,5 +1,6 @@
 package com.bzahov.weatherapp.ui.weather.oneday
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,17 +12,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
+import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.animationUtils.AnimationUtils.Companion.showHideViewAndActionBarWithAnimation
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_one_day.*
 import kotlinx.android.synthetic.main.item_one_day.view.*
 import kotlinx.android.synthetic.main.layout_day_night_description_view.view.*
@@ -33,6 +38,8 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
+
+
     private val TAG = "OneDayWeatherFragment"
 
     override val kodein by closestKodein()
@@ -40,7 +47,9 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
 
     private val viewModelFactory: OneDayWeatherViewModelFactory by instance<OneDayWeatherViewModelFactory>()
     private lateinit var groupAdapter: GroupAdapter<ViewHolder>
+    private lateinit var recyclerView: RecyclerView
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private var lastOrientation: Int = 0
 
 
     override fun onCreateView(
@@ -49,6 +58,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
     ): View? {
         val view = inflater.inflate(R.layout.item_one_day, container, false)
         mSwipeRefreshLayout = view.oneDayWeatherFragmentSwipe
+        lastOrientation = resources.configuration.orientation;
         return view
     }
 
@@ -84,11 +94,42 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         viewModel.resetStartEndDates()
 
         initRecyclerView()
+
+        getActionBar().show()
+//            oneDayPerHourRecyclerView.setOnTouchListener {
+//                v, event ->
+//            v.performClick()
+//            when(event.action){
+////                MotionEvent.ACTION_DOWN -> {
+////                    oneDayGroupData.visibility = View.GONE
+////                }
+//                MotionEvent.AXIS_SCROLL -> {
+//                    oneDayGroupData.visibility = View.GONE
+//
+//                }
+//                else ->{
+//                    oneDayGroupData.visibility = View.VISIBLE
+//                }
+//            }
+//            return@setOnTouchListener v.onTouchEvent(event)
+//        }
     }
 
     override fun onAttachFragment(childFragment: Fragment) {
         super.onAttachFragment(childFragment)
         bindUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lastOrientation = resources.configuration.orientation
+        bindUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        getActionBar().show()
+        getBottomNavigationView().visibility = View.VISIBLE
     }
 
     private fun bindUI(): Job {
@@ -106,48 +147,48 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
 
             oneDayWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?: "null"} \n")
-              /*  if (it == null) {
-                    Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
-                    launch {
-                        viewModel.requestRefreshOfData()
-                    }
-                    return@Observer
-                } else {*/
-                    when (it) {
-                        null ->{
+                /*  if (it == null) {
+                      Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
+                      launch {
+                          viewModel.requestRefreshOfData()
+                      }
+                      return@Observer
+                  } else {*/
+                when (it) {
+                    null -> {
 
-                            Log.e(TAG, "State is null, Update UI with EMPTY STATE $it")
-                            updateEmptyStateUI(it)
-                        }
-                        is OneDayWeatherState -> {
-                            Log.d(TAG, "Update UI with that data: $it")
-                            updateUI(it)
-                            updateRecyclerViewData(it.hourInfoItemsList)
-                        }
-                        is EmptyState -> {
-                            Log.e(TAG, "Update UI with EMPTY STATE $it")
-                            updateEmptyStateUI(it)
-                        }
-                        else -> {
-                            Log.e(TAG, "Found UNKNOWN STATE $it")
-                            updateEmptyStateUI(null)
-                        }
+                        Log.e(TAG, "State is null, Update UI with EMPTY STATE $it")
+                        updateEmptyStateUI(it)
                     }
+                    is OneDayWeatherState -> {
+                        Log.d(TAG, "Update UI with that data: $it")
+                        updateUI(it)
+                        updateRecyclerViewData(it.hourInfoItemsList)
+                    }
+                    is EmptyState -> {
+                        Log.e(TAG, "Update UI with EMPTY STATE $it")
+                        updateEmptyStateUI(it)
+                    }
+                    else -> {
+                        Log.e(TAG, "Found UNKNOWN STATE $it")
+                        updateEmptyStateUI(null)
+                    }
+                }
                 //}
             })
         }
     }
 
-    private fun updateEmptyStateUI( it: EmptyState?) {
+    private fun updateEmptyStateUI(it: EmptyState?) {
 
-        var warningString = getAppString(R.string.no_data_warning)
-        var errorString = getAppString(R.string.no_data_warning)
+        var warningString = getAppString(R.string.error_no_data_warning)
+        var errorString = getAppString(R.string.error_no_data_warning)
 
-        if(it != null){
+        if (it != null) {
             warningString = it.warningString
             errorString = it.errorString
         }
-        updateActionBarTitle("Loading...",requireActivity())
+        updateActionBarTitle("Loading...", requireActivity())
         updateActionBarDescription(warningString)
 //        updateDayTemperatures(
 //            null,
@@ -183,7 +224,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
 
     private fun initRecyclerView() {
         groupAdapter = GroupAdapter<ViewHolder>()
-        oneDayPerHourRecyclerView.apply {
+        recyclerView = oneDayPerHourRecyclerView.apply {
             adapter = groupAdapter
         }
         groupAdapter.setOnItemClickListener { item, view ->
@@ -196,6 +237,47 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
             Log.e(TAG, "GroupAdapter.setOnItemClickListener ${itemDetail}\n")
             showHourInfoDetails(itemDetail.dtTxt, view)
         }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && getBottomNavigationView().isShown) {
+                    getBottomNavigationView()?.visibility = View.GONE;
+                } else if (dy < 0) {
+                    getBottomNavigationView()?.visibility = View.VISIBLE;
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (lastOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if ((!recyclerView.canScrollVertically(1) || !recyclerView.canScrollHorizontally(
+                            -1
+                        )) &&/*newState == RecyclerView.SCROLL_STATE_SETTLING || */newState == RecyclerView.SCROLL_STATE_IDLE
+                    ) {
+                        //oneDayGroupData.clearAnimation()
+                        if (!getActionBar().isShowing) {
+                            showHideViewAndActionBarWithAnimation(
+                                oneDayGroupData, View.VISIBLE,
+                                actionBar = getActionBar()
+                            )
+                        }
+                    } else {
+                        //oneDayGroupData.clearAnimation()
+                        if (getActionBar().isShowing) {
+                            showHideViewAndActionBarWithAnimation(
+                                oneDayGroupData,
+                                View.GONE,
+                                1111,
+                                222,
+                                getActionBar()
+                            )
+
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun updateRecyclerViewData(hourInfoItemsList: List<HourInfoItem>) {
@@ -227,19 +309,27 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         updateIcon(nightIconNumber, view.iconViewNightConditionIcon)
     }
 
-    private fun updateDayTemperatures(calculatedDayData: MinMaxAvgTemp?, view: View, errorString: String = "") {
-        view.tempViewTittleText.text = getAppString(R.string.tempView_title_day)
+    private fun updateDayTemperatures(
+        calculatedDayData: MinMaxAvgTemp?,
+        view: View,
+        errorString: String = ""
+    ) {
+        view.tempViewTittleText.text = getAppString(R.string.weather_text_temp_title_day)
         if (calculatedDayData == null) {
-            fillTempViews(null, view.oneNightTemperatureView,errorString)
+            fillTempViews(null, view.oneNightTemperatureView, errorString)
             return
         } else
-        fillTempViews(calculatedDayData, view.oneDayTemperatureView)
+            fillTempViews(calculatedDayData, view.oneDayTemperatureView)
     }
 
-    private fun updateNightTemperatures(calculatedNightData: MinMaxAvgTemp?, view: View, errorString: String = "") {
-        view.tempViewTittleText.text = getAppString(R.string.tempView_title_night)
+    private fun updateNightTemperatures(
+        calculatedNightData: MinMaxAvgTemp?,
+        view: View,
+        errorString: String = ""
+    ) {
+        view.tempViewTittleText.text = getAppString(R.string.weather_text_temp_title_night)
         if (calculatedNightData == null) {
-            fillTempViews(null, view.oneNightTemperatureView,errorString)
+            fillTempViews(null, view.oneNightTemperatureView, errorString)
             return
         } else
             fillTempViews(calculatedNightData, view.oneNightTemperatureView)
@@ -267,10 +357,10 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware {
         (activity as? AppCompatActivity)?.supportActionBar?.subtitle = subtitle
     }
 
-    override fun onResume() {
-        super.onResume()
-        bindUI()
-    }
+    private fun getActionBar() = (requireActivity() as MainActivity).supportActionBar!!
+
+    private fun getBottomNavigationView() = requireActivity().bottom_navigation
+
 }
 
 

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/DayCardView"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,48 +15,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/futureWeatherDate"
+            style="@style/lowimportant_text"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="32dp"
-            android:textAlignment="center"
-            android:textSize="@dimen/normal_text_size"
-            android:textStyle="italic"
+            android:paddingBottom="@dimen/corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/futureConditionText"
             tools:text="1.1.2000" />
 
-        <TextView
-            android:id="@+id/futureTemperature"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/futureConditionTextHolder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:foregroundGravity="center"
-            android:text="0.0°C"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/futureConditionText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
-            tools:text="23.0°C" />
-
-        <TextView
-            android:id="@+id/futureConditionText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_margin="3dp"
+            app:cardCornerRadius="@dimen/corner_radius"
+            app:layout_constraintBottom_toTopOf="@+id/futureWeatherDate"
             app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
-            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
-            tools:text="Clear" />
+            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/futureConditionText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autoSizeTextType="none"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                tools:text="Clear" />
+        </com.google.android.material.card.MaterialCardView>
 
         <ImageView
             android:id="@+id/futureConditionIcon"
@@ -74,6 +66,24 @@
             app:layout_constraintWidth_percent="0.15"
             tools:src="@drawable/ic_weather_sunny"
             tools:tint="#f9a920" />
+
+        <!--<TextView
+            android:id="@+id/futureTemperature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:text="0.0°C"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/futureConditionText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
+            tools:text="23.0°C" />
+
+
 
         <TextView
             android:id="@+id/futureFeelsLike"
@@ -162,21 +172,33 @@
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
             app:layout_constraintTop_toTopOf="@+id/futureFeelsLike"
-            tools:text="23.0°C" />
+            tools:text="23.0°C" />-->
+
+        <include
+            android:id="@+id/futureTemperatureView"
+            layout="@layout/layout_temperature_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineLeftVertical"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineRightVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75" />
+            app:layout_constraintGuide_percent="0.7" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineLeftVertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
+            app:layout_constraintGuide_percent="0.3" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineHorizont"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/currentWeatherFragment"
@@ -10,8 +11,14 @@
         android:icon="@drawable/ic_today"
         android:title="@string/menu_one_day"/>
 
+<!--    <item-->
+<!--        android:id="@+id/action_search"-->
+<!--        android:icon="@android:drawable/ic_menu_search"-->
+<!--        app:showAsAction="ifRoom|collapseActionView"-->
+<!--        app:actionViewClass="androidx.appcompat.widget.SearchView"-->
+<!--        android:title="Search"/>-->
     <item
-        android:id="@+id/FutureListWeatherFragment"
+        android:id="@+id/futureListWeatherFragment"
         android:icon="@drawable/ic_calendar_week"
         android:title="@string/menu_sevendays"/>
     <item

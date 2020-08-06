@@ -1,8 +1,13 @@
 package com.bzahov.weatherapp
 
 import android.app.Application
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
+import android.os.Build
 import androidx.preference.PreferenceManager
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
@@ -35,6 +40,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
 import org.kodein.di.generic.*
 import java.time.LocalDateTime
+import java.util.concurrent.locks.LockSupport
 
 class ForecastApplication : Application(), KodeinAware {
 
@@ -48,7 +54,12 @@ class ForecastApplication : Application(), KodeinAware {
         bind() from singleton { instance<ForecastDatabase>().currentLocationDao() }
         bind() from singleton { instance<ForecastDatabase>().forecastDao() } // for forecast
 
-        bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance(),instance()) }
+        bind<ConnectivityInterceptor>() with singleton {
+            ConnectivityInterceptorImpl(
+                instance(),
+                instance()
+            )
+        }
         // bind different weather api services
         bind() from singleton {
             WeatherApiService(
@@ -58,10 +69,26 @@ class ForecastApplication : Application(), KodeinAware {
         bind() from singleton { OpenWeatherApiService(instance()) } // for forecast
 
         // bind different data sources for each api service
-        bind<CurrentWeatherNetworkDataSource>() with singleton { CurrentWeatherNetworkDataSourceImpl(instance()) }
-        bind<FutureWeatherNetworkDataSource>() with singleton { FutureWeatherNetworkDataSourceImpl(instance()) }
+        bind<CurrentWeatherNetworkDataSource>() with singleton {
+            CurrentWeatherNetworkDataSourceImpl(
+                instance()
+            )
+        }
+        bind<FutureWeatherNetworkDataSource>() with singleton {
+            FutureWeatherNetworkDataSourceImpl(
+                instance()
+            )
+        }
         // bind app repository
-        bind<CurrentForecastRepository>() with singleton { CurrentForecastRepositoryImpl(instance(), instance(),instance(),instance(),instance()) }
+        bind<CurrentForecastRepository>() with singleton {
+            CurrentForecastRepositoryImpl(
+                instance(),
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         bind<FutureForecastRepository>() with singleton {
             FutureForecastRepositoryImpl(
                 instance(), instance(), instance(), instance(), instance()
@@ -69,15 +96,22 @@ class ForecastApplication : Application(), KodeinAware {
         }
 
         // bind all providers
-        bind<UnitProvider>() with singleton{UnitProviderImpl(instance())}
-        bind<LocationProvider>() with singleton{ LocationProviderImpl(instance(),instance()) }
-        bind<InternetProvider>() with singleton{ InternetProviderImpl(instance()) }
+        bind<UnitProvider>() with singleton { UnitProviderImpl(instance()) }
+        bind<LocationProvider>() with singleton { LocationProviderImpl(instance(), instance()) }
+        bind<InternetProvider>() with singleton { InternetProviderImpl(instance()) }
 
         //bind location providers
         bind() from provider { LocationServices.getFusedLocationProviderClient(instance<Context>()) }
 
         //bind all fragment's view models
-        bind() from provider { CurrentWeatherViewModelFactory(instance(),instance(),instance(),instance())}
+        bind() from provider {
+            CurrentWeatherViewModelFactory(
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         bind() from provider {
             SettingsFragmentViewModelFactory(
                 instance(),
@@ -87,9 +121,31 @@ class ForecastApplication : Application(), KodeinAware {
                 instance()
             )
         }
-        bind() from provider { FutureListWeatherViewModelFactory(instance(),instance(),instance(),instance()) }
-        bind() from factory { detailDate: LocalDateTime -> FutureDetailWeatherViewModelFactory(detailDate,instance(),instance(),instance(),instance()) }
-        bind() from provider { OneDayWeatherViewModelFactory(instance(),instance(),instance(), instance()) }
+        bind() from provider {
+            FutureListWeatherViewModelFactory(
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
+        bind() from factory { detailDate: LocalDateTime ->
+            FutureDetailWeatherViewModelFactory(
+                detailDate,
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
+        bind() from provider {
+            OneDayWeatherViewModelFactory(
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         //bind() from factory { startDate: LocalDateTime, endDate: LocalDateTime -> OneDayWeatherViewModelFactory(startDate,endDate,instance(),instance(),instance()) }
 
     }
@@ -97,20 +153,53 @@ class ForecastApplication : Application(), KodeinAware {
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
-        PreferenceManager.setDefaultValues(this,R.xml.preferences,false)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         resourcesNew = resources
+
+        createChannel(
+            getString(R.string.notification_channel_id),
+            getString(R.string.notification_channel_name)
+        )
     }
 
+    private fun createChannel(channelId: String, channelName: String) {
+        // TODO: Step 1.6 START create a channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                // TODO: Step 2.4 change importance
+                NotificationManager.IMPORTANCE_DEFAULT
+            )// TODO: Step 2.6 disable badges for this channel
+                .apply {
+                    setShowBadge(false)
+                }
 
-    companion object{
-        var resourcesNew: Resources? = null
-        fun getAppResources(): Resources? {
-            return resourcesNew
-        }
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.GREEN
+            notificationChannel.enableVibration(true)
+//            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
 
-        fun getAppString(id: Int): String {
-            return resourcesNew!!.getString(id)
+            notificationChannel.description = getString(R.string.notification_channel_description)
+
+            val notificationManager = applicationContext.getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+
         }
+        // TODO: Step 1.6 END create a channel
     }
+
+companion object {
+    var resourcesNew: Resources? = null
+    fun getAppResources(): Resources? {
+        return resourcesNew
+    }
+
+    fun getAppString(id: Int): String {
+        return resourcesNew!!.getString(id)
+    }
+}
 
 }

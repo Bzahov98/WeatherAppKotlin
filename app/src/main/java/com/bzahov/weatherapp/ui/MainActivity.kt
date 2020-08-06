@@ -45,7 +45,7 @@ class MainActivity(
 
         navController = Navigation.findNavController(this, nav_host_fragment.id)
 
-        bottom_nav.setupWithNavController(navController)
+        bottom_navigation.setupWithNavController(navController)
 
         NavigationUI.setupActionBarWithNavController(this, navController)
 

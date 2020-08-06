@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="Weather Location">
         <SwitchPreference
             android:defaultValue="true"
@@ -24,5 +25,35 @@
             android:key="UNIT_SYSTEM"
             android:summary="%s"
             android:title="Unit system" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Widgets">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preferences_enable_weather_widget"
+            android:summary="Add weather widget to phone"
+            android:title="Enable weather widget">
+        </SwitchPreference>
+        <SeekBarPreference
+            android:defaultValue="60"
+            android:icon="@drawable/icons8_synchronize_96"
+            android:iconSpaceReserved="true"
+            android:key="@string/preferences_widget_refresh_rate"
+            android:max="360"
+            android:min="0"
+            android:summary="Select refresh rate in minutes"
+            android:title="Widget refresh rate"
+            app:showSeekBarValue="true"
+            app:updatesContinuously="true"
+
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/preferences_show_notifications"
+            android:summary="Allow app to send you notifications"
+            android:title="Enable app notifications" />
     </PreferenceCategory>
 </PreferenceScreen>

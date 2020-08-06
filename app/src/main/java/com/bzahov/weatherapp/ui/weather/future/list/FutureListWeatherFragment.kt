@@ -1,6 +1,7 @@
 package com.bzahov.weatherapp.ui.weather.future.list
 
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
@@ -19,11 +21,14 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
+import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.animationUtils.AnimationUtils
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.future.list.recyclerview.FutureWeatherItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.future_list_weather_fragment.*
 import kotlinx.android.synthetic.main.future_list_weather_fragment.view.*
 import kotlinx.coroutines.Job
@@ -33,12 +38,15 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
+
     private val TAG = "FutureDetailWeatherFragment"
     override val kodein by closestKodein()
     private val viewModelFactory: FutureListWeatherViewModelFactory by instance<FutureListWeatherViewModelFactory>()
     private lateinit var viewModel: FutureListWeatherViewModel
     private lateinit var groupAdapter: GroupAdapter<ViewHolder>
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var recyclerView: RecyclerView
+    private var lastOrientation: Int = 0
 
 
     override fun onCreateView(
@@ -47,6 +55,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     ): View? {
         val view = inflater.inflate(R.layout.future_list_weather_fragment, container, false)
         mSwipeRefreshLayout = view.futureListWeatherFragmentSwipe
+        lastOrientation = resources.configuration.orientation
         return view
     }
 
@@ -61,32 +70,22 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             .get(FutureListWeatherViewModel::class.java)
         initRecyclerView()
         bindUI()
+        resetControlViews()
     }
 
-    private fun initRefresherLayout() {
-        mSwipeRefreshLayout.isRefreshing = true
-        mSwipeRefreshLayout.setOnRefreshListener {
-            mSwipeRefreshLayout.isRefreshing = false
-            if (viewModel.isOnline()) {
-                Log.d(TAG, getAppString(R.string.loading_updateting_data))
-                UIUpdateViewUtils.showSnackBarMessage(
-                    getAppString(R.string.loading_updateting_data),
-                    requireActivity()
-                )
-                launch { viewModel.requestRefreshOfData() }
-            } else {
-                Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
-                UIUpdateViewUtils.showSnackBarMessage(
-                    ForecastApplication.getAppString(R.string.warning_device_offline),
-                    requireActivity(),
-                    false
-                )
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        lastOrientation = resources.configuration.orientation
+        bindUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        resetControlViews()
     }
 
     private fun bindUI(): Job {
-        Log.d(TAG, "bindUI")
+        //Log.d(TAG, "bindUI")
         return launch {
             viewModel.getFutureListData()
             val futureWeatherLiveData = viewModel.uiViewsState
@@ -127,17 +126,26 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         }
     }
 
+    private fun updateUI(it: FutureListState) {
+        futureGroupLoading.visibility = View.GONE
+        mSwipeRefreshLayout.isRefreshing = false
+        updateActionBarSubtitleWithResource(
+            R.string.future_weather_five_days_next,
+            requireActivity()
+        )
+    }
+
     private fun updateEmptyStateUI(it: EmptyState) {
         updateActionBarTitle("Loading...", requireActivity())
         updateActionBarSubtitle(
             it.warningString,
             requireActivity()
-        );
+        )
     }
 
     private fun initRecyclerView() {
-        groupAdapter = GroupAdapter<ViewHolder>()
-        futureRecyclerView.apply {
+        groupAdapter = GroupAdapter()
+        recyclerView = futureRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@FutureListWeatherFragment.context)
             adapter = groupAdapter
         }
@@ -153,6 +161,70 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             Log.e(TAG, "\n\nGroupAdapter.setOnItemClickListener ${itemDetail}\n")
             showWeatherDetail(itemDetail.dtTxt, view)
         }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && getBottomNavigationView().isShown) {
+                    getBottomNavigationView()?.visibility = View.GONE
+                } else if (dy < 0) {
+                    getBottomNavigationView()?.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (lastOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    if ((!recyclerView.canScrollVertically(1) || !recyclerView.canScrollHorizontally(
+                            -1
+                        )) && newState == RecyclerView.SCROLL_STATE_IDLE
+                    ) {
+                        //oneDayGroupData.clearAnimation()
+                        if (!getActionBar().isShowing) {
+                            AnimationUtils.showHideViewAndActionBarWithAnimation(
+                                futureTextDescriptionView,
+                                View.VISIBLE,
+                                actionBar = getActionBar()
+                            )
+                        }
+                    } else {
+                        //oneDayGroupData.clearAnimation()
+                        if (getActionBar().isShowing) {
+                            AnimationUtils.showHideViewAndActionBarWithAnimation(
+                                futureTextDescriptionView,
+                                View.GONE,
+                                1111,
+                                222,
+                                getActionBar()
+                            )
+
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun initRefresherLayout() {
+        mSwipeRefreshLayout.isRefreshing = true
+        mSwipeRefreshLayout.setOnRefreshListener {
+            mSwipeRefreshLayout.isRefreshing = false
+            if (viewModel.isOnline()) {
+                Log.d(TAG, getAppString(R.string.loading_updating_data))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    getAppString(R.string.loading_updating_data),
+                    requireActivity()
+                )
+                launch { viewModel.requestRefreshOfData() }
+            } else {
+                Log.e(TAG, getAppString(R.string.warning_device_offline))
+                UIUpdateViewUtils.showSnackBarMessage(
+                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    requireActivity(),
+                    false
+                )
+            }
+        }
     }
 
     private fun updateRecyclerViewData(weatherItems: List<FutureWeatherItem>) {
@@ -161,24 +233,18 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
         groupAdapter.notifyDataSetChanged()
     }
 
-
     private fun showWeatherDetail(string: String, view: View) {
+        resetControlViews()
         val actionShowDetail = FutureListWeatherFragmentDirections.actionShowDetail(string)
         Navigation.findNavController(view).navigate(actionShowDetail)
     }
 
-
-    private fun updateUI(it: FutureListState) {
-        futureGroupLoading.visibility = View.GONE
-        mSwipeRefreshLayout.isRefreshing = false
-        updateActionBarSubtitleWithResource(
-            R.string.future_weather_five_days_next,
-            requireActivity()
-        );
+    private fun resetControlViews() {
+        getActionBar().show()
+        getBottomNavigationView().visibility = View.VISIBLE
     }
 
-    override fun onResume() {
-        super.onResume()
-        bindUI()
-    }
+    private fun getActionBar() = (requireActivity() as MainActivity).supportActionBar!!
+
+    private fun getBottomNavigationView() = requireActivity().bottom_navigation
 }

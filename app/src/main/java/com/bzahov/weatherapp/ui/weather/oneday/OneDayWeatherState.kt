@@ -110,7 +110,7 @@ class MinMaxAvgTemp(
             return if (dataSource.isNotEmpty()) {
                 dataSource.random().weatherDetails.random().description
             } else {
-                getAppString(R.string.no_data_warning)
+                getAppString(R.string.error_no_data_warning)
             }
         }
 
@@ -119,7 +119,7 @@ class MinMaxAvgTemp(
             return if (dataSource.isNotEmpty()) {
                 dataSource.random().weatherDetails.random().icon
             } else {
-                getAppString(R.string.no_data_warning)
+                getAppString(R.string.error_no_data_warning)
             }
         }
 

@@ -1,0 +1,69 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+
+<!--    <include-->
+<!--        android:id="@+id/include"-->
+<!--        layout="@layout/layout_temperature_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content" />-->
+
+    <ImageView
+        android:id="@+id/widgetWeatherIcon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_weather_sunny" />
+
+    <TextView
+        android:id="@+id/widgetTemperatureText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/widgetWeatherIcon"
+        android:contentDescription="@string/widget_text"
+        android:text="@string/tools_default_temp_nounit"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+    <TextView
+        android:id="@+id/widgetTemperatureUnit"
+        android:layout_toEndOf="@+id/widgetTemperatureText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/widget_text"
+        android:text="@string/metric_temperature"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        android:layout_alignParentTop="true"
+        />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/widgetLocationIcon"
+        android:layout_below="@id/widgetWeatherIcon"
+        android:layout_alignParentStart="true"
+        app:materialIcon="account_box_outline"
+        app:materialIconSize="72dp"
+        android:src="@drawable/ic_weather_sunny"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/widgetLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/widgetWeatherIcon"
+        android:layout_toEndOf="@+id/widgetLocationIcon"
+        android:contentDescription="@string/widget_text"
+        android:text="@string/widget_location"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+</RelativeLayout>

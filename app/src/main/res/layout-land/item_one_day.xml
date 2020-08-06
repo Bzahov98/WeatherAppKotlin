@@ -104,7 +104,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineLeftVertical"
+                    app:layout_constraintEnd_toStartOf="@+id/oneDayNightIconDescrView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,21 +112,26 @@
                     android:id="@+id/oneDayNightIconDescrView"
                     layout="@layout/layout_day_night_description_view"
                     android:layout_width="0dp"
+                    style="@style/DayCardViewLand"
                     android:layout_height="0dp"
                     android:layout_margin="3dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
+                    app:layout_constraintEnd_toStartOf="@+id/oneNightTemperatureView"
+                    app:layout_constraintStart_toEndOf="@+id/oneDayTemperatureView"
                     app:layout_constraintStart_toStartOf="@+id/constraintLayout"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <include
                     android:id="@+id/oneNightTemperatureView"
-                    style="@style/NightCardView"
+                    style="@style/NightCardViewLand"
                     layout="@layout/layout_temperature_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/oneDayNightIconDescrView"
                     app:layout_constraintStart_toStartOf="@+id/guidelineRightVertical"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -161,7 +166,9 @@
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/oneDayGroupData"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="oneDayTemperatureView,oneNightTemperatureView,oneDayNightIconDescrView"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -170,8 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DayCardView"
-                app:cardCornerRadius="9dp"
-                android:layout_margin="2dp">
+                app:cardCornerRadius="@dimen/corner_radius_smaller">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/oneDayHourlyInfo"
@@ -181,10 +187,9 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/oneDayPerHourText"
-                        style="@style/MyMaterialTextView"
+                        style="@style/MyMaterialTextViewLand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
                         android:text="@string/description_each_3_hours_of_day"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -194,11 +199,12 @@
                         android:id="@+id/oneDayPerHourRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/corner_radius"
                         android:clipChildren="false"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourText"
                         tools:itemCount="8"

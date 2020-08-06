@@ -2,6 +2,9 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="@color/colorAccent"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardUseCompatPadding="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <LinearLayout
@@ -19,10 +22,10 @@
                 android:id="@+id/perThreeHoursTempDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temperature:"
+                android:text="@string/weather_text_temperature"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -107,7 +110,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/perThreeHoursWindSpeedInfo"
                     app:srcCompat="@drawable/wind_north_east5"
                     tools:srcCompat="@drawable/wind_north_east5" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -133,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="24 mm"
+                    android:text="@string/tools_weather_prepacipitation_volume"
                     android:textSize="@dimen/normal_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"

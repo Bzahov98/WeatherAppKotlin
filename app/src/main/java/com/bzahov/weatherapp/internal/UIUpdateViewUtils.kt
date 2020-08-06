@@ -71,7 +71,7 @@ class UIUpdateViewUtils {
                 .into(iconView)
         }
         fun showSnackBarMessage(message: String, activity: FragmentActivity?, isSuccessful: Boolean = true) {
-            val bottomNavView: BottomNavigationView = activity?.findViewById(R.id.bottom_nav)!!
+            val bottomNavView: BottomNavigationView = activity?.findViewById(R.id.bottom_navigation)!!
             val snackbar = Snackbar.make(bottomNavView, message, Snackbar.LENGTH_LONG).apply {
                 anchorView = bottomNavView
             }

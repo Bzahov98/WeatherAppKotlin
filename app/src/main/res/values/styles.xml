@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,10 +9,111 @@
         <!--Removing actionbar-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <!-- Optional, but recommended for full edge-to-edge rendering -->
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+
+    </style>
+
+    <style name="OrangeTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+
+        <!--        <item name="colorSecondary">@color/secondaryColor</item>-->
+        <item name="android:background">@color/secondaryLightColor</item>
+        <item name="colorAccent">@color/colorDayAccent</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <!--Removing actionbar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="NightCardView" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
+
+    <style name="NightCardViewLand" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="cardCornerRadius">@dimen/corner_radius_smaller</item>
+        <item name="cardUseCompatPadding">false</item>
+    </style>
+
+    <style name="DayCardView" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/colorDayAccent</item>
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+    <style name="DayCardViewLight" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/secondaryLightColor</item>
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+    <style name="DayTextView" parent="Widget.MaterialComponents.TextView">
+<!--        <item name="cardBackgroundColor">@</item>-->
+
+        <item name="android:textColor">@color/secondaryLightColor</item>
+    </style>
+
+    <style name="DayCardViewLand" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/colorDayAccent</item>
+        <item name="cardCornerRadius">@dimen/corner_radius_smaller</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
 
     <style name="ToolbarTheme" parent="ThemeOverlay.MaterialComponents.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">#EEEEEE</item>
+    </style>
+
+    <style name="NoToolbarTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">#EEEEEE</item>
+    </style>
+
+    <style name="MyMaterialTextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:background">#C46D6D6D</item>
+        <item name="lineHeight">@dimen/corner_radius</item>
+        <item name="android:shadowRadius">5.5</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="MyMaterialTextViewLand" parent="Widget.MaterialComponents.TextView">
+        <item name="android:background">@color/secondaryLightColor</item>
+        <item name="lineHeight">@dimen/corner_radius_smaller</item>
+        <item name="android:shadowRadius">2.5</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="importantTextView" parent="DayTextView">
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:foregroundGravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textSize">27sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="lowimportant_text">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/normal_text_size</item>
+        <item name="android:textStyle">italic|bold</item>
     </style>
 </resources>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/colorAccent"
+    app:cardCornerRadius="10dp"
+    android:padding="0dp"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/perThreeHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        app:layout_constraintStart_toEndOf="@+id/perThreeHoursHourInfo">
+
+
+        <TextView
+            android:id="@+id/perThreeHoursHourInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:text="@string/default_future_time_short_calibration"
+            android:textSize="@dimen/subtitles_size"
+
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toTopOf="@+id/perThreeHoursIcon"
+            app:layout_constraintDimensionRatio=""
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/perThreeHoursTempDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:autoSizeTextType="uniform"
+            android:text="@string/weather_text_temperature"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursHourInfo"
+            app:layout_constraintStart_toEndOf="@+id/perThreeHoursHourInfo"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursHourInfo" />
+
+        <TextView
+            android:id="@+id/perThreeHoursTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/tools_default_temp"
+            android:textSize="@dimen/subtitles_size"
+            app:layout_constraintEnd_toEndOf="@+id/perThreeHoursTempDescription"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursTempDescription"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursWindIcon" />
+
+
+        <ImageView
+            android:id="@+id/perThreeHoursIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:adjustViewBounds="true"
+            android:foregroundGravity="center"
+
+            android:maxWidth="50dp"
+            android:maxHeight="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_weather_sunny"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@+id/perThreeHoursHourInfo"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursHourInfo"
+            app:layout_constraintTop_toBottomOf="@+id/perThreeHoursHourInfo" />
+
+        <TextView
+            android:id="@+id/perThreeHoursWindDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Wind:"
+            android:textSize="@dimen/normal_text_size"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursTempDescription"
+            app:layout_constraintEnd_toEndOf="@+id/perThreeHoursWindSpeedInfo"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursWindSpeedInfo"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursTempDescription" />
+
+        <TextView
+            android:id="@+id/perThreeHoursWindSpeedInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center_horizontal"
+            android:text="NE 24 km/h"
+            android:textSize="@dimen/normal_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/perThreeHoursWindIcon"
+            app:layout_constraintStart_toEndOf="@+id/perThreeHoursTempDescription"
+            app:layout_constraintTop_toBottomOf="@+id/perThreeHoursWindDescription" />
+
+        <ImageView
+            android:id="@+id/perThreeHoursWindIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:foregroundGravity="center"
+
+            android:maxWidth="50dp"
+            android:maxHeight="50dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursIcon"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@+id/perThreeHoursWindSpeedInfo"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursWindSpeedInfo"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursIcon"
+            app:srcCompat="@drawable/wind_north_east5"
+            tools:srcCompat="@drawable/wind_north_east5" />
+
+        <TextView
+            android:id="@+id/perThreeHoursPrepDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:autoSizeTextType="uniform"
+            android:text="Precipitation:"
+            android:textSize="@dimen/normal_text_size"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursWindDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/perThreeHoursWindDescription"
+            app:layout_constraintTop_toBottomOf="@+id/perThreeHoursWindView" />
+
+        <TextView
+            android:id="@+id/perThreeHoursPrepInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/tools_weather_prepacipitation_volume"
+            android:textSize="@dimen/normal_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursWindSpeedInfo"
+            app:layout_constraintEnd_toEndOf="@+id/perThreeHoursPrepDescription"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursPrepDescription"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursWindSpeedInfo" />
+
+        <ImageView
+            android:id="@+id/perThreeHoursPrepIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:foregroundGravity="center"
+            android:maxWidth="50dp"
+            android:maxHeight="50dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/perThreeHoursWindIcon"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="@+id/perThreeHoursPrepDescription"
+            app:layout_constraintTop_toTopOf="@+id/perThreeHoursWindIcon"
+            app:srcCompat="@drawable/icons8_rainmeter"
+            tools:srcCompat="@drawable/icons8_rainmeter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
