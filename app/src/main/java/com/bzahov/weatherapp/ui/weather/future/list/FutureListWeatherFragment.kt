@@ -219,7 +219,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             } else {
                 Log.e(TAG, getAppString(R.string.warning_device_offline))
                 UIUpdateViewUtils.showSnackBarMessage(
-                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    getAppString(R.string.warning_device_offline),
                     requireActivity(),
                     false
                 )

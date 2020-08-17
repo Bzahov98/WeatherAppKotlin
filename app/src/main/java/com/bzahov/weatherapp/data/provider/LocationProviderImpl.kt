@@ -16,12 +16,12 @@ import com.bzahov.weatherapp.data.db.entity.current.WeatherLocation
 import com.bzahov.weatherapp.data.provider.interfaces.LocationProvider
 import com.bzahov.weatherapp.internal.asDeferred
 import com.bzahov.weatherapp.internal.exceptions.LocationPermissionNotGrantedException
+import com.bzahov.weatherapp.ui.settings.SettingsFragment
+import com.bzahov.weatherapp.ui.settings.SettingsFragment.Companion.CUSTOM_LOCATION
+import com.bzahov.weatherapp.ui.settings.SettingsFragment.Companion.USE_DEVICE_LOCATION
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlin.math.abs
 
-
-const val CUSTOM_LOCATION = "CUSTOM_LOCATION"
-const val USE_DEVICE_LOCATION = "USE_DEVICE_LOCATION"
 const val DEFAULT_TIMEZONE_OFFSET = 0
 
 class LocationProviderImpl(

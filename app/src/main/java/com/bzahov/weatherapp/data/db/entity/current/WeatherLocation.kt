@@ -41,4 +41,5 @@ data class WeatherLocation(
         val zoneId = ZoneId.of(timezoneId)
         return ZonedDateTime.ofInstant(instant, zoneId)
     }
+    fun getLocalTimeClock(): String = localtime.substringAfter(" ")
 }

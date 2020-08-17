@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <receiver android:name=".ui.WeatherWidget">
+        <receiver android:name="com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -25,7 +25,7 @@
                 android:resource="@xml/weather_widget_info" />
         </receiver>
 
-        <activity android:name=".ui.WeatherWidgetConfigureActivity">
+        <activity android:name="com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -39,11 +39,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <receiver-->
-<!--            android:name=".internal.notifications.AlarmReceiver"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false">-->
-<!--        </receiver>-->
+        <receiver
+            android:name="com.bzahov.weatherapp.ui.remoteviews.notifications.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="notification.action.title" />
+                <action android:name="notification.action.description" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui
+package com.bzahov.weatherapp.ui.remoteviews.widgets
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -8,17 +8,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.ui.WeatherWidget.Companion.updateAppWidget
+import com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidget.Companion.updateAppWidget
 
 /**
- * The configuration screen for the [WeatherWidget] AppWidget.
+ * The configuration screen for the [CurrentWeatherWidget] AppWidget.
  */
-class WeatherWidgetConfigureActivity : Activity() {
+class CurrentWeatherWidgetConfigureActivity : Activity() {
     var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     var mAppWidgetText: EditText? = null
     var mOnClickListener =
         View.OnClickListener {
-            val context: Context = this@WeatherWidgetConfigureActivity
+            val context: Context = this@CurrentWeatherWidgetConfigureActivity
 
             // When the button is clicked, store the string locally
             val widgetText = mAppWidgetText!!.text.toString()
@@ -65,7 +65,7 @@ class WeatherWidgetConfigureActivity : Activity() {
         }
         mAppWidgetText!!.setText(
             loadTitlePref(
-                this@WeatherWidgetConfigureActivity,
+                this@CurrentWeatherWidgetConfigureActivity,
                 mAppWidgetId
             )
         )

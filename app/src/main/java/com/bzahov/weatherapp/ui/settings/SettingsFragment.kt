@@ -1,11 +1,7 @@
 package com.bzahov.weatherapp.ui.settings
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,16 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.*
+import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.data.provider.CUSTOM_LOCATION
 import com.bzahov.weatherapp.data.provider.UNIT_SYSTEM
-import com.bzahov.weatherapp.data.provider.USE_DEVICE_LOCATION
-import com.bzahov.weatherapp.ui.notifications.sendNotification
-import com.bzahov.weatherapp.ui.WeatherWidgetConfigureActivity
+import com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidgetConfigureActivity
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
 import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModel
 import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
@@ -33,9 +26,6 @@ import org.kodein.di.generic.instance
 
 private const val TAG = "SettingsFragment"
 
-val ENABLE_WEATHER_WIDGET = getAppString(R.string.preferences_enable_weather_widget)
-val WEATHER_WIDGET_REFRESH_RATE = getAppString(R.string.preferences_widget_refresh_rate)
-val SHOW_NOTIFICATIONS = getAppString(R.string.preferences_show_notifications)
 
 class SettingsFragment() : ScopedPreferenceCompatFragment(),
     SharedPreferences.OnSharedPreferenceChangeListener, KodeinAware {
@@ -79,16 +69,18 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
             SHOW_NOTIFICATIONS -> {
 
                 Toast.makeText(context,"bla", Toast.LENGTH_SHORT).show()
+//
+//                val notificationManager = ContextCompat.getSystemService(
+//                    requireContext(),
+//                    NotificationManager::class.java
+//                ) as NotificationManager
+//
+//                notificationManager.sendNotification(
+//                    requireContext().getText(R.string.notification_ready).toString(),
+//                    requireContext()
+//                )
 
-                val notificationManager = ContextCompat.getSystemService(
-                    requireContext(),
-                    NotificationManager::class.java
-                ) as NotificationManager
-
-                notificationManager.sendNotification(
-                    requireContext().getText(R.string.notification_ready).toString(),
-                    requireContext()
-                )
+                (activity?.application as ForecastApplication).testAlarmNotification()
                 return true
             }
             else -> super.onPreferenceTreeClick(preference)
@@ -133,7 +125,7 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
                 if (widgetPreference != null) {
                     if (widgetPreference.isChecked) {
                         Log.d(TAG, "enable weather widget")
-                        val intent = Intent(context, WeatherWidgetConfigureActivity::class.java)
+                        val intent = Intent(context, CurrentWeatherWidgetConfigureActivity::class.java)
                         startActivity(intent)
                     }
                 }
@@ -168,5 +160,15 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
         } else {
             locationPreference?.isSelectable = viewModel.isOnline()
         }
+    }
+    companion object{
+
+        val ENABLE_WEATHER_WIDGET = getAppString(R.string.preferences_enable_weather_widget)
+        val WEATHER_WIDGET_REFRESH_RATE = getAppString(R.string.preferences_widget_refresh_rate)
+        val SHOW_NOTIFICATIONS = getAppString(R.string.preferences_show_notifications)
+
+        val CUSTOM_LOCATION = getAppString(R.string.preferences_location_custom)
+        val USE_DEVICE_LOCATION = getAppString(R.string.preferences_location_use_device)
+        val UNIT_SYSTEM = getAppString(R.string.preferences_unit_system)
     }
 }

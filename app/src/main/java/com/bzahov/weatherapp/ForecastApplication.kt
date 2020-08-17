@@ -1,13 +1,14 @@
 package com.bzahov.weatherapp
 
-import android.app.Application
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
+import android.os.SystemClock
+import androidx.core.app.AlarmManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.network.ConnectivityInterceptorImpl
@@ -29,6 +30,8 @@ import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.data.services.OpenWeatherApiService
 import com.bzahov.weatherapp.data.services.WeatherApiService
 import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
+import com.bzahov.weatherapp.ui.remoteviews.notifications.AlarmReceiver
+import com.bzahov.weatherapp.ui.remoteviews.notifications.cancelNotifications
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.detail.FutureDetailWeatherViewModelFactory
 import com.bzahov.weatherapp.ui.weather.future.list.FutureListWeatherViewModelFactory
@@ -40,7 +43,6 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
 import org.kodein.di.generic.*
 import java.time.LocalDateTime
-import java.util.concurrent.locks.LockSupport
 
 class ForecastApplication : Application(), KodeinAware {
 
@@ -121,6 +123,10 @@ class ForecastApplication : Application(), KodeinAware {
                 instance()
             )
         }
+
+        bind() from provider {
+
+        }
         bind() from provider {
             FutureListWeatherViewModelFactory(
                 instance(),
@@ -147,18 +153,57 @@ class ForecastApplication : Application(), KodeinAware {
             )
         }
         //bind() from factory { startDate: LocalDateTime, endDate: LocalDateTime -> OneDayWeatherViewModelFactory(startDate,endDate,instance(),instance(),instance()) }
-
     }
+    private lateinit var app: ForecastApplication
+    private lateinit var alarmManager: AlarmManager
 
+    //    private var prefs =
+//        app.getSharedPreferences("com.example.android.eggtimernotifications", Context.MODE_PRIVATE)
+    private lateinit var notifyIntent: Intent
+
+    private val second: Long = 1_000L
+    private val REQUEST_CODE = 0
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         resourcesNew = resources
 
+
         createChannel(
             getString(R.string.notification_channel_id),
             getString(R.string.notification_channel_name)
+        )
+
+        testAlarmNotification()
+    }
+
+    fun testAlarmNotification() {
+        val app: ForecastApplication = this
+        val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val notifyIntent = Intent(app, AlarmReceiver::class.java)
+
+        val notificationManager =
+            ContextCompat.getSystemService(
+                app,
+                NotificationManager::class.java
+            ) as NotificationManager
+
+        var notifyPendingIntent = PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE,
+            notifyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        notificationManager.cancelNotifications()
+        val triggerTime = SystemClock.elapsedRealtime() + second * 10
+
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            triggerTime,
+            notifyPendingIntent
         )
     }
 
@@ -191,15 +236,15 @@ class ForecastApplication : Application(), KodeinAware {
         // TODO: Step 1.6 END create a channel
     }
 
-companion object {
-    var resourcesNew: Resources? = null
-    fun getAppResources(): Resources? {
-        return resourcesNew
-    }
+    companion object {
+        var resourcesNew: Resources? = null
+        fun getAppResources(): Resources? {
+            return resourcesNew
+        }
 
-    fun getAppString(id: Int): String {
-        return resourcesNew!!.getString(id)
+        fun getAppString(id: Int): String {
+            return resourcesNew!!.getString(id)
+        }
     }
-}
 
 }

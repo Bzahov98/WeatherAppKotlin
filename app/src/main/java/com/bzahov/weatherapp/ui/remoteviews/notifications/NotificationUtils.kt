@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui.notifications
+package com.bzahov.weatherapp.ui.remoteviews.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -19,7 +19,12 @@ private val FLAGS = 0
  *
  * @param context, activity context.
  */
-fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
+
+fun NotificationManager.sendNotification(
+    notificationTitle: String,
+    notificationBody: String,
+    applicationContext: Context
+) {
     // Create the content intent for the notification, which launches
     // this activity
     // TODO: Step 1.11 create intent
@@ -59,13 +64,12 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         // TODO: Step 1.8 use the new 'breakfast' notification channel
 
         // TODO: Step 1.3 set title, text and icon to builder
-       // .setStyle(bigPicStyle)
+        // .setStyle(bigPicStyle)
         .setLargeIcon(weatherImage)
         //.setLargeIcon(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(, R.drawable.icon128), 128, 128, false))
         .setSmallIcon(R.drawable.snowflake/*cooked_egg*/)
-        .setContentTitle(applicationContext
-            .getString(R.string.notification_title))
-        .setContentText(messageBody)
+        .setContentTitle(notificationTitle)
+        .setContentText(notificationBody)
         // TODO: Step 1.13 set content intent
         .setContentIntent(contentPendingIntent)
         .setAutoCancel(true)

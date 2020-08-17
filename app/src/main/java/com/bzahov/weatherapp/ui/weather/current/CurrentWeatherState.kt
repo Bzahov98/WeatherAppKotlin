@@ -87,6 +87,7 @@ data class CurrentWeatherState(
     }
 
     private fun calculateCondition(condition: String) {
+
         currentCondition = condition.removePrefix("[").removeSuffix("]")
     }
 

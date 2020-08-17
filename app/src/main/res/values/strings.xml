@@ -97,6 +97,7 @@
     <string name="preferences_enable_weather_widget">ENABLE_WEATHER_WIDGET</string>
     <string name="preferences_widget_refresh_rate">WEATHER_WIDGET_REFRESH_RATE</string>
     <string name="preferences_show_notifications">SHOW_NOTIFICATIONS</string>
+    <string name="preference_current_location">CURRENT_LOCATION_IN_USE</string>
 
     <string name="notification_channel_id">0</string>
     <string name="notification_channel_description">Show daily notification for today\'s weather</string>
@@ -118,5 +119,11 @@
     <string name="future_list">Future List</string>
     <string name="description_next_5_days">Next 5 days: </string>
 
-
+<string name="notification_action_title">notification.action.title</string>
+<string name="notification_action_desc">notification.action.description</string>
+    <string name="preference_location_in_use_key">locationInUse</string>
+    <string name="notification_action_title_weather_data_key">weatherData</string>
+    <string name="preferences_location_custom">CUSTOM_LOCATION</string>
+    <string name="preferences_location_use_device">USE_DEVICE_LOCATION</string>
+    <string name="preferences_unit_system">UNIT_SYSTEM</string>
 </resources>

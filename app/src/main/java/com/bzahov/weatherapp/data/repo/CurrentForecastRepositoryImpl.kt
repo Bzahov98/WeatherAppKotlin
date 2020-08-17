@@ -100,5 +100,7 @@ class CurrentForecastRepositoryImpl(
     override suspend fun requestRefreshOfData() {
         fetchCurrentWeather()
     }
+
+
 }
 

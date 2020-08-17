@@ -1,5 +1,7 @@
 package com.bzahov.weatherapp.ui.weather.current
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
@@ -17,6 +20,7 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBa
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
+import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
@@ -26,7 +30,8 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
 
-class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
+class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
+    CurrentWidgetRefresher {
     private val TAG = "CurrentWeatherFragment"
     override val kodein by closestKodein()
     private val viewModelFactory: CurrentWeatherViewModelFactory by instance<CurrentWeatherViewModelFactory>()
@@ -42,24 +47,24 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         //showSnackBarMessage("Swipe down to refresh data")
 
         mSwipeRefreshLayout = view.currentWeatherFragmentSwipe
-            /*view.setOnTouchListener { v: View, m: MotionEvent ->
-                // Perform tasks here
-                when (m.actionMasked) {
-                    MotionEvent.ACTION_DOWN -> {
-                        if (isOnline(requireContext())) {
-                            Log.d(TAG, "Updating Weather Data")
-                            showSnackBarMessage("Updating Weather Data")
-                            launch { refreshWeather() }
-                            true
-                        } else {
-                            Log.e(TAG, "Your device is offline can't update data")
-                            showSnackBarMessage("Your device is offline, can't update data", false)
-                            true
-                        }
+        /*view.setOnTouchListener { v: View, m: MotionEvent ->
+            // Perform tasks here
+            when (m.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (isOnline(requireContext())) {
+                        Log.d(TAG, "Updating Weather Data")
+                        showSnackBarMessage("Updating Weather Data")
+                        launch { refreshWeather() }
+                        true
+                    } else {
+                        Log.e(TAG, "Your device is offline can't update data")
+                        showSnackBarMessage("Your device is offline, can't update data", false)
+                        true
                     }
-                    else -> false
                 }
-            }*/
+                else -> false
+            }
+        }*/
 
         return view
     }
@@ -76,6 +81,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         bindUI()
     }
 
+    private var location: String? = null
     private fun bindUI(): Job {
         return launch {
             viewModel.getCurrentWeather()
@@ -84,23 +90,29 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
 
             weatherLocation.observe(viewLifecycleOwner, Observer { location ->
                 if (location == null) return@Observer
+
+                val sharedPref = getLocationSharedPreferences()
+                sharedPref?.edit()
+                    ?.putString(getString(R.string.preference_location_in_use_key), location.name)
+                    ?.apply()
                 updateActionBarTitle(location.name, requireActivity())
                 Log.d(TAG, "Update location with that data: $location")
             })
 
             currentWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 if (it == null) return@Observer
-
-                when(it){
+                requireContext().refreshWidgetData()
+                when (it) {
                     is CurrentWeatherState -> {
                         Log.d(TAG, "Update UI with that data: $it")
                         updateUI(it)
+                        updateNotificationData(it)
                     }
                     is EmptyState -> {
                         updateEmptyStateUI(it)
                         Log.e(TAG, "Update UI with EMPTY STATE $it")
                     }
-                    else ->{
+                    else -> {
                         Log.e(TAG, "Found UNKNOWN STATE $it")
                     }
                 }
@@ -108,14 +120,59 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             })
         }
     }
+//    override fun Context.updateCurrentWidget() {
+//        val TAG = "ss"
+//        Log.d(TAG,"request update of current weather widget")
+//        val widgetUpdateIntent = Intent(this, CurrentWeatherWidget::class.java).apply {
+//            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+//            putExtra(
+//                AppWidgetManager.EXTRA_APPWIDGET_IDS,
+//                AppWidgetManager.getInstance(this@updateCurrentWidget).getAppWidgetIds(
+//                    ComponentName(
+//                        this@updateCurrentWidget,
+//                        CurrentWeatherWidget::class.java
+//                    )
+//                )
+//            )
+//        }
+//        sendBroadcast(widgetUpdateIntent)
+//    }
+    private fun updateNotificationData(it: CurrentWeatherState) {
+        //val local = sharedPref?.getString(getString(R.string.preference_location_in_use_key))
+        val titleIntent = Intent(getAppString(R.string.notification_action_title))
+        titleIntent.putExtra("bla", getWeatherDescription(it))
+//            getString(R.string.notification_action_title_weather_data_key),
+//            arrayListOf(
+//                getWeatherDescription(it),
+//                it.currentCondition
+//            )
+//        )
+        activity?.sendBroadcast(titleIntent);
+    }
+
+    private fun getWeatherDescription(it: CurrentWeatherState): String? {
+        return "${getLocationString()} + ${it.currentFeelsLikeTemperature} | "
+    }
+
+    private fun getLocationString() =
+        (getLocationSharedPreferences())?.getString(
+            getString(R.string.preference_location_in_use_key),
+            getAppString(R.string.default_location) + " erRor"
+        )
+
+    private fun getLocationSharedPreferences() =
+        activity?.getSharedPreferences(
+            getString(R.string.preference_current_location),
+            Context.MODE_PRIVATE
+        )
 
     private fun updateEmptyStateUI(it: EmptyState) {
-        updateCondition(it.warningString )
+        updateCondition(it.warningString)
         updateActionBarSubtitleWithResource(R.string.current_weather_today, requireActivity())
-        updatePrecipitation(it.errorString )
-        updateTemperatures(it.errorString ,it.errorString )
-        updateWind(it.errorString )
-        updateVisibility(it.errorString )
+        updatePrecipitation(it.errorString)
+        updateTemperatures(it.errorString, it.errorString)
+        updateWind(it.errorString)
+        updateVisibility(it.errorString)
         //updateBackground(it.isDay)
         // TODO put it into viewModel
         GlideApp.with(this)

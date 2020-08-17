@@ -5,14 +5,14 @@
         <SwitchPreference
             android:defaultValue="true"
             android:disableDependentsState="true"
-            android:key="USE_DEVICE_LOCATION"
+            android:key="@string/preferences_location_use_device"
             android:summary="Allow the app to get your location"
             android:title="Use device location" />
 
         <EditTextPreference
             android:defaultValue="@string/default_location"
             android:dependency="USE_DEVICE_LOCATION"
-            android:key="CUSTOM_LOCATION"
+            android:key="@string/preferences_location_custom"
             android:summary="The location for which the weather is displayed"
             android:title="Location" />
     </PreferenceCategory>
@@ -22,7 +22,7 @@
             android:defaultValue="METRIC"
             android:entries="@array/unitSystemEntries"
             android:entryValues="@array/unitSystemValues"
-            android:key="UNIT_SYSTEM"
+            android:key="@string/preferences_unit_system"
             android:summary="%s"
             android:title="Unit system" />
     </PreferenceCategory>

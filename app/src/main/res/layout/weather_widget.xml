@@ -19,6 +19,7 @@
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_weather_sunny" />
 
+
     <TextView
         android:id="@+id/widgetTemperatureText"
         android:layout_width="wrap_content"
@@ -30,6 +31,19 @@
         android:textColor="@color/secondaryDarkColor"
         android:textSize="24sp"
         android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/widgetTemperatureFeelsLikeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/widgetWeatherIcon"
+        android:layout_alignBottom="@+id/widgetTemperatureText"
+        android:contentDescription="@string/widget_text"
+        android:text="@string/tools_default_temp_nounit"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
+
     <TextView
         android:id="@+id/widgetTemperatureUnit"
         android:layout_toEndOf="@+id/widgetTemperatureText"
@@ -51,7 +65,7 @@
         android:layout_alignParentStart="true"
         app:materialIcon="account_box_outline"
         app:materialIconSize="72dp"
-        android:src="@drawable/ic_weather_sunny"
+        android:src="@drawable/icons8_location_64"
         android:contentDescription="TODO" />
 
     <TextView
