@@ -112,12 +112,20 @@ class CurrentWeatherWidget(
             )
             remoteViews.setTextViewText(
                 R.id.widgetTemperatureText,
-                "${weather.temperature} $unitAbbreviation"
+                "${weather.temperature} "
             )
 
             remoteViews.setTextViewText(
                 R.id.widgetTemperatureFeelsLikeText,
-                "${weather.feelslike} $unitAbbreviation"
+                "Feels Like: ${weather.feelslike} "
+            )
+            remoteViews.setTextViewText(
+                R.id.widgetTemperatureUnit,
+                unitAbbreviation
+            )
+            remoteViews.setTextViewText(
+                R.id.widgetTemperatureUnit2,
+                unitAbbreviation
             )
 
             var appWidgetTarget =

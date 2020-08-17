@@ -1,83 +1,130 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/shape"
+    android:backgroundTint="@color/secondaryLightColor"
+    android:backgroundTintMode="screen"
     android:padding="@dimen/widget_margin">
 
-<!--    <include-->
-<!--        android:id="@+id/include"-->
-<!--        layout="@layout/layout_temperature_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content" />-->
-
-    <ImageView
-        android:id="@+id/widgetWeatherIcon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/ic_weather_sunny" />
-
-
-    <TextView
-        android:id="@+id/widgetTemperatureText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/widgetWeatherIcon"
-        android:contentDescription="@string/widget_text"
-        android:text="@string/tools_default_temp_nounit"
-        android:textColor="@color/secondaryDarkColor"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-    <TextView
-        android:id="@+id/widgetTemperatureFeelsLikeText"
-        android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/widgetWeatherIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="2dp"
+            android:layout_margin = "3dp"
+            android:src="@drawable/ic_weather_sunny"
+            android:background="@drawable/shape_small"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="8"
+            android:layout_marginStart="2dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="5">
+
+                <TextView
+                    android:id="@+id/widgetTemperatureText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/widget_text"
+                    android:text="@string/tools_default_temp_nounit"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondaryDarkColor"
+                    android:textSize="24sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/widgetTemperatureUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/widget_text"
+                    android:gravity="center"
+                    android:text="@string/metric_temperature"
+                    android:textColor="@color/secondaryDarkColor"
+                    android:textSize="24sp"
+                    android:textStyle="bold|italic" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                >
+
+                <TextView
+                    android:id="@+id/widgetTemperatureFeelsLikeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/widget_text"
+                    android:text="@string/tools_default_temp_nounit_feels_like"
+                    android:textColor="@color/secondaryDarkColor"
+                    android:textSize="17sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/widgetTemperatureUnit2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center"
+                    android:layout_toEndOf="@+id/widgetTemperatureText"
+                    android:contentDescription="@string/widget_text"
+                    android:gravity="center"
+                    android:text="@string/metric_temperature"
+                    android:textColor="@color/secondaryDarkColor"
+                    android:textSize="17sp"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/widgetWeatherIcon"
-        android:layout_alignBottom="@+id/widgetTemperatureText"
-        android:contentDescription="@string/widget_text"
-        android:text="@string/tools_default_temp_nounit"
-        android:textColor="@color/secondaryDarkColor"
-        android:textSize="20sp"
-        android:textStyle="bold|italic" />
+        android:layout_margin = "3dp"
+        >
 
-    <TextView
-        android:id="@+id/widgetTemperatureUnit"
-        android:layout_toEndOf="@+id/widgetTemperatureText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/widget_text"
-        android:text="@string/metric_temperature"
-        android:textColor="@color/secondaryDarkColor"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:layout_alignParentTop="true"
-        />
+        <ImageView
+            android:id="@+id/widgetLocationIcon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/shape"
+            android:src="@drawable/icons8_location_64"
+            app:materialIcon="account_box_outline"
+            app:materialIconSize="72dp" />
 
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:id="@+id/widgetLocationIcon"
-        android:layout_below="@id/widgetWeatherIcon"
-        android:layout_alignParentStart="true"
-        app:materialIcon="account_box_outline"
-        app:materialIconSize="72dp"
-        android:src="@drawable/icons8_location_64"
-        android:contentDescription="TODO" />
+        <TextView
+            android:id="@+id/widgetLocation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape"
+            android:layout_marginLeft="2dp"
+            android:contentDescription="@string/widget_text"
+            android:text="@string/widget_location"
+            android:textColor="@color/secondaryDarkColor"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/widgetLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/widgetWeatherIcon"
-        android:layout_toEndOf="@+id/widgetLocationIcon"
-        android:contentDescription="@string/widget_text"
-        android:text="@string/widget_location"
-        android:textColor="@color/secondaryDarkColor"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
 
-</RelativeLayout>
+</LinearLayout>
