@@ -18,11 +18,14 @@
 
     <string name="loading_string">Loading..</string>
     <string name="feels_like">Feels like:</string>
-    <string name="image_weather_condition_description">Weather condition icon</string>
+
     // fragment descriptions (subtitle)
     <string name="current_weather_today">Today</string>
     <string name="future_weather_five_days_next">Next 5 days</string>
 
+    // image descriptions
+    <string name="hint_refresh_weather_data">refresh weather data</string>
+    <string name="hint_image_weather_condition_description">Weather condition icon</string>
     // unit abbreviations
     <string name="percentage">%</string>
     <string name="image_format_png">.png</string>
@@ -75,7 +78,6 @@
     <string name="weather_text_feels_like">Feels like</string>
     <string name="weather_text_visibility">Visibility: </string>
 
-
     <string name="description_icon_day">DayIcon</string>
     <string name="description_icon_night">NightIcon</string>
     <string name="description_each_3_hours_of_day">Each 3 hours of day:</string>
@@ -88,11 +90,7 @@
     <string name="menu_refresh">Refresh Data</string>
 
 
-    <string name="widget_text">Sofia</string>
-    <string name="widget_configure">Configure</string>
-    <string name="widget_add_button_text">Add widget</string>
-    <string name="widget_location">Sofia</string>
-
+    // Preferences
     <string name="preferences_enable_weather_widget">ENABLE_WEATHER_WIDGET</string>
     <string name="preferences_widget_refresh_rate">WEATHER_WIDGET_REFRESH_RATE</string>
     <string name="preferences_show_notifications">SHOW_NOTIFICATIONS</string>
@@ -101,13 +99,25 @@
     <string name="preference_location_in_use_key">locationInUse</string>
     <string name="preferences_location_use_device">USE_DEVICE_LOCATION</string>
     <string name="preferences_unit_system">UNIT_SYSTEM</string>
-
+    // Notification
+    // Notification channels info
     <string name="notification_channel_id">0</string>
     <string name="notification_channel_description">Show daily notification for today\'s weather</string>
     <string name="notification_channel_name">Weather Temperature</string>
     <string name="notification_ready">Precipitation in Rain</string>
     <string name="notification_title">Sofia, Bulgaria: 26°C </string>
+    // Notification Actions
+    <string name="notification_action_title">notification.action.title</string>
+    <string name="notification_action_desc">notification.action.description</string>
+    <string name="notification_action_title_weather_data_key">weatherData</string>
 
+    // Widgets
+    <string name="widget_text">Sofia</string>
+    <string name="widget_configure">Configure</string>
+    <string name="widget_add_button_text">Add widget</string>
+    <string name="widget_location">Sofia</string>
+
+    // XML layouts tools descriptions
     <string name="tools_weather_prepacipitation_volume">24 mm</string>
     <string name="tools_weather_wind_speed_and_direction">24 mm</string>
     <string name="tool_zero_temperature">0.0°C</string>
@@ -123,8 +133,5 @@
     <string name="future_list">Future List</string>
     <string name="description_next_5_days">Next 5 days: </string>
 
-    <string name="notification_action_title">notification.action.title</string>
-    <string name="notification_action_desc">notification.action.description</string>
-    <string name="notification_action_title_weather_data_key">weatherData</string>
 
 </resources>

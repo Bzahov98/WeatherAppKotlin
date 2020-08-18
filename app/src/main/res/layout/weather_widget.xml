@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="10">
 
         <ImageView
             android:id="@+id/widgetWeatherIcon"
@@ -25,9 +25,10 @@
             android:background="@drawable/shape_small"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:layout_weight="10"
             android:weightSum="8"
             android:layout_marginStart="2dp">
 
@@ -40,7 +41,7 @@
                     android:id="@+id/widgetTemperatureText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:contentDescription="@string/widget_text"
                     android:text="@string/tools_default_temp_nounit"
                     android:textAlignment="center"
@@ -54,13 +55,13 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:contentDescription="@string/widget_text"
-                    android:gravity="center"
+                    android:gravity="top"
                     android:text="@string/metric_temperature"
                     android:textColor="@color/secondaryDarkColor"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold|italic" />
-
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -83,9 +84,7 @@
                     android:id="@+id/widgetTemperatureUnit2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
                     android:layout_gravity="center"
-                    android:layout_toEndOf="@+id/widgetTemperatureText"
                     android:contentDescription="@string/widget_text"
                     android:gravity="center"
                     android:text="@string/metric_temperature"
@@ -93,8 +92,28 @@
                     android:textSize="17sp"
                     android:textStyle="bold|italic" />
             </LinearLayout>
+
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/widgetOtherButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:background="@drawable/shape_small"
+            android:src="@drawable/notification_on_filled_black_50px"
+            android:contentDescription="@string/hint_refresh_weather_data" />
+
+        <ImageView
+            android:id="@+id/widgetRefreshData"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:background="@drawable/shape_small"
+            android:src="@drawable/refresh_black_32px"
+            android:contentDescription="@string/hint_refresh_weather_data" />
 
     </LinearLayout>
 
