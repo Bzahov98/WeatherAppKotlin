@@ -39,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1.1.2000"
-            style="@style/lowimportant_text" />
+            style="@style/low_important_text" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/futureConditionTextHolder"

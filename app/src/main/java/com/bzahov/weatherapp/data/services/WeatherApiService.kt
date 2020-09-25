@@ -20,6 +20,7 @@ interface WeatherApiService {
         @Query("query") location: String ,
         @Query("units") unit: String = "m"
     ) : Deferred<CurrentWeatherResponse>
+
     companion object{
         private const val TAG = "WeatherApiService"
         private val API_KEY = getAppString(R.string.weather_stack_key)

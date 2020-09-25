@@ -19,6 +19,8 @@ data class OneDayWeatherState(
 
     var currentPrecipitationText: String = errorString
     var oneDaySubtitle: String = errorString
+    fun getUnitAbbreviation() = UIConverterFieldUtils.getTemperatureUnitAbbreviation(isMetric)
+
     lateinit var hourInfoItemsList: List<HourInfoItem>
     lateinit var minMaxAvgTemp: MinMaxAvgTemp
     lateinit var allDayWeatherAndAverageData: MinMaxAvgTemp
@@ -46,6 +48,13 @@ data class OneDayWeatherState(
         minMaxAvgTemp = MinMaxAvgTemp()
         allDayWeatherAndAverageData = MinMaxAvgTemp()
         allNightWeatherAndAverageData = MinMaxAvgTemp()
+    }
+
+    fun getDayNightPairList() {
+
+        allDayWeatherAndAverageData
+
+       // val resultPair = Pair<FutureDayData, FutureDayData>()
     }
 
     private fun filterAllDayData() =
@@ -79,7 +88,7 @@ data class OneDayWeatherState(
 }
 
 class MinMaxAvgTemp(
-    private val dataSource: List<FutureDayData>,
+    val dataSource: List<FutureDayData>,
     isMetric: Boolean
 ) {
     constructor() : this(emptyList(), true)
@@ -163,9 +172,5 @@ class MinMaxAvgTemp(
         return avgSumTemp / avgCount
     }
 
-    private val unitAbbreviation: String = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
-        isMetric,
-        getAppString(R.string.metric_temperature),
-        getAppString(R.string.imperial_temperature)
-    )
+    val unitAbbreviation: String = UIConverterFieldUtils.getTemperatureUnitAbbreviation(isMetric)
 }

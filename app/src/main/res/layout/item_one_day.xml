@@ -206,10 +206,65 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/oneDayPerHourColumnChart"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                style="@style/DayCardView"-->
+<!--                app:cardCornerRadius="3dp">-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/oneDayPerHourChartTemperature"
+                        style="@style/MyMaterialTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/description_chart_temperature"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/oneDayPerHourChartPrecipitation"
+                        style="@style/MyMaterialTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/description_chart_precipitations"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartTemperature" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/oneDayPerHourChartWind"
+                        style="@style/ChartMaterialTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/description_chart_wind"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartPrecipitation" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/oneDayPerHourChartText"
+                        style="@style/MyMaterialTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/description_chart_"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartWind" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/oneDayGroupLoading"
@@ -218,6 +273,7 @@
                     android:layout_marginEnd="8dp"
                     app:constraint_referenced_ids="oneDayProgressBarLoading, oneDayTextViewLoading"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="gone"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ProgressBar
@@ -250,5 +306,6 @@
                     app:layout_constraintVertical_bias="0.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

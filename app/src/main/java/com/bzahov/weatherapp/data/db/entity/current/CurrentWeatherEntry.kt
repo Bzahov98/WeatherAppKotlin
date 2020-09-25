@@ -46,4 +46,6 @@ data class CurrentWeatherEntry(
     @PrimaryKey(autoGenerate = false)
     var id: Int =
         CURRENT_WEATHER_ID // we have only 1 instance in db
+
+    fun getCondition() = weatherDescriptions.toString().removePrefix("[").removeSuffix("]")
 }

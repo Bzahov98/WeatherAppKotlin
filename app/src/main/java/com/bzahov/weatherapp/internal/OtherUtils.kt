@@ -12,10 +12,14 @@ class OtherUtils {
                 // REWORK Fix Offset
                 val currentDay = LocalDateTime.ofEpochSecond(it.dt,0, ZoneOffset.ofTotalSeconds(timeOffset))
 
-                currentDay.isAfter(currentDay.withHour(8)).and(
-                    currentDay.isBefore(currentDay.withHour(20))
-                )
+                checkIsDayTime(currentDay)
             }
+        }
+
+        private fun checkIsDayTime(currentDay: LocalDateTime): Boolean {
+            return currentDay.isAfter(currentDay.withHour(8)).and(
+                currentDay.isBefore(currentDay.withHour(20))
+            )
         }
     }
 }

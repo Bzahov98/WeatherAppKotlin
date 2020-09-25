@@ -152,6 +152,7 @@ class ForecastApplication : Application(), KodeinAware {
                 instance()
             )
         }
+
         //bind() from factory { startDate: LocalDateTime, endDate: LocalDateTime -> OneDayWeatherViewModelFactory(startDate,endDate,instance(),instance(),instance()) }
     }
     private lateinit var app: ForecastApplication
@@ -175,7 +176,7 @@ class ForecastApplication : Application(), KodeinAware {
             getString(R.string.notification_channel_name)
         )
 
-        testAlarmNotification()
+        //testAlarmNotification()
     }
 
     fun testAlarmNotification() {

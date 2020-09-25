@@ -19,7 +19,7 @@
 
     <PreferenceCategory android:title="Units">
         <ListPreference
-            android:defaultValue="METRIC"
+            android:defaultValue="@string/unit_system_full_name_metric"
             android:entries="@array/unitSystemEntries"
             android:entryValues="@array/unitSystemValues"
             android:key="@string/preferences_unit_system"
@@ -40,20 +40,25 @@
             android:iconSpaceReserved="true"
             android:key="@string/preferences_widget_refresh_rate"
             android:max="360"
-            android:min="0"
+            android:min="30"
             android:summary="Select refresh rate in minutes"
             android:title="Widget refresh rate"
             app:showSeekBarValue="true"
             app:updatesContinuously="true"
-
             />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Notifications">
         <SwitchPreference
             android:defaultValue="false"
+            android:persistent="true"
             android:key="@string/preferences_show_notifications"
             android:summary="Allow app to send you notifications"
             android:title="Enable app notifications" />
+        <Preference
+            android:key="@string/preferences_notification_channel_settings"
+            android:persistent="false"
+            android:title="Notification channel settings"
+            android:summary="Click to Open Notification channel settings"/>
     </PreferenceCategory>
 </PreferenceScreen>

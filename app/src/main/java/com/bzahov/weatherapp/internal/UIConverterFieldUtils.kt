@@ -29,6 +29,10 @@ class UIConverterFieldUtils {
             val dtPattern = getAppString(R.string.date_formatter_pattern_hour_minutes_only)
             return dateTimestampToString(dtTimestamp, offsetTotalSeconds, dtPattern)
         }
+        fun dateTimestampToHourString(dtTimestamp: Long, offsetTotalSeconds: Int = 0): String {
+            val dtPattern = getAppString(R.string.date_formatter_pattern_hours_only)
+            return dateTimestampToString(dtTimestamp, offsetTotalSeconds, dtPattern)
+        }
 
         fun dateTimestampToDateString(dtTimestamp: Long, offsetTotalSeconds: Int = 0): String {
             val dtPattern = getAppString(R.string.date_formatter_pattern_day_month__only)
@@ -53,6 +57,13 @@ class UIConverterFieldUtils {
             val cond = StringBuilder()
             weatherDetails.forEach() { cond.append(it.description).append(" ") }
             return cond.toString()
+        }
+        fun getTemperatureUnitAbbreviation(isMetric: Boolean): String {
+            return chooseLocalizedUnitAbbreviation(
+                isMetric,
+                getAppString(R.string.metric_temperature),
+                getAppString(R.string.imperial_temperature)
+            )
         }
 
         fun chooseLocalizedUnitAbbreviation(

@@ -26,7 +26,7 @@ class DateConverters {
     }
 
     @TypeConverter
-    fun storedStringToWeatherDescrp(data: String?): List<WeatherDetails>? {
+    fun storedStringToWeatherDescription(data: String?): List<WeatherDetails>? {
         val gson = Gson()
         if (data == null) {
             return Collections.emptyList()
@@ -36,7 +36,7 @@ class DateConverters {
     }
 
     @TypeConverter
-    fun weatherDescrpToStoredString(myObjects: List<WeatherDetails>?): String? {
+    fun weatherDescriptionToStoredString(myObjects: List<WeatherDetails>?): String? {
         val gson = Gson()
         return gson.toJson(myObjects)
     }

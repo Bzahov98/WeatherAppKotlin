@@ -57,16 +57,17 @@ class MainActivity(
             requestLocationPermission()
     }
 
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
+
     private fun bindLocationManager() {
         LifecycleBoundLocationManager(
             this,
             fusedLocationProviderClient,
             locationCallback
         )
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
     }
 
     private fun requestLocationPermission() {
@@ -88,7 +89,7 @@ class MainActivity(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
-    ){
+    ) {
         if (requestCode == MY_PERMISSION_ACCESS_COARSE_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 bindLocationManager()

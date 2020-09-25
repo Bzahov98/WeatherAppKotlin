@@ -3,6 +3,7 @@ package com.bzahov.weatherapp.ui.settings
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,10 @@ import androidx.preference.*
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.data.provider.UNIT_SYSTEM
-import com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidgetConfigureActivity
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
 import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModel
 import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
+import com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidgetConfigureActivity
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -68,7 +68,7 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
             }
             SHOW_NOTIFICATIONS -> {
 
-                Toast.makeText(context,"bla", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "bla", Toast.LENGTH_SHORT).show()
 //
 //                val notificationManager = ContextCompat.getSystemService(
 //                    requireContext(),
@@ -81,7 +81,13 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
 //                )
 
                 (activity?.application as ForecastApplication).testAlarmNotification()
-                return true
+                true
+            }
+            NOTIFICATION_CHANNEL_SETTINGS -> {
+                val intent: Intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                startActivity(intent)
+                true
             }
             else -> super.onPreferenceTreeClick(preference)
         }
@@ -125,7 +131,10 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
                 if (widgetPreference != null) {
                     if (widgetPreference.isChecked) {
                         Log.d(TAG, "enable weather widget")
-                        val intent = Intent(context, CurrentWeatherWidgetConfigureActivity::class.java)
+                        val intent = Intent(
+                            context,
+                            CurrentWeatherWidgetConfigureActivity::class.java
+                        )
                         startActivity(intent)
                     }
                 }
@@ -170,5 +179,6 @@ class SettingsFragment() : ScopedPreferenceCompatFragment(),
         val CUSTOM_LOCATION = getAppString(R.string.preferences_location_custom)
         val USE_DEVICE_LOCATION = getAppString(R.string.preferences_location_use_device)
         val UNIT_SYSTEM = getAppString(R.string.preferences_unit_system)
+        val NOTIFICATION_CHANNEL_SETTINGS = getAppString(R.string.preferences_notification_channel_settings)
     }
 }

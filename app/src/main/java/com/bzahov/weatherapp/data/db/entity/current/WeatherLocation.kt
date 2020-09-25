@@ -42,4 +42,8 @@ data class WeatherLocation(
         return ZonedDateTime.ofInstant(instant, zoneId)
     }
     fun getLocalTimeClock(): String = localtime.substringAfter(" ")
+
+    fun extractLocationString() =
+        "${this.name}, ${this.country} | ${this.getLocalTimeClock()}"
+
 }

@@ -5,16 +5,18 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
-import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.ForecastDatabase
-import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
-import com.bzahov.weatherapp.internal.UIConverterFieldUtils
+import com.bzahov.weatherapp.data.provider.PreferenceProvider.Companion.getUnitAbbreviation
+import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
 import com.bzahov.weatherapp.ui.settings.SettingsFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +28,18 @@ import kotlinx.coroutines.launch
  * App Widget Configuration implemented in [CurrentWeatherWidgetConfigureActivity]
  */
 private const val TAG = "CurrentWeatherWidget"
-private const val ONCLICKTAG = "myOnClickTag"
+const val REFRESH_BUTTON_TAG = "myOnClickTag"
+const val WIDGET_NOTIFICATION_TAG = "myOnClickTag2"
+const val WIDGET_LAUNCH_ACTIVITY_TAG = "myOnClickTag3"
 
-class CurrentWeatherWidget(
-    val currentWeatherRepository: CurrentForecastRepository
-) : AppWidgetProvider()/*, KodeinAware*/ {
-    //
-//    override val kodein by closestKodein()
+open class CurrentWeatherWidget() :
+    AppWidgetProvider(),
+    CurrentWidgetRefresher/*,
+    KodeinAware*/ {
+
+    private var refreshButtonActive: Boolean = false
+    private var notificationButtonActive: Boolean = false
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -42,11 +49,23 @@ class CurrentWeatherWidget(
         for (appWidgetId in appWidgetIds) {
 
             val remoteViews = RemoteViews(context.packageName, R.layout.weather_widget)
-
+            Log.e(TAG, "onUpdate")
             remoteViews.setOnClickPendingIntent(
                 R.id.widgetRefreshData,
-                getPendingSelfIntent(context, ONCLICKTAG)
+                getPendingSelfIntent(context, REFRESH_BUTTON_TAG)
             )
+            remoteViews.setOnClickPendingIntent(
+                R.id.widgetOtherButton,
+                getPendingSelfIntent(context, WIDGET_NOTIFICATION_TAG)
+            )
+            remoteViews.setOnClickPendingIntent(
+                R.id.widgetCurrentWeather,
+                getPendingSelfIntent(context, WIDGET_LAUNCH_ACTIVITY_TAG)
+            )
+
+
+            Log.e(TAG, "onUpdate after remote views Intent")
+
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
             updateAppWidget(
                 context,
@@ -71,12 +90,144 @@ class CurrentWeatherWidget(
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
+        Log.d(TAG, "OnReceive")
+        val remoteViews = RemoteViews(context?.packageName, R.layout.weather_widget)
         if (intent != null) {
-            if (ONCLICKTAG == intent.action){
-                Toast.makeText(context,"Trying to refresh data",Toast.LENGTH_SHORT).show()
-               // currentWeatherRepository.requestRefreshOfData()
+
+            when (intent.action) {
+                REFRESH_BUTTON_TAG -> {
+                    if (!refreshButtonActive) {
+                        refreshButtonActive = true
+                        Log.d(TAG, "REFRESH_BUTTON_TAG clicked")
+
+                        refreshButtonOnClick(context, remoteViews, intent)
+
+                        refreshButtonActive = false
+                    } else {
+                        Log.d(TAG, "REFRESH_BUTTON_TAG refused")
+                    }
+                }
+                WIDGET_NOTIFICATION_TAG -> {
+                    if (!notificationButtonActive) {
+                        notificationButtonActive = true
+                        Log.d(TAG, "WIDGET_NOTIFICATION_TAG clicked")
+
+                        notificationButtonOnClick(context, remoteViews, intent)
+
+                        notificationButtonActive = false
+                    } else Log.d(TAG, "WIDGET_NOTIFICATION_TAG refused")
+
+                }
+                WIDGET_LAUNCH_ACTIVITY_TAG -> {
+                    launchCurrentWeatherActivity(context, remoteViews, intent)
+                }
+                else -> {
+                    Log.d(TAG, "OnReceive with tag: ${intent.action}")
+
+                }
+
             }
         }
+    }
+
+    private fun launchCurrentWeatherActivity(
+        context: Context?,
+        remoteViews: RemoteViews,
+        intent: Intent
+    ) {
+        Toast.makeText(context, "Launching Activity", Toast.LENGTH_SHORT).show()
+        val mainActivityIntent = Intent(context, MainActivity::class.java)
+        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context!!.startActivity(mainActivityIntent)
+    }
+
+    private fun refreshButtonOnClick(
+        context: Context?,
+        remoteViews: RemoteViews,
+        intent: Intent
+    ) {
+        Toast.makeText(context, "Trying to refresh the data", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch {
+            // Instruct the widget manager to update the widget
+            //currentForecastRepository.requestRefreshOfData()
+
+            context?.refreshWidgetData()
+        }
+    }
+
+    private fun notificationButtonOnClick(
+        context: Context?,
+        remoteViews: RemoteViews,
+        intent: Intent
+    ) {
+        Toast.makeText(context, "Trying to notif", Toast.LENGTH_SHORT).show()
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        //editor.putInt("storedInt", storedPreference); // value to store
+        // editor.commit()
+
+        var isNotificationsOn =
+            PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                SettingsFragment.SHOW_NOTIFICATIONS,
+                true
+            )
+
+        if (isNotificationsOn) {
+            Toast.makeText(context, "Turning Off app notifications", Toast.LENGTH_SHORT)
+                .show()
+            // TODO set notificationsOn app preferences to false
+            isNotificationsOn = false
+            editor.putBoolean(SettingsFragment.SHOW_NOTIFICATIONS, isNotificationsOn)
+            editor.apply()
+
+            var appWidgetTarget =
+                AppWidgetTarget(
+                    context,
+                    R.id.widgetOtherButton,
+                    remoteViews,
+                    remoteViews.layoutId
+                )
+            if (context != null) {
+                Glide.with(context)
+                    .asBitmap()
+                    .load(R.drawable.notifications_off_black_48px)
+                    .into(appWidgetTarget)
+            };
+
+        } else {
+            Toast.makeText(context, "Turning ON app notifications", Toast.LENGTH_SHORT)
+                .show()
+            // TODO set notificationsOn app preferences to true
+            isNotificationsOn = true
+            editor.putBoolean(SettingsFragment.SHOW_NOTIFICATIONS, isNotificationsOn)
+            editor.apply()
+            //                    remoteViews.setImageViewResource(
+            //                        R.id.widgetOtherButton,
+            //                        R.drawable.notifications_on_50px
+            //                    )
+            var appWidgetTarget =
+                AppWidgetTarget(
+                    context,
+                    R.id.widgetOtherButton,
+                    remoteViews,
+                    remoteViews.layoutId
+                )
+            if (context != null) {
+                Glide.with(context)
+                    .asBitmap()
+                    .load(R.drawable.notification_on_black_50px)
+                    .into(appWidgetTarget)
+            };
+        }
+        // currentWeatherRepository.requestRefreshOfData()
+        //                CoroutineScope(Dispatchers.IO).launch {
+        //                    // Instruct the widget manager to update the widget
+        //                    //currentForecastRepository.requestRefreshOfData()
+        //                    //context?.refreshWidgetData()
+        //                }
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        appWidgetManager.updateAppWidget(intent.component, remoteViews)
     }
 
     override fun onEnabled(context: Context) {
@@ -106,16 +257,9 @@ class CurrentWeatherWidget(
             appWidgetId: Int
         ) {
             Log.d(TAG, "update current weather widget")
-            val unitAbbreviation = UIConverterFieldUtils.chooseLocalizedUnitAbbreviation(
-                context.getSharedPreferences(""/*REWORK: FIND RIGHT PREFERENCE NAME*/, 0)
-                    .getBoolean(SettingsFragment.UNIT_SYSTEM, true),
-                ForecastApplication.getAppString(R.string.metric_temperature),
-                ForecastApplication.getAppString(R.string.imperial_temperature)
-            )
-            // Construct the RemoteViews object
 
             CoroutineScope(Dispatchers.IO).launch {
-                val remoteViews = updateUI(context, unitAbbreviation, appWidgetId)
+                val remoteViews = updateUI(context, appWidgetId)
                 // Instruct the widget manager to update the widget
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
             }
@@ -125,20 +269,24 @@ class CurrentWeatherWidget(
 
         private fun updateUI(
             context: Context,
-            unitAbbreviation: String,
             appWidgetId: Int
         ): RemoteViews {
+
+            val unitAbbreviation = getUnitAbbreviation(context)
+            // Fetch data from database
             val weather =
                 ForecastDatabase.invoke(context.applicationContext).currentWeatherDao()
                     .getCurrentWeatherAsync()
             val location =
                 ForecastDatabase.invoke(context.applicationContext).currentLocationDao()
                     .getLocationNotLive()
-            // set values to views
+            // Construct the RemoteViews object
             val remoteViews = RemoteViews(context.packageName, R.layout.weather_widget)
+
+            // set values to views
             remoteViews.setTextViewText(
                 R.id.widgetLocation,
-                "${location.name}, ${location.country} | ${location.getLocalTimeClock()}"
+                location.extractLocationString()
             )
             remoteViews.setTextViewText(
                 R.id.widgetTemperatureText,
