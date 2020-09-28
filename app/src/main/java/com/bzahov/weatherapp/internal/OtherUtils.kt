@@ -4,7 +4,7 @@ import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class OtherUtils {
+class   OtherUtils {
     companion object{
 
         fun isDayTime(timeOffset: Int = 0): (FutureDayData) -> Boolean {
