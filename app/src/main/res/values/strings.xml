@@ -151,13 +151,29 @@
     <string name="unknown">\?</string>
     <string name="retry">Retry</string>
 
+    <string name="graphs_default_title">Weather in next 24 hours</string>
+    <string name="graphs_default_axis_x_name">3 hours intervals</string>
+
     <string name="graphs_precipitation_title">Precipitations in next 24 hours</string>
     <string name="graphs_precipitation_axis_y_namecloud_humid">Cloudiness/Humidity, %</string>
     <string name="graphs_precipitation_line_cloudiness">Cloudiness, %</string>
     <string name="graphs_precipitation_line_humidity">Humidity, %</string>
-    <string name="graphs_precipitation_axis_x_name">3 hours intervals</string>
     <string name="graphs_precipitation_axis_y_name_precip">Precipitations, mm</string>
     <string name="graphs_precipitation_series_rain">Rain, mm</string>
     <string name="graphs_precipitation_series_snow">Snow, mm</string>
     <string name="graphs_precipitation_rain_unit_abbreviation">mm</string>
+
+
+
+    <string name="graphs_temperature_title">Weather in next 24 hours</string>
+
+<!--    <string name="graphs_precipitation_axis_y_namecloud_humid">Cloudiness/Humidity, %</string>-->
+    <string name="graphs_wind_line_speed">Wind speed, m/s</string>
+    <string name="graphs_wind_line_degree">Degree, 0</string>
+    <string name="graphs_wind_axis_y_name_degree">Wind degree, *</string>
+    <string name="graphs_wind_axis_y_name_speed">Wind Speed, m/s</string>
+    <string name="graphs_wind_series_speed">Wind Speed, m/s</string>
+    <string name="graphs_wind_series_degree">Wind degree</string>
+    <string name="graphs_wind_speed_unit_abbreviation">m/s</string>
+    <string name="graphs_wind_title">Wind component in next 24 hours</string>
 </resources>

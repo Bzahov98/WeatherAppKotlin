@@ -1,9 +1,7 @@
 package com.bzahov.weatherapp.ui.anychartGraphs
 
 import android.util.Log
-import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
 import com.anychart.core.cartesian.series.Line
 import com.anychart.data.Mapping
@@ -15,45 +13,32 @@ import com.anychart.scales.Linear
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
+import com.bzahov.weatherapp.internal.enums.WindDirections
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.colorizeAxesBackground
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.hideSeriesTooltip
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setAxisLabelName
-import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setSeriesAnchor
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setSeriesTooltip
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetBaseCartesian
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupTooltipAndInteractivity
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.testChartData
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_DEFAULT_RAIN
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_DEFAULT_SNOW
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_DEFAULT_TEMP_ZERO
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_PRECIPITATIONS_CLOUDINESS
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_PRECIPITATIONS_HUMIDITY
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_PRECIPITATIONS_PRESSURE
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_PRECIPITATIONS_RAIN
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_PRECIPITATIONS_SNOW
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_TEMPERATURE_FEELS_LIKE
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.CustomDataEntry.Companion.KEY_TEMPERATURE_TEMP
 import com.bzahov.weatherapp.ui.weather.oneday.OneDayWeatherState
 
 class OneDayChartUtils {
     companion object {
         private const val TAG = "OneDayChartUtils"
-        const val CHART_TYPE_DEFAULT = "DEFAULT"
-        const val CHART_TYPE_TEMPERATURE = "TEMPERATURE"
-        const val CHART_TYPE_PRECIPITATIONS = "PRECIPITATIONS"
+        private const val CHART_TYPE_DEFAULT = "DEFAULT"
+        private const val CHART_TYPE_TEMPERATURE = "TEMPERATURE"
+        private const val CHART_TYPE_PRECIPITATIONS = "PRECIPITATIONS"
+        private const val CHART_TYPE_WIND = "WIND"
 
         fun createChart(
             weatherStateData: OneDayWeatherState?,
             chartType: String = CHART_TYPE_DEFAULT
         ): Cartesian {
-            val cartesian: Cartesian = AnyChart.cartesian()
-            cartesian.autoRedraw(true)
+            val chartTitle = getAppString(R.string.graphs_default_title)
 
-            cartesian.dataArea(true)
-            cartesian.animation(true)
-            cartesian.crosshair(false)
-
-            cartesian.title("Weather in next 24 hours")
-
+            val cartesian: Cartesian = setupAndGetBaseCartesian(chartTitle)
             cartesian.yScale().stickToZero(true)
-            //cartesian.yAxis("Sss")
-
 
             val scalesLinear: Linear = Linear.instantiate()
 //        scalesLinear.minimum(-40.0)
@@ -128,19 +113,11 @@ class OneDayChartUtils {
         }
 
         fun createTemperatureChart(weatherStateData: OneDayWeatherState?): Cartesian {
-            val cartesian: Cartesian = AnyChart.cartesian()
-            cartesian.autoRedraw(true)
-
-            cartesian.dataArea(true)
-            cartesian.animation(true)
-            cartesian.crosshair(false)
-
-            cartesian.background().stroke("null")
-
-            cartesian.title("Weather in next 24 hours")
-
+            val chartTitle = getAppString(R.string.graphs_temperature_title)
+            val cartesian: Cartesian = setupAndGetBaseCartesian(chartTitle)
             cartesian.yScale().stickToZero(true)
-            //cartesian.yAxis("Sss")
+
+            cartesian.background().stroke("blue")
 
 
             val scalesLinear: Linear = Linear.instantiate()
@@ -165,31 +142,26 @@ class OneDayChartUtils {
             val set: Set = Set.instantiate()
             set.data(data)
 
-            val tempLineData: Mapping =
+            val temperatureData: Mapping =
                 set.mapAs("{ x: 'x', value: '${KEY_TEMPERATURE_TEMP}' }") // Hour info
-            val feelsLikeLineData: Mapping =
+            val feelsLikeTemperatureData: Mapping =
                 set.mapAs("{ x: 'x', value: '${KEY_TEMPERATURE_FEELS_LIKE}' }") // weather.feelsLike oC oF
-            //val tempZeroLine: Mapping = set.mapAs("{ x: 'x', value: '${KEY_TEMP_ZERO}' }")
-            val column1Data: Mapping = set.mapAs("{ x: 'x', value: 'value' }") // temperature oC oF
-            val column2Data: Mapping = set.mapAs("{ x: 'x', value: 'value2' }") // feels like oC oF
-//            val column3Data: Mapping = set.mapAs("{ x: 'x', value: 'value3' }")
-//            val series3 = cartesian.column(column3Data)
 
             val xAxisName = "Next 24 Hours"
             var yAxisName = "Temperature, $unitAbbreviation"
             var series1Name = "Temperature"
             var series2Name = "FeelsLike"
 
-            val tempLine: Line = cartesian.line(tempLineData)
+            val tempLine: Line = cartesian.line(temperatureData)
             tempLine.name(series1Name)
             tempLine.labels().format("{%Value} $unitAbbreviation")
-            val feelsLikeLine: Line = cartesian.line(feelsLikeLineData)
+            val feelsLikeLine: Line = cartesian.line(feelsLikeTemperatureData)
             feelsLikeLine.name(series2Name)
 
             //cartesian.yScale().minimum(-35.0).maximum(50.0)
-            val series1 = cartesian.column(column1Data)
+            val series1 = cartesian.column(temperatureData)
             series1.name(series1Name)
-            val series2 = cartesian.column(column2Data)
+            val series2 = cartesian.column(feelsLikeTemperatureData)
 
             series2.name(series2Name)
 
@@ -207,62 +179,56 @@ class OneDayChartUtils {
         }
 
         fun createPrecipitationsChart(
-            weatherStateData: OneDayWeatherState?,
-            chartType: String = CHART_TYPE_PRECIPITATIONS
-        ): Cartesian {
-            val xAxisName  = getAppString(R.string.graphs_precipitation_axis_x_name)
-            val yAxisName = getAppString(R.string.graphs_precipitation_axis_y_name_precip)
-            val series1Name = getAppString(R.string.graphs_precipitation_series_rain)
-            val series2Name = getAppString(R.string.graphs_precipitation_series_snow)
-            val unitAbbreviation = getAppString(R.string.graphs_precipitation_rain_unit_abbreviation)
+                weatherStateData: OneDayWeatherState?,
+                chartType: String = CHART_TYPE_PRECIPITATIONS
+            ): Cartesian {
+                val xAxisName = getAppString(R.string.graphs_default_axis_x_name)
+                val yAxisName = getAppString(R.string.graphs_precipitation_axis_y_name_precip)
+                val series1Name = getAppString(R.string.graphs_precipitation_series_rain)
+                val series2Name = getAppString(R.string.graphs_precipitation_series_snow)
+                val unitAbbreviation =
+                    getAppString(R.string.graphs_precipitation_rain_unit_abbreviation)
+                val chartTitle = getAppString(R.string.graphs_precipitation_title)
 
-            val cartesian: Cartesian = AnyChart.cartesian()
-            cartesian.autoRedraw(true)
+                val cartesian: Cartesian = setupAndGetBaseCartesian(chartTitle)
 
-            cartesian.dataArea(true)
-            cartesian.animation(true)
+                var data: MutableList<DataEntry> = ArrayList()// testChartData() // TODO: Debug
 
-            cartesian.title(getAppString(R.string.graphs_precipitation_title))
+                if (weatherStateData != null) {
+                    data = extractChartDataFromState(weatherStateData, chartType)
+                    // currentStateData.hourInfoItemsList.last().
+                    //unitAbbreviation = weatherStateData.getUnitAbbreviation()
+                } else {
+                    Log.e(TAG, "createPrecipitationsChart: weatherStateData is null")
+                    cartesian.label("No DATA")
+                    return cartesian
+                }
 
+                val xAxis = cartesian.xAxis(0)
+                val yAxis = cartesian.yAxis(0)
+                val yAxis1 = cartesian.yAxis(1)
 
-            var data: MutableList<DataEntry> = ArrayList()// testChartData() // TODO: Debug
-
-
-            if (weatherStateData != null) {
-                data = extractChartDataFromState(weatherStateData, chartType)
-                // currentStateData.hourInfoItemsList.last().
-                //unitAbbreviation = weatherStateData.getUnitAbbreviation()
-            } else {
-                Log.e(TAG, "createPrecipitationsChart: weatherStateData is null")
-                cartesian.label("No DATA")
-                return cartesian
-            }
-
-            val xAxis = cartesian.xAxis(0)
-            val yAxis = cartesian.yAxis(0)
-            val yAxis1 = cartesian.yAxis(1)
-
-            xAxis
-                .title(xAxisName)
-                .staggerMode(true)
-                .staggerMaxLines(2)
-            yAxis.title(yAxisName)
-            yAxis.setAxisLabelName(unitAbbreviation)
-            yAxis1.setAxisLabelName("%")
+                xAxis
+                    .title(xAxisName)
+                    .staggerMode(true)
+                    .staggerMaxLines(2)
+                yAxis.title(yAxisName)
+                yAxis.setAxisLabelName(unitAbbreviation)
+                yAxis1.setAxisLabelName("%")
 
 
-            val percentYAxis =
-                yAxis1.title(getAppString(R.string.graphs_precipitation_axis_y_namecloud_humid))
-                    .orientation(Orientation.RIGHT)
-            val lineMarker = cartesian.lineMarker(0)
-                .axis(percentYAxis)
-                .value(85)
-                //.layout("85%")
-                .stroke("#A5B3B3", 1, "5 2", StrokeLineJoin.ROUND, StrokeLineCap.ROUND)
+                val percentYAxis =
+                    yAxis1.title(getAppString(R.string.graphs_precipitation_axis_y_namecloud_humid))
+                        .orientation(Orientation.RIGHT)
+                val lineMarker = cartesian.lineMarker(0)
+                    .axis(percentYAxis)
+                    .value(85)
+                    //.layout("85%")
+                    .stroke("#A5B3B3", 1, "5 2", StrokeLineJoin.ROUND, StrokeLineCap.ROUND)
 
 
-            val set: Set = Set.instantiate()
-            set.data(data)
+                val set: Set = Set.instantiate()
+                set.data(data)
 
             val cloudinessLineData: Mapping =
                 set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_CLOUDINESS}' }") // Cloudiness, % - value
@@ -305,16 +271,12 @@ class OneDayChartUtils {
             //cartesian.yAxis(0).scale(ScaleTypes.GANTT)
 
             //tooltipSettings(cartesian, unitAbbreviation)
-            cartesian.crosshair(false)
-            cartesian.tooltip()
-                .positionMode(TooltipPositionMode.POINT)
-                .displayMode(TooltipDisplayMode.SEPARATED)
-            cartesian.interactivity().hoverMode(HoverMode.BY_X).selectionMode()
+            setupTooltipAndInteractivity(cartesian)
 
-            setSeriesAnchor(series1, Anchor.RIGHT_BOTTOM)
-            setSeriesAnchor(series2, Anchor.LEFT_BOTTOM)
-            setSeriesAnchor(line, Anchor.CENTER)
-            setSeriesAnchor(humidityLine, Anchor.AUTO)
+            setSeriesTooltip(series1, Anchor.RIGHT_BOTTOM)
+            setSeriesTooltip(series2, Anchor.LEFT_BOTTOM)
+            setSeriesTooltip(line, Anchor.CENTER)
+            setSeriesTooltip(humidityLine, Anchor.AUTO)
             //
 
             val log = cartesian.yScale(ScaleTypes.LINEAR_COLOR)
@@ -339,14 +301,118 @@ class OneDayChartUtils {
             );
 
             colorizeAxesBackground(xAxis)
-
             cartesian.yScale().ticks().set(ticksArray)
-
 
             return cartesian
         }
 
+        fun createWindChart(
+                weatherStateData: OneDayWeatherState?,
+                chartType: String = CHART_TYPE_WIND
+            ): Cartesian {
+                val xAxisName = getAppString(R.string.graphs_default_axis_x_name)
+                val yAxisName = getAppString(R.string.graphs_wind_axis_y_name_speed)
+                val series1Name = getAppString(R.string.graphs_wind_series_speed)
+                val series2Name = getAppString(R.string.graphs_wind_series_degree)
+                val unitAbbreviation =
+                    getAppString(R.string.graphs_wind_speed_unit_abbreviation)
+                val chartTitle = getAppString(R.string.graphs_wind_title)
 
+                val cartesian: Cartesian = setupAndGetBaseCartesian(chartTitle)
+
+                var data: MutableList<DataEntry> = ArrayList()// testChartData() // TODO: Debug
+
+                if (weatherStateData != null) {
+                    data = extractChartDataFromState(weatherStateData, chartType)
+                    // currentStateData.hourInfoItemsList.last().
+                    //unitAbbreviation = weatherStateData.getUnitAbbreviation()
+                } else {
+                    Log.e(TAG, "createwindChart: weatherStateData is null")
+                    cartesian.label("No DATA")
+                    return cartesian
+                }
+
+                val xAxis = cartesian.xAxis(0)
+                val yAxis = cartesian.yAxis(0)
+                //val yAxis1 = cartesian.yAxis(1)
+
+                xAxis
+                    .title(xAxisName)
+                    .staggerMode(true)
+                    .staggerMaxLines(2)
+                yAxis.title(yAxisName)
+                yAxis.setAxisLabelName(unitAbbreviation)
+                //yAxis1.setAxisLabelName("%")
+
+
+//                val percentYAxis =
+//                    yAxis1.title(getAppString(R.string.graphs_precipitation_axis_y_namecloud_humid))
+//                        .orientation(Orientation.RIGHT)
+//                val lineMarker = cartesian.lineMarker(0)
+//                    .axis(percentYAxis)
+//                    .value(85)
+//                    //.layout("85%")
+//                    .stroke("#A5B3B3", 1, "5 2", StrokeLineJoin.ROUND, StrokeLineCap.ROUND)
+
+
+                val set: Set = Set.instantiate()
+                set.data(data)
+
+            val windSpeedData: Mapping =
+                set.mapAs("{ x: 'x', value: '${KEY_WIND_SPEED}' }") // wind speed - value
+            val windDegreeData: Mapping =
+                set.mapAs("{ x: 'x', value: '${KEY_WIND_DEGREE}' }") // wind degree, 0 - value2
+
+
+
+//            val series3 = cartesian.column(column3Data)
+//            series3.name("Any")
+
+//                var line = chart.lineMarker();
+//                line.value(0);
+//                line.stroke("2 red");
+
+
+            val line: Line = cartesian.line(windSpeedData)
+            line.name(getAppString(R.string.graphs_wind_line_speed))
+            line.labels().enabled(false)
+            line.legendItem().disabled()
+
+//            val humidityLine: Line = cartesian.line(windDegreeData)
+//            humidityLine.name(getAppString(R.string.graphs_precipitation_line_humidity))
+//            humidityLine.labels().enabled()
+//            val pressureLine: Line = cartesian.line(pressureLineData)
+//            pressureLine.name("Pressure, hPa")
+
+            val series1 = cartesian.column(windSpeedData)
+            //val series2 = cartesian.column(windDegreeData)
+
+            series1.name(series1Name)
+//            series2.name(series2Name)
+
+
+            //cartesian.yAxis(0).scale(ScaleTypes.GANTT)
+
+            //tooltipSettings(cartesian, unitAbbreviation)
+            setupTooltipAndInteractivity(cartesian)
+
+            setSeriesTooltip(series1, Anchor.RIGHT_BOTTOM,"Wind Speed: {%value}$unitAbbreviation , <br> <b>Wind direction: {%$KEY_WIND_DEGREE}</b>")
+            hideSeriesTooltip(line)
+//            setSeriesAnchor(series2, Anchor.LEFT_BOTTOM)
+            //setSeriesAnchor(line, Anchor.CENTER)
+//            setSeriesAnchor(humidityLine, Anchor.AUTO)
+            //
+
+            val log = cartesian.yScale(ScaleTypes.LINEAR_COLOR)
+            val yScale = cartesian.yScale()
+            //yScale.softMaximum(100)
+//            yScale.ticks().interval(10)
+//            yScale.minorTicks().interval(2)
+            yScale.softMinimum(0)
+            colorizeAxesBackground(xAxis)
+
+            return cartesian
+        }
 
         private fun extractChartDataFromState(
             state: OneDayWeatherState,
@@ -358,7 +424,7 @@ class OneDayChartUtils {
                     state.hourInfoItemsList.forEach { hourData ->
                         val weatherEntry = hourData.weatherEntry
                         data.add(
-                            CustomDataEntry(
+                            AnyChartGraphsUtils.Companion.CustomDataEntry(
                                 UIConverterFieldUtils.dateTimestampToHourString(
                                     weatherEntry.dt,
                                     0
@@ -374,7 +440,7 @@ class OneDayChartUtils {
 
                     state.weatherData.forEach { hourData ->
                         data.add(
-                            CustomDataEntry(
+                            AnyChartGraphsUtils.Companion.CustomDataEntry(
                                 UIConverterFieldUtils.dateTimestampToHourString(
                                     hourData.dt,
                                     0
@@ -385,11 +451,26 @@ class OneDayChartUtils {
                         )
                     }
                 }
+                CHART_TYPE_WIND -> {
+
+                    state.weatherData.forEach { hourData ->
+                        data.add(
+                            AnyChartGraphsUtils.Companion.CustomDataEntry(
+                                UIConverterFieldUtils.dateTimestampToHourString(
+                                    hourData.dt,
+                                    0
+                                ), // x
+                                hourData.wind.speed, // value
+                                stringValue = WindDirections.getDescriptionStringByDouble(hourData.wind.deg) // hourData.wind.deg // value 2
+                            )
+                        )
+                    }
+                }
                 CHART_TYPE_PRECIPITATIONS -> {
 
                     state.weatherData.forEach { hourData ->
                         data.add(
-                            CustomDataEntry(
+                            AnyChartGraphsUtils.Companion.CustomDataEntry(
                                 UIConverterFieldUtils.dateTimestampToHourString(
                                     hourData.dt,
                                     0
@@ -403,50 +484,31 @@ class OneDayChartUtils {
                         )
                     }
                 }
-
-
             }
-
             return data
         }
 
-        class CustomDataEntry(
-            x: String?,
-            value: Number = 0,
-            value2: Number? = 0,
-            value3: Number? = 0,
-            value4: Number? = 0,
-            value5: Number? = 0
-        ) :
+        // DEFAULT
+        const val ZERO_TEMP_CONST = 0
+        const val KEY_DEFAULT_TEMP_ZERO = "value5OrZero"
+        const val KEY_DEFAULT_RAIN = "value2"
+        const val KEY_DEFAULT_SNOW = "value3"
 
-            ValueDataEntry(x, value.toInt() + ZERO_TEMP_CONST) {
-            init {
-                setValue("value2", value2)
-                setValue("value3", value3)
-                setValue("value4", value4)
-                setValue("value5", value5)
-                setValue(KEY_DEFAULT_TEMP_ZERO, ZERO_TEMP_CONST)
-            }
+        // TEMPERATURE
+        const val KEY_TEMPERATURE_TEMP = "value"
+        const val KEY_TEMPERATURE_FEELS_LIKE = "value2"
 
-            companion object {
-                // DEFAULT
-                const val ZERO_TEMP_CONST = 0
-                const val KEY_DEFAULT_TEMP_ZERO = "value5OrZero"
-                const val KEY_DEFAULT_RAIN = "value2"
-                const val KEY_DEFAULT_SNOW = "value3"
+        // PRECIPITATIONS
+        const val KEY_PRECIPITATIONS_CLOUDINESS = "value"
+        const val KEY_PRECIPITATIONS_HUMIDITY = "value2"
+        const val KEY_PRECIPITATIONS_PRESSURE = "value3"
+        const val KEY_PRECIPITATIONS_RAIN = "value4"
+        const val KEY_PRECIPITATIONS_SNOW = "value5"
+
+        // Wind
+        const val KEY_WIND_SPEED = "value"
+        const val KEY_WIND_DEGREE = "stringValue"
 
 
-                // TEMPERATURE
-                const val KEY_TEMPERATURE_TEMP = "value"
-                const val KEY_TEMPERATURE_FEELS_LIKE = "value2"
-
-                // PRECIPITATIONS
-                const val KEY_PRECIPITATIONS_CLOUDINESS = "value"
-                const val KEY_PRECIPITATIONS_HUMIDITY = "value2"
-                const val KEY_PRECIPITATIONS_PRESSURE = "value3"
-                const val KEY_PRECIPITATIONS_RAIN = "value4"
-                const val KEY_PRECIPITATIONS_SNOW = "value5"
-            }
-        }
     }
 }

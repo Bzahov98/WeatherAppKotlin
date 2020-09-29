@@ -25,6 +25,7 @@ import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.s
 import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createChart
 import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createPrecipitationsChart
 import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createTemperatureChart
+import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createWindChart
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem
@@ -56,27 +57,6 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var lastOrientation: Int = 0
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            oneDayPerHourChartText.id -> {
-                Log.d(TAG, "oneDayPerHourChartText")
-                showWeatherDialog()
-            }
-            oneDayPerHourChartTemperature.id -> {
-                Log.d(TAG, "oneDayPerHourChartTemperature")
-                showWeatherTemperatureDialog()
-            }
-            oneDayPerHourChartPrecipitation.id -> {
-                Log.d(TAG, "oneDayPerHourChartPrecipitation")
-                showWeatherPrecipitationDialog()
-            }
-            oneDayPerHourChartWind.id -> {
-                Log.d(TAG, "oneDayPerHourChartWind")
-
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -94,7 +74,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
         // TODO add listeners when add views in landscape layout
         oneDayPerHourChartTemperature.setOnClickListener(this);
         oneDayPerHourChartPrecipitation.setOnClickListener(this);
-//        oneDayPerHourChartWind.setOnClickListener(this);
+        oneDayPerHourChartWind?.setOnClickListener(this); // TODO ADD to landscape view
         oneDayPerHourChartText.setOnClickListener(this);
         //oneDayPerHourChartText.setOnClickListener(this);
     }
@@ -156,6 +136,27 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
         getBottomNavigationView().visibility = View.VISIBLE
     }
 
+    override fun onClick(view: View) {
+        when (view.id) {
+            oneDayPerHourChartText.id -> {
+                Log.d(TAG, "oneDayPerHourChartText")
+                showWeatherDialog()
+            }
+            oneDayPerHourChartTemperature.id -> {
+                Log.d(TAG, "oneDayPerHourChartTemperature")
+                showWeatherTemperatureDialog()
+            }
+            oneDayPerHourChartPrecipitation.id -> {
+                Log.d(TAG, "oneDayPerHourChartPrecipitation")
+                showWeatherPrecipitationDialog()
+            }
+            oneDayPerHourChartWind?.id -> {
+                Log.d(TAG, "oneDayPerHourChartWind")
+                showWeatherWindDialog()
+            }
+        }
+    }
+
     private fun bindUI(): Job {
         return launch {
             viewModel.getOneDayData()
@@ -171,13 +172,6 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 
             oneDayWeatherLiveData.observe(viewLifecycleOwner, Observer {
                 Log.d(TAG, "UpdateUI for List<FutureDayData> with: \n ${it ?: "null"} \n")
-                /*  if (it == null) {
-                      Log.e(TAG, "DATA IS EMPTY TRY TO FETCH AGAIN")
-                      launch {
-                          viewModel.requestRefreshOfData()
-                      }
-                      return@Observer
-                  } else {*/
                 when (it) {
                     null -> {
 
@@ -391,14 +385,38 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
     private fun getBottomNavigationView() = requireActivity().bottom_navigation
 
     private fun showWeatherDialog() {
-        showDialog(requireContext(),R.layout.activity_graph_test, R.id.any_chart_view, currentStateData) { createChart(currentStateData) }
+        showDialog(
+            requireContext(),
+            R.layout.activity_graph_test,
+            R.id.any_chart_view,
+            currentStateData
+        ) { createChart(currentStateData) }
     }
 
     private fun showWeatherTemperatureDialog() {
-        showDialog(requireContext(), R.layout.activity_graph_test, R.id.any_chart_view, currentStateData) { createTemperatureChart(currentStateData) }
+        showDialog(
+            requireContext(),
+            R.layout.activity_graph_test,
+            R.id.any_chart_view,
+            currentStateData
+        ) { createTemperatureChart(currentStateData) }
     }
+
     private fun showWeatherPrecipitationDialog() {
-        showDialog(requireContext(), R.layout.activity_graph_test, R.id.any_chart_view, currentStateData) { createPrecipitationsChart(currentStateData) }
+        showDialog(
+            requireContext(),
+            R.layout.activity_graph_test,
+            R.id.any_chart_view,
+            currentStateData
+        ) { createPrecipitationsChart(currentStateData) }
+    }
+    private fun showWeatherWindDialog() {
+        showDialog(
+            requireContext(),
+            R.layout.activity_graph_test,
+            R.id.any_chart_view,
+            currentStateData
+        ) { createWindChart(currentStateData) }
     }
 }
 
