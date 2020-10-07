@@ -10,8 +10,7 @@
         android:id="@+id/oneDayWeatherFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secondaryLightColor"
-        android:backgroundTint="@color/cardview_shadow_start_color">
+        style="@style/CardView.Light">
 
         <LinearLayout
             android:layout_width="match_parent"

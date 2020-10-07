@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     tools:showIn="@layout/item_one_day"
     app:cardCornerRadius="@dimen/corner_radius_smaller"
-    app:cardBackgroundColor="@color/colorDayAccent">
+    style="@style/CardView.Light">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,6 +19,7 @@
             android:layout_marginEnd="1dp"
             android:backgroundTintMode="add"
             android:hint="Day Condition"
+            android:tooltipText="sss"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/iconViewDayConditionIcon"

@@ -207,10 +207,11 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
         updateTemperatures(it.currentTemperature, it.currentFeelsLikeTemperature)
         updateWind(it.currentWind)
         updateVisibility(it.currentVisibility)
-        updateBackground(it.isDay)
+        //updateBackground(it.isDay)
         // TODO put it into viewModel
         GlideApp.with(this)
             .load(it.iconStringID)
+            .circleCrop()
             .into(currentIConditionIcon)
 
         drawChart(it)

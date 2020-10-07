@@ -398,7 +398,7 @@ class OneDayChartUtils {
 
             setSeriesTooltip(series1, Anchor.RIGHT_BOTTOM,"Wind Speed: {%value}$unitAbbreviation , <br> <b>Wind direction: {%$KEY_WIND_DEGREE}</b>")
             hideSeriesTooltip(line)
-//            setSeriesAnchor(series2, Anchor.LEFT_BOTTOM)
+//            setSeriesAnchor(series2, Anchor.LEFT_BOTTO    M)
             //setSeriesAnchor(line, Anchor.CENTER)
 //            setSeriesAnchor(humidityLine, Anchor.AUTO)
             //

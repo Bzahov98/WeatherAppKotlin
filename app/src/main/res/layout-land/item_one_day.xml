@@ -110,9 +110,9 @@
 
                 <include
                     android:id="@+id/oneDayNightIconDescrView"
+                    style="@style/DayCardViewLand"
                     layout="@layout/layout_day_night_description_view"
                     android:layout_width="0dp"
-                    style="@style/DayCardViewLand"
                     android:layout_height="0dp"
                     android:layout_margin="3dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -168,21 +168,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
-                    app:constraint_referenced_ids="oneDayTemperatureView,oneNightTemperatureView,oneDayNightIconDescrView"/>
+                    app:constraint_referenced_ids="oneDayTemperatureView,oneNightTemperatureView,oneDayNightIconDescrView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/oneDayPerHourChartText"
                 style="@style/MyMaterialTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/description_each_3_hours_of_day_chart"
-                />
+                android:text="@string/description_each_3_hours_of_day_chart" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/oneDayPerHourRecyclerCardView"
+                style="@style/DayCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/DayCardView"
                 app:cardCornerRadius="@dimen/corner_radius_smaller">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -222,19 +223,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="4dp"
+                        android:background="@color/primaryColor"
+                        android:backgroundTint="@color/primaryDarkColor"
+
                         android:clickable="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:background="@color/colorPrimary"
                         app:srcCompat="@drawable/ic_weather_sunny" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/oneDayPerHourChartPrecipitation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
+                        android:background="@color/primaryColor"
                         android:backgroundTint="@color/primaryDarkColor"
-                        android:background="@color/colorPrimary"
+                        android:clickable="true"
                         app:layout_constraintBottom_toTopOf="@+id/oneDayPerHourChartTemperature"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/oneDayPerHourChartTemperature"
