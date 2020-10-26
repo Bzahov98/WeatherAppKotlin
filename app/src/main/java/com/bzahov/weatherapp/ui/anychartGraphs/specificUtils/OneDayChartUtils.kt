@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui.anychartGraphs
+package com.bzahov.weatherapp.ui.anychartGraphs.specificUtils
 
 import android.util.Log
 import com.anychart.chart.common.dataentry.DataEntry
@@ -14,6 +14,7 @@ import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIConverterFieldUtils
 import com.bzahov.weatherapp.internal.enums.WindDirections
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.colorizeAxesBackground
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.hideSeriesTooltip
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setAxisLabelName
@@ -51,7 +52,11 @@ class OneDayChartUtils {
             var data: MutableList<DataEntry> = testChartData() // TODO: Debug
             var unitAbbreviation = "C"
             if (weatherStateData != null) {
-                data = extractChartDataFromState(weatherStateData, chartType)
+                data =
+                    extractChartDataFromState(
+                        weatherStateData,
+                        chartType
+                    )
                 // currentStateData.hourInfoItemsList.last().
                 unitAbbreviation = weatherStateData.getUnitAbbreviation()
             } else {
@@ -62,13 +67,13 @@ class OneDayChartUtils {
             set.data(data)
 
             val lineData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_TEMPERATURE_TEMP}' }") // Hour info
+                set.mapAs("{ x: 'x', value: '$KEY_TEMPERATURE_TEMP' }") // Hour info
             val tempZeroLine: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_DEFAULT_TEMP_ZERO}' }") // 0
+                set.mapAs("{ x: 'x', value: '$KEY_DEFAULT_TEMP_ZERO' }") // 0
             val column1Data: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_DEFAULT_RAIN}' }") // weatherEntry.rain value2
+                set.mapAs("{ x: 'x', value: '$KEY_DEFAULT_RAIN' }") // weatherEntry.rain value2
             val column2Data: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_DEFAULT_SNOW}' }") // weatherEntry.snow value3
+                set.mapAs("{ x: 'x', value: '$KEY_DEFAULT_SNOW' }") // weatherEntry.snow value3
 //            val column3Data: Mapping = set.mapAs("{ x: 'x', value: 'value4' }")
 
 
@@ -131,7 +136,11 @@ class OneDayChartUtils {
             var data: MutableList<DataEntry> = testChartData() // TODO: Debug
             var unitAbbreviation = "C"
             if (weatherStateData != null) {
-                data = extractChartDataFromState(weatherStateData, CHART_TYPE_TEMPERATURE)
+                data =
+                    extractChartDataFromState(
+                        weatherStateData,
+                        CHART_TYPE_TEMPERATURE
+                    )
                 // currentStateData.hourInfoItemsList.last().
                 unitAbbreviation = weatherStateData.getUnitAbbreviation()
             } else {
@@ -143,9 +152,9 @@ class OneDayChartUtils {
             set.data(data)
 
             val temperatureData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_TEMPERATURE_TEMP}' }") // Hour info
+                set.mapAs("{ x: 'x', value: '$KEY_TEMPERATURE_TEMP' }") // Hour info
             val feelsLikeTemperatureData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_TEMPERATURE_FEELS_LIKE}' }") // weather.feelsLike oC oF
+                set.mapAs("{ x: 'x', value: '$KEY_TEMPERATURE_FEELS_LIKE' }") // weather.feelsLike oC oF
 
             val xAxisName = "Next 24 Hours"
             var yAxisName = "Temperature, $unitAbbreviation"
@@ -195,7 +204,11 @@ class OneDayChartUtils {
                 var data: MutableList<DataEntry> = ArrayList()// testChartData() // TODO: Debug
 
                 if (weatherStateData != null) {
-                    data = extractChartDataFromState(weatherStateData, chartType)
+                    data =
+                        extractChartDataFromState(
+                            weatherStateData,
+                            chartType
+                        )
                     // currentStateData.hourInfoItemsList.last().
                     //unitAbbreviation = weatherStateData.getUnitAbbreviation()
                 } else {
@@ -231,15 +244,15 @@ class OneDayChartUtils {
                 set.data(data)
 
             val cloudinessLineData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_CLOUDINESS}' }") // Cloudiness, % - value
+                set.mapAs("{ x: 'x', value: '$KEY_PRECIPITATIONS_CLOUDINESS' }") // Cloudiness, % - value
             val humidityLineData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_HUMIDITY}' }") // humidity, % - value2
+                set.mapAs("{ x: 'x', value: '$KEY_PRECIPITATIONS_HUMIDITY' }") // humidity, % - value2
             val pressureLineData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_PRESSURE}' }") // pressure hPa - value3
+                set.mapAs("{ x: 'x', value: '$KEY_PRECIPITATIONS_PRESSURE' }") // pressure hPa - value3
             val rainColumnData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_RAIN}' }") // rain mm - value4
+                set.mapAs("{ x: 'x', value: '$KEY_PRECIPITATIONS_RAIN' }") // rain mm - value4
             val snowColumnData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_PRECIPITATIONS_SNOW}' }") // snow mm - value5
+                set.mapAs("{ x: 'x', value: '$KEY_PRECIPITATIONS_SNOW' }") // snow mm - value5
             //val column3Data: Mapping = set.mapAs("{ x: 'x', value: 'value4' }")
 
 
@@ -323,7 +336,11 @@ class OneDayChartUtils {
                 var data: MutableList<DataEntry> = ArrayList()// testChartData() // TODO: Debug
 
                 if (weatherStateData != null) {
-                    data = extractChartDataFromState(weatherStateData, chartType)
+                    data =
+                        extractChartDataFromState(
+                            weatherStateData,
+                            chartType
+                        )
                     // currentStateData.hourInfoItemsList.last().
                     //unitAbbreviation = weatherStateData.getUnitAbbreviation()
                 } else {
@@ -359,9 +376,9 @@ class OneDayChartUtils {
                 set.data(data)
 
             val windSpeedData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_WIND_SPEED}' }") // wind speed - value
+                set.mapAs("{ x: 'x', value: '$KEY_WIND_SPEED' }") // wind speed - value
             val windDegreeData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_WIND_DEGREE}' }") // wind degree, 0 - value2
+                set.mapAs("{ x: 'x', value: '$KEY_WIND_DEGREE' }") // wind degree, 0 - value2
 
 
 

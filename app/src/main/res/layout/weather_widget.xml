@@ -6,9 +6,10 @@
     android:id="@+id/widgetCurrentWeather"
     android:orientation="vertical"
     android:background="@drawable/shape"
-    android:backgroundTint="@color/secondaryLightColor"
     android:backgroundTintMode="screen"
     android:padding="@dimen/widget_margin">
+
+<!--    android:backgroundTint="@color/secondaryLightColor"-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,9 +47,9 @@
                     android:contentDescription="@string/widget_text"
                     android:text="@string/tools_default_temp_nounit"
                     android:textAlignment="center"
-                    android:textColor="@color/secondaryDarkColor"
                     android:textSize="24sp"
                     android:textStyle="bold|italic" />
+<!--                android:textColor="@color/secondaryDarkColor"-->
 
                 <TextView
                     android:id="@+id/widgetTemperatureUnit"
@@ -58,9 +59,10 @@
                     android:contentDescription="@string/widget_text"
                     android:gravity="top"
                     android:text="@string/metric_temperature"
-                    android:textColor="@color/secondaryDarkColor"
                     android:textSize="20sp"
                     android:textStyle="bold|italic" />
+<!--                                    android:textColor="@color/secondaryDarkColor"
+-->
             </LinearLayout>
 
 
@@ -77,9 +79,9 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/widget_text"
                     android:text="@string/tools_default_temp_nounit_feels_like"
-                    android:textColor="@color/secondaryDarkColor"
                     android:textSize="17sp"
                     android:textStyle="bold|italic" />
+<!--                android:textColor="@color/secondaryDarkColor"-->
 
                 <TextView
                     android:id="@+id/widgetTemperatureUnit2"
@@ -89,9 +91,10 @@
                     android:contentDescription="@string/widget_text"
                     android:gravity="center"
                     android:text="@string/metric_temperature"
-                    android:textColor="@color/secondaryDarkColor"
                     android:textSize="17sp"
                     android:textStyle="bold|italic" />
+<!--                                    android:textColor="@color/secondaryDarkColor"
+-->
             </LinearLayout>
 
         </LinearLayout>
@@ -141,9 +144,10 @@
             android:layout_marginLeft="2dp"
             android:contentDescription="@string/widget_text"
             android:text="@string/widget_location"
-            android:textColor="@color/secondaryDarkColor"
             android:textSize="24sp"
             android:textStyle="bold|italic" />
+<!--                    android:textColor="@color/secondaryDarkColor"
+-->
     </LinearLayout>
 
 

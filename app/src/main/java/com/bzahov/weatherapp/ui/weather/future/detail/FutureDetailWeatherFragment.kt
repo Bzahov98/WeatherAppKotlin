@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -160,21 +159,21 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
 
     // Rework change background with proper color to match to all pictures background
     private fun updateBackground(isDay: Boolean) {
-        if (isDay) {
-            futureDetailWeatherFragment.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.colorWeatherIconBackgroundDay
-                )
-            )
-        } else {
-            futureDetailWeatherFragment.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.colorWeatherIconBackgroundNight
-                )
-            )
-        }
+//        if (isDay) {
+//            futureDetailWeatherFragment.setBackgroundColor(
+//                ContextCompat.getColor(
+//                    requireContext(),
+//                    R.color.colorWeatherIconBackgroundDay
+//                )
+//            )
+//        } else {
+//            futureDetailWeatherFragment.setBackgroundColor(
+//                ContextCompat.getColor(
+//                    requireContext(),
+//                    R.color.colorWeatherIconBackgroundNight
+//                )
+//            )
+//        }
     }
 
     private fun updateTemperatures(tempText: String, feelsLikeText: String) {

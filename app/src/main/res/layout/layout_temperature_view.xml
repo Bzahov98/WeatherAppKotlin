@@ -23,7 +23,11 @@
             style="@style/MyMaterialTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:autoSizeTextType="uniform"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@string/weather_text_temp_title_day"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body2"
             app:layout_constraintBottom_toTopOf="@+id/guidelineHorizont"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tool_zero_temperature"
+            android:textAppearance="@style/ShapeAppearance.MyTheme.MediumComponent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guidelineHorizont"
@@ -43,13 +48,13 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorDayAccent"
+
             app:cardCornerRadius="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tempViewTemperature">
-
+<!--app:cardBackgroundColor="@color/colorDayAccent"-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -66,11 +71,12 @@
                     style="@style/DayTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:foregroundGravity="center"
                     android:text="@string/feels_like"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
+
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -85,8 +91,8 @@
                     android:text="Max:"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                     app:layout_constraintEnd_toEndOf="@+id/tempViewMinTemptText"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/tempViewMinTemptText"
                     app:layout_constraintTop_toBottomOf="@+id/tempViewMinTemptText" />
 
@@ -104,6 +110,7 @@
                     android:layout_marginTop="2dp"
                     android:foregroundGravity="center"
                     android:text="Min:"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Subtitle1"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
                     app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
@@ -118,6 +125,7 @@
                     android:foregroundGravity="center"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Headline5"
                     app:layout_constraintEnd_toEndOf="@+id/tempViewFeelsLike"
                     app:layout_constraintStart_toEndOf="@+id/tempViewMinTemptText"
                     app:layout_constraintTop_toTopOf="@+id/tempViewMinTemptText"
@@ -131,6 +139,7 @@
                     android:foregroundGravity="center"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Headline5"
                     app:layout_constraintEnd_toEndOf="@+id/tempViewMinTemp"
                     app:layout_constraintStart_toEndOf="@+id/tempViewMaxTempText"
                     app:layout_constraintTop_toTopOf="@+id/tempViewMaxTempText"
@@ -144,6 +153,7 @@
                     android:foregroundGravity="center"
                     android:textAlignment="center"
                     android:textSize="@dimen/normal_text_size"
+                    android:textAppearance="@style/TextAppearance.MyTheme.Headline5"
                     app:layout_constraintBottom_toBottomOf="@+id/tempViewFeelsLikeText"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guidelineVertical"

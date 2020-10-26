@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/currentWeatherFragmentSwipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:id="@+id/currentWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.navigation.CurrentWeatherFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:background="@color/colorWeatherIconBackgroundDay"
         tools:context=".ui.weather.current.CurrentWeatherFragment">
+<!--        android:background="@color/colorWeatherIconBackgroundDay"-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -56,14 +56,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/loading_string"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textAppearance="@style/TextAppearance.MyTheme.Caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentProgressBarLoading"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/currentProgressBarLoading" />
 
             <TextView
                 android:id="@+id/currentTextCondition"
@@ -73,7 +70,7 @@
                 android:layout_marginTop="14dp"
                 android:layout_marginEnd="24dp"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -83,15 +80,11 @@
                 android:id="@+id/currentIConditionIcon"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:contentDescription="@string/hint_image_weather_condition_description"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="@+id/currentTextCondition"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextCondition"
-                app:layout_constraintWidth_percent="0.25"
                 tools:src="@drawable/ic_weather_sunny"
                 tools:tint="#f9a920" />
 
@@ -100,7 +93,6 @@
             <!--            android:layout_height="match_parent"-->
             <!--            app:constraint_referenced_ids="textView_temperature,textView_visibility, textView_precipitation,textView_wind, textView_feels_like_temperature,"-->
             <!--            app:layout_constraintEnd_toStartOf="@+id/guideline"-->
-            <!--            app:layout_constraintHorizontal_bias="0.0"-->
             <!--            app:layout_constraintStart_toStartOf="parent"-->
             <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
@@ -110,64 +102,79 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline3"
                 app:layout_constraintBottom_toBottomOf="@+id/currentIConditionIcon"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/currentIConditionIcon"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintTop_toBottomOf="@+id/currentTextCondition"
                 tools:text="25.0°C" />
 
             <TextView
                 android:id="@+id/currentFeelsLikeTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MyTheme.Body1"
                 app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextTemperature"
                 tools:text="Feels like 20.4°C" />
 
-            <TextView
-                android:id="@+id/currentWind"
+            <com.anychart.AnyChartView
+                android:id="@+id/currentTermometerChartView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintEnd_toEndOf="@+id/currentPrecipitation"
-                app:layout_constraintStart_toStartOf="@+id/currentPrecipitation"
-                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature"
-                tools:text="Wind: SE, 5.3 m/s" />
+                android:layout_height="0dp"
+                android:layout_margin="3dp"
+                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintEnd_toStartOf="@+id/currentIConditionIcon"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/currentTextCondition" />
 
-            <TextView
-                android:id="@+id/currentPrecipitation"
+            <com.google.android.material.chip.ChipGroup
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
-                app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
-                app:layout_constraintTop_toBottomOf="@+id/currentWind"
-                tools:text="Precipitation: 5 mm" />
+                android:layout_margin="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature">
 
-            <TextView
-                android:id="@+id/currentVisibility"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintEnd_toEndOf="@+id/currentPrecipitation"
-                app:layout_constraintStart_toStartOf="@+id/currentPrecipitation"
-                app:layout_constraintTop_toBottomOf="@+id/currentPrecipitation"
-                tools:text="Visibility: 20 km" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentWind"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="none"
+                    app:chipIcon="@drawable/wind_black40px"
+                    tools:text="Wind: SE, 5.3 m/s" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentPrecipitation"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="none"
+                    app:chipIcon="@drawable/rainy_snowy_black40px"
+                    tools:text="Precipitation: 5 mm" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentVisibility"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="none"
+                    app:chipIcon="@drawable/vision_black40px"
+                    tools:text="Visibility: 20 km" />
+            </com.google.android.material.chip.ChipGroup>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.54" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

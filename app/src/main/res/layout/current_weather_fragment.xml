@@ -12,8 +12,9 @@
         android:name="com.bzahov.weatherapp.ui.navigation.CurrentWeatherFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWeatherIconBackgroundDay"
         tools:context=".ui.weather.current.CurrentWeatherFragment">
+
+<!--        android:background="@color/colorWeatherIconBackgroundDay"-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.66" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/currentGroupLoading"
@@ -55,14 +56,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/loading_string"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textAppearance="@style/TextAppearance.MyTheme.Caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentProgressBarLoading"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/currentProgressBarLoading" />
 
             <TextView
                 android:id="@+id/currentTextCondition"
@@ -71,29 +69,22 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.043"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.017"
                 tools:text="Patchy rain possible" />
 
             <ImageView
                 android:id="@+id/currentIConditionIcon"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.593"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.207"
+                app:layout_constraintTop_toBottomOf="@+id/currentTextCondition"
                 app:layout_constraintWidth_percent="0.25"
                 tools:src="@drawable/ic_weather_sunny"
                 tools:tint="#f9a920" />
@@ -102,16 +93,14 @@
                 android:id="@+id/currentTextTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_margin="4dp"
+                android:autoSizeTextType="uniform"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline2"
                 app:layout_constraintBottom_toBottomOf="@+id/currentIConditionIcon"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/currentIConditionIcon"
-                app:layout_constraintVertical_bias="1.0"
                 tools:text="25.0°C" />
 
             <TextView
@@ -119,66 +108,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:autoSizeTextType="uniform"
+                android:textAppearance="@style/TextAppearance.MyTheme.Body1"
                 app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
-                app:layout_constraintHorizontal_bias="0.423"
                 app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextTemperature"
-                app:layout_constraintVertical_bias="0.0"
                 tools:text="Feels like 20.4°C" />
 
-            <TextView
-                android:id="@+id/currentWind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.028"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.542"
-                tools:text="Wind: SE, 5.3 m/s" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView2"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="35dp"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                android:src="@drawable/wind_black40px"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/currentWind"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/currentWind" />-->
 
-            <TextView
-                android:id="@+id/currentPrecipitation"
-                android:layout_width="wrap_content"
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_margin="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.031"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentWind"
-                app:layout_constraintVertical_bias="0.0"
-                tools:text="Precipitation: 5 mm" />
+                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature">
 
-            <TextView
-                android:id="@+id/currentVisibility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.031"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentPrecipitation"
-                app:layout_constraintVertical_bias="0.0"
-                tools:text="Visibility: 20 km" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentWind"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
+
+                    app:chipIcon="@drawable/wind_black40px"
+                    tools:text="Wind: SE, 5.3 m/sssssssas" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentPrecipitation"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="none"
+                    app:chipIcon="@drawable/rainy_snowy_black40px"
+                    tools:text="Precipitation: 5 mm" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentVisibility"
+                    style="@style/MyChipDataStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="none"
+                    app:chipIcon="@drawable/vision_black40px"
+                    tools:text="Visibility: 20 km" />
+            </com.google.android.material.chip.ChipGroup>
 
             <com.anychart.AnyChartView
                 android:id="@+id/currentTermometerChartView"
@@ -193,10 +176,13 @@
                 android:id="@+id/currentChartView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentVisibility" />
+                app:layout_constraintStart_toStartOf="parent">
+
+
+            </com.anychart.AnyChartView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

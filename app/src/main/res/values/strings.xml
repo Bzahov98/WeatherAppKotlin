@@ -137,11 +137,23 @@
     <string name="future_list">Future List</string>
     <string name="description_next_5_days">Next 5 days: </string>
     <string name="preferences_notification_channel_settings">OPEN_NOTIFICATION_CHANNEL_SETTINGS</string>
+
+    // charts action descriptions
     <string name="description_each_3_hours_of_day_chart">Weather Chart</string>
+    <string name="description_each_3_hours_of_day_chart_short">Weather Chart</string>
+
     <string name="description_chart_temperature">Show weather temperature chart</string>
+    <string name="description_chart_temperature_short">Temperature chart</string>
+
     <string name="description_chart_precipitations">Show weather precipitations chart</string>
+    <string name="description_chart_precipitations_short">Precipitations chart</string>
+
     <string name="description_chart_wind">Show weather wind chart</string>
+    <string name="description_chart_wind_short">Wind chart</string>
+
     <string name="description_chart_">Show Weather Chart</string>
+    <string name="description_chart_short">Weather Chart</string>
+
     <string name="future_weather_next_24_hours">Next 24 hours by 3hours intervals</string>
 
     <string name="loading">Loading</string>

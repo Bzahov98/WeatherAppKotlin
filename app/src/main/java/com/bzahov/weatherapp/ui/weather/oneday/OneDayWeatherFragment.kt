@@ -22,10 +22,10 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.ui.MainActivity
 import com.bzahov.weatherapp.ui.animationUtils.AnimationUtils.Companion.showHideViewAndActionBarWithAnimation
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.showDialog
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createChart
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createPrecipitationsChart
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createTemperatureChart
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.createWindChart
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createChart
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createPrecipitationsChart
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createTemperatureChart
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createWindChart
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.HourInfoItem

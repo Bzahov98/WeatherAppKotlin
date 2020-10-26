@@ -158,7 +158,8 @@ class FutureForecastRepositoryImpl(
                 Log.d(TAG, "FetchedData: $fetchedFutureWeather")
                 deleteOldEntities(fetchedFutureWeather)
                 forecastDao.insert(fetchedFutureWeather.list)
-                locationProvider.offsetDateTime = fetchedFutureWeather.city.timezone
+                // REWORK: locationProvider.offsetDateTime = fetchedFutureWeather.city.timezone
+                locationProvider.offsetDateTime = LocationProvider.DEFAULT_TIMEZONE_OFFSET
                 //forecastDao.insert(fetchedFutureWeather.list)
                 //weatherLocationDao.upsert(fetchedFutureWeather.city.name)
             } catch (e: NullPointerException) {

@@ -3,18 +3,72 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="colorWeatherIconBackgroundDay">#95B3E3</color>
-    <color name="colorWeatherIconBackgroundNight">#3C4A8F</color>
-    <color name="colorWeatherIconBackgroundClouds">#C4C4C4</color>
-    <color name="colorDayAccent">#E2C922</color>
+<!--    <color name="colorWeatherIconBackgroundDay">#95B3E3</color>-->
+<!--    <color name="colorWeatherIconBackgroundNight">#3C4A8F</color>-->
+<!--    <color name="colorWeatherIconBackgroundClouds">#C4C4C4</color>-->
+<!--    <color name="colorDayAccent">#E2C922</color>-->
+
+<!--    <color name="primaryColor">#f57b00</color>-->
+<!--    <color name="primaryLightColor">#ffac42</color>-->
+<!--    <color name="primaryDarkColor">#bb4c00</color>-->
+<!--    <color name="secondaryColor">#424242</color>-->
+<!--    <color name="secondaryLightColor">#6d6d6d</color>-->
+<!--    <color name="secondaryDarkColor">#1b1b1b</color>-->
+<!--    <color name="primaryTextColor">#000000</color>-->
+<!--    <color name="secondaryTextColor">#ffffff</color>-->
+
+    <!--Color palette-->
+    <color name="myTheme_white_50">#ffffff</color>
+
+    <color name="myTheme_black_800">#121212</color>
+    <color name="myTheme_black_900">#000000</color>
+
+    <color name="myTheme_blue_50">#eef0f2</color>
+    <color name="myTheme_blue_100">#d2dbe0</color>
+    <color name="myTheme_blue_200">#adbbc4</color>
+    <color name="myTheme_blue_300">#8ca2ae</color>
+    <color name="myTheme_blue_600">#4a6572</color>
+    <color name="myTheme_blue_700">#344955</color>
+    <color name="myTheme_blue_800">#232f34</color>
+
+    <color name="myTheme_orange_300">#fbd790</color>
+    <color name="myTheme_orange_400">#f9be64</color>
+    <color name="myTheme_orange_500">#f9aa33</color>
+
+    <color name="myTheme_red_200">#cf7779</color>
+    <color name="myTheme_red_400">#ff4c5d</color>
+
+    <color name="myTheme_white_50_alpha_060">#99ffffff</color>
+
+    <color name="myTheme_blue_50_alpha_060">#99eef0f2</color>
+
+    <color name="myTheme_black_900_alpha_020">#33000000</color>
+    <color name="myTheme_black_900_alpha_087">#de000000</color>
+    <color name="myTheme_black_900_alpha_060">#99000000</color>
 
 
-    <color name="primaryColor">#f57b00</color>
-    <color name="primaryLightColor">#ffac42</color>
-    <color name="primaryDarkColor">#bb4c00</color>
-    <color name="secondaryColor">#424242</color>
-    <color name="secondaryLightColor">#6d6d6d</color>
-    <color name="secondaryDarkColor">#1b1b1b</color>
+    <color name="primaryColor">#5fb925</color>
+    <color name="primaryLightColor">#93ec59</color>
+    <color name="primaryDarkColor">#258800</color>
+    <color name="secondaryColor">#bcbcbc</color>
+    <color name="secondaryLightColor">#eeeeee</color>
+    <color name="secondaryDarkColor">#8c8c8c</color>
     <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#DCCBCB</color>
+    <color name="light_green_500">#8BC34A</color>
+    <color name="light_green_600">#7CB342</color>
+    <color name="light_green_50">#F1F8E9</color>
+    <color name="light_green_300">#AED581</color>
+    <color name="grey_50">#FAFAFA</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="grey_500">#9E9E9E</color>
+    <color name="grey_400">#BDBDBD</color>
+
+
+    <!--Nav bar color protection for behavior differences between Android P and Q. All sdk-->
+    <!--levels should draw fullscreen. P should color the nav bar with a translucent background -->
+    <!--to guard for contrast. Q should have a transparent nav bar as Q will automatically -->
+    <!--handles contrast by either dynamically coloring the nav bar handle (gesture nav) -->
+    <!--or automatically applying a translucent background (3-button mode).-->
+    <color name="nav_bar">@color/myTheme_black_900_alpha_020</color>
 </resources>

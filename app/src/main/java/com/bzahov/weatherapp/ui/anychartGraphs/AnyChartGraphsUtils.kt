@@ -9,8 +9,8 @@ import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
 import com.anychart.enums.TooltipDisplayMode
 import com.anychart.enums.TooltipPositionMode
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.KEY_DEFAULT_TEMP_ZERO
-import com.bzahov.weatherapp.ui.anychartGraphs.OneDayChartUtils.Companion.ZERO_TEMP_CONST
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.KEY_DEFAULT_TEMP_ZERO
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.ZERO_TEMP_CONST
 
 class AnyChartGraphsUtils {
     companion object{

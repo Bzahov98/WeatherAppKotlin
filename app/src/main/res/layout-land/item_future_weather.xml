@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:paddingBottom="@dimen/corner_radius"
+            android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,11 +41,11 @@
                 android:id="@+id/futureConditionText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:autoSizeTextType="none"
+                android:autoSizeTextType="uniform"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
                 tools:text="Clear" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -62,7 +62,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guidelineRightVertical"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.363"
             app:layout_constraintWidth_percent="0.15"
             tools:src="@drawable/ic_weather_sunny"
             tools:tint="#f9a920" />
@@ -181,10 +180,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guidelineLeftVertical"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+             />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineRightVertical"

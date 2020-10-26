@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -15,22 +14,21 @@ import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.SingleValueDataSet
 import com.anychart.charts.Cartesian
-import com.anychart.charts.LinearGauge
 import com.anychart.core.cartesian.series.Line
 import com.anychart.data.Mapping
 import com.anychart.data.Set
-import com.anychart.enums.*
-import com.anychart.scales.Base
+import com.anychart.enums.HoverMode
+import com.anychart.enums.TooltipPositionMode
 import com.anychart.scales.Linear
-import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawThermometer
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
@@ -211,113 +209,26 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
         // TODO put it into viewModel
         GlideApp.with(this)
             .load(it.iconStringID)
+            .circleCrop()
             .into(currentIConditionIcon)
 
         drawChart(it)
-        drawThermometer(it)
+        initThermometerChart(it)
     }
 
-    private fun drawThermometer(it: CurrentWeatherState) {
+    private fun initThermometerChart(it: CurrentWeatherState) {
         if (currentTermometerChartView == null) {
-            // TODO add at landscape layout currentThermometerChartView
-            Log.e(TAG, " currentThermometerChartView is null")
+            Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
             return
         }
         APIlib.getInstance().setActiveAnyChartView(currentTermometerChartView)
         currentTermometerChartView.setDebug(true)
 
-        val linearGauge = AnyChart.linear()
-
-        // TODO data
-
-        linearGauge.addPointer(SingleValueDataSet(arrayOf(it.weatherSingleData.temperature)))
-        linearGauge.addPointer(SingleValueDataSet(arrayOf(it.weatherSingleData.feelslike)))
-        linearGauge.addPointer(SingleValueDataSet(arrayOf(28)))
-        linearGauge.addPointer(SingleValueDataSet(arrayOf(15)))
-        //linearGauge.data())
-
-        linearGauge.tooltip()
-            .useHtml(true)
-            .format(
-                jsGetTermometerTooltip()
-            )
-
-        linearGauge.jsLabel(0,Position.LEFT_TOP,Anchor.LEFT_TOP, isMetric = true)
-        linearGauge.jsLabel(1,Position.RIGHT_TOP,Anchor.RIGHT_TOP, isMetric = false)
-
-        val scale: Base = linearGauge.scale()
-            .minimum(-30)
-            .maximum(40)
-//                .setTicks
-
-        //                .setTicks
-        linearGauge.axis(0).scale(scale)
-        linearGauge.axis(0)
-            .offset("-1%")
-            .width("0.5%")
-
-        linearGauge.axis(0).labels()
-            .format("{%Value}&deg;")
-            .useHtml(true)
-
-        linearGauge.thermometer(0)
-            .name("Thermometer")
-            .id(1)
-
-        linearGauge.axis(0).minorTicks(true)
-        linearGauge.axis(0).labels()
-            .format(
-                jsAxisLabelStyle()
-            )
-            .useHtml(true)
-
-        linearGauge.axis(1).minorTicks(true)
-        linearGauge.axis(1).labels()
-            .format(
-                jsAxisLabelStyle()
-            )
-            .useHtml(true)
-        linearGauge.axis(1)
-            .offset("3.5%")
-            .orientation(Orientation.RIGHT)
-
-        val linear = Linear.instantiate()
-        linear.minimum(-20)
-            .maximum(100)
-//                .setTicks
-        //                .setTicks
-        linearGauge.axis(1).scale(linear)
-
-        currentTermometerChartView.setChart(linearGauge)
+        currentTermometerChartView.setChart(drawThermometer(it))
     }
 
-    fun LinearGauge.jsLabel (index: Int = 0, position: Position, anchor: Anchor, isMetric : Boolean, offsetX : String= "25%", offsetY : String = "20px", fontColor : String = "black", fontSize : Int = 15){
-        val text : String = if(isMetric) "C&deg;" else "F&deg;"
-        this.label(index)
-            .useHtml(true)
-            .text(text)
-            .position(position/*Position.LEFT_TOP*/)
-            .anchor(anchor/*Anchor.LEFT_TOP*/)
-            .offsetX(offsetX)
-            .offsetY(offsetY)
-            .fontColor(fontColor)
-            .fontSize(fontSize)
-    }
-
-    private fun jsAxisLabelStyle(): String {
-        return ("function () {\n" +
-                "    return '<span style=\"color:black;\">' + this.value + '&deg;</span>'\n" +
-                "  }")
-    }
-
-    private fun jsGetTermometerTooltip(): String {
-        return "function () {\n" +
-                "          return this.value + '&deg;' + 'C' +\n" +
-                "            ' (' + (this.value * 1.8 + 32).toFixed(1) +\n" +
-                "            '&deg;' + 'F' + ')'\n" +
-                "    }"
-    }
-
+    //Unused
+    @Deprecated("unused")
     private fun drawChart(it: CurrentWeatherState) {
         if (currentChartView == null) {
             // TODO add at landscape layout currentChartView
@@ -402,9 +313,9 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
                 UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
                 launch { viewModel.requestRefreshOfData() }
             } else {
-                Log.e(TAG, ForecastApplication.getAppString(R.string.warning_device_offline))
+                Log.e(TAG, getAppString(R.string.warning_device_offline))
                 UIUpdateViewUtils.showSnackBarMessage(
-                    ForecastApplication.getAppString(R.string.warning_device_offline),
+                    getAppString(R.string.warning_device_offline),
                     requireActivity(),
                     false
                 )
@@ -414,27 +325,27 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 
     //TODO Rework change background with proper color to match to all pictures background
     private fun updateBackground(isDay: Boolean) {
-        if (isDay) {
-            val dayColor = ContextCompat.getColor(
-                requireContext(),
-                R.color.colorWeatherIconBackgroundDay
-            )
-            currentWeatherFragment.setBackgroundColor(
-                dayColor
-            )
-
-            setChartBackground(dayColor,currentChartView)
-
-        } else {
-            val nightColor = ContextCompat.getColor(
-                requireContext(),
-                R.color.colorWeatherIconBackgroundNight
-            )
-            currentWeatherFragment.setBackgroundColor(
-                nightColor
-            )
-            setChartBackground(nightColor,currentChartView)
-        }
+//        if (isDay) {
+//            val dayColor = ContextCompat.getColor(
+//                requireContext(),
+//                R.color.colorWeatherIconBackgroundDay
+//            )
+//            currentWeatherFragment.setBackgroundColor(
+//                dayColor
+//            )
+//
+//            setChartBackground(dayColor,currentChartView)
+//
+//        } else {
+//            val nightColor = ContextCompat.getColor(
+//                requireContext(),
+//                R.color.colorWeatherIconBackgroundNight
+//            )
+//            currentWeatherFragment.setBackgroundColor(
+//                nightColor
+//            )
+//            setChartBackground(nightColor,currentChartView)
+//        }
     }
 
     private fun setChartBackground(
