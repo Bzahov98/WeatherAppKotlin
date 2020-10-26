@@ -4,11 +4,14 @@ import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
+import com.anychart.charts.LinearGauge
 import com.anychart.core.cartesian.series.Base
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
 import com.anychart.enums.TooltipDisplayMode
 import com.anychart.enums.TooltipPositionMode
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
+import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.KEY_DEFAULT_TEMP_ZERO
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.ZERO_TEMP_CONST
 
@@ -43,7 +46,18 @@ class AnyChartGraphsUtils {
             cartesian.crosshair(false)
             cartesian.legend(true)
             cartesian.title(chartTitle)
+            cartesian.background().fill(getAppString(R.color.light_green_50),1)
             return cartesian
+        }
+
+        fun setupAndGetLinearGauge(chartTitle: String): LinearGauge {
+            val linearGauge = AnyChart.linear()
+            linearGauge.autoRedraw(true)
+            linearGauge.animation(true)
+            linearGauge.legend(false)
+        //    linearGauge.title(chartTitle)
+            linearGauge.background().fill("#F1F8E9")
+            return linearGauge
         }
 
         fun com.anychart.core.axes.Linear.setAxisLabelName(unitAbbreviation: String){

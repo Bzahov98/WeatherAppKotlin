@@ -45,6 +45,7 @@ data class CurrentWeatherState(
         calculateVisibility(weatherSingleData.visibility)
         calculateCondition(weatherSingleData.weatherDescriptions.toString())
         calculatePrecipitation(weatherSingleData.precipation)
+        weatherSingleData.temperature -=1
         calculateTemperatures(weatherSingleData.temperature, weatherSingleData.feelslike)
         calculateWind(weatherSingleData.dir, weatherSingleData.speed)
         calculateIsDay(weatherSingleData.isDay)

@@ -118,11 +118,10 @@
                 android:id="@+id/futureDetailWind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailFeelsLikeTemperature"
                 tools:text="Wind: SE, 5.3 m/s" />
@@ -133,8 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailWind"
                 tools:text="Precipitation: 5 mm" />
 
@@ -142,10 +141,9 @@
                 android:id="@+id/futureDetailVisibility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailRainPrecipitation"
                 tools:text="Visibility: 20 km" />
@@ -156,7 +154,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/futureDetailRainPrecipitation"
 
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/futureDetailRainPrecipitation"
                 app:layout_constraintTop_toTopOf="@+id/futureDetailRainPrecipitation"
                 tools:srcCompat="@drawable/snowflake" />
         </androidx.constraintlayout.widget.ConstraintLayout>

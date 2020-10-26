@@ -14,7 +14,7 @@ const val CURRENT_WEATHER_ID = 0
 @TypeConverters(DateConverters::class)
 data class CurrentWeatherEntry(
 
-    val temperature: Double,
+    var temperature: Double,
     val feelslike: Double,
     val precipation: Double,
     val pressure: Double,

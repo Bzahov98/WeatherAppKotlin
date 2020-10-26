@@ -164,9 +164,11 @@
             </com.google.android.material.chip.ChipGroup>
 
             <com.anychart.AnyChartView
-                android:id="@+id/currentTermometerChartView"
+                android:id="@+id/currentThermometerChartView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="#F1F8E9"
+                android:layout_marginTop="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/currentChartView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline"

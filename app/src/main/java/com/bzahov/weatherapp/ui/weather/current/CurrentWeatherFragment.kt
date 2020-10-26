@@ -11,16 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anychart.APIlib
-import com.anychart.AnyChart
 import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.charts.Cartesian
-import com.anychart.core.cartesian.series.Line
-import com.anychart.data.Mapping
-import com.anychart.data.Set
-import com.anychart.enums.HoverMode
-import com.anychart.enums.TooltipPositionMode
-import com.anychart.scales.Linear
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
@@ -32,7 +23,6 @@ import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChart
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
-import com.bzahov.weatherapp.ui.weather.oneday.OneDayDialogFragment
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.android.synthetic.main.current_weather_fragment.view.*
 import kotlinx.coroutines.Job
@@ -212,96 +202,20 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
             .circleCrop()
             .into(currentIConditionIcon)
 
-        drawChart(it)
         initThermometerChart(it)
     }
 
     private fun initThermometerChart(it: CurrentWeatherState) {
-        if (currentTermometerChartView == null) {
+        if (currentThermometerChartView == null) {
             Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
             return
         }
-        APIlib.getInstance().setActiveAnyChartView(currentTermometerChartView)
-        currentTermometerChartView.setDebug(true)
+        APIlib.getInstance().setActiveAnyChartView(currentThermometerChartView)
+        currentThermometerChartView.setDebug(true)
 
-        currentTermometerChartView.setChart(drawThermometer(it))
+        currentThermometerChartView.setChart(drawThermometer(it))
     }
 
-    //Unused
-    @Deprecated("unused")
-    private fun drawChart(it: CurrentWeatherState) {
-        if (currentChartView == null) {
-            // TODO add at landscape layout currentChartView
-            Log.e(TAG, " currentChartView is null ")
-            return
-        }
-        APIlib.getInstance().setActiveAnyChartView(currentChartView)
-        currentChartView.setDebug(true)
-
-        val cartesian: Cartesian = AnyChart.cartesian()
-
-        cartesian.animation(true)
-
-        cartesian.title("Weather in next 5 days")
-
-        cartesian.yScale().stickToZero(true)
-        //cartesian.yAxis("Sss")
-
-
-        val scalesLinear: Linear = Linear.instantiate()
-//        scalesLinear.minimum(-40.0)
-        scalesLinear.maximum(75.0)
-
-        val extraYAxis = cartesian.yAxis(1.0)
-//        extraYAxis.orientation(Orientation.RIGHT)
-//            .scale(scalesLinear)
-//
-
-        val data: MutableList<DataEntry> = ArrayList()
-        data.add(OneDayDialogFragment.CustomDataEntry("P1", 24, 23, -21))
-        data.add(OneDayDialogFragment.CustomDataEntry("P2", 21, 22, -22))
-        data.add(OneDayDialogFragment.CustomDataEntry("P3", 0.2, 21, 21))
-        data.add(OneDayDialogFragment.CustomDataEntry("P4", -23.1, 1, 11))
-        data.add(OneDayDialogFragment.CustomDataEntry("P5", -14.0, 4, 5))
-
-        val set: Set = Set.instantiate()
-        set.data(data)
-        val lineData: Mapping = set.mapAs("{ x: 'x', value: 'value' }")
-        val tempZeroLine: Mapping = set.mapAs("{ x: 'x', value: 'tempZero' }")
-        val column1Data: Mapping = set.mapAs("{ x: 'x', value: 'value2' }")
-        val column2Data: Mapping = set.mapAs("{ x: 'x', value: 'value3' }")
-        val column3Data: Mapping = set.mapAs("{ x: 'x', value: 'value4' }")
-
-        val series1 = cartesian.column(column1Data)
-        series1.name("series 1")
-        //cartesian.crosshair(false)
-
-//                var line = chart.lineMarker();
-//                line.value(0);
-//                line.stroke("2 red");
-
-        val line: Line = cartesian.line(lineData)
-        val tempLine: Line = cartesian.line(tempZeroLine)
-        //line.yScale(scalesLinear)
-
-        var series2 = cartesian.column(column2Data)
-        series2.name("series 2")
-
-        //cartesian.container("container")
-        cartesian.column(column3Data)
-
-        cartesian.yScale().minimum(-35.0).maximum(50.0)
-
-        cartesian.yAxis(0).labels().format("\${%Value}{groupsSeparator: }")
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.CHART)
-        cartesian.interactivity().hoverMode(HoverMode.BY_SPOT)
-
-        cartesian.xAxis(0).title("Product")
-        cartesian.yAxis(0).title("Revenue")
-
-        currentChartView.setChart(cartesian)
-    }
 
 
     private fun initRefresherLayout() {
