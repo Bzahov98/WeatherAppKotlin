@@ -20,6 +20,7 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBa
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawThermometer
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawWindGauge
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
@@ -203,6 +204,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
             .into(currentIConditionIcon)
 
         initThermometerChart(it)
+        initWindChart(it, currentWindChartView)
     }
 
     private fun initThermometerChart(it: CurrentWeatherState) {
@@ -214,6 +216,16 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
         currentThermometerChartView.setDebug(true)
 
         currentThermometerChartView.setChart(drawThermometer(it))
+    }
+    private fun initWindChart(it: CurrentWeatherState, view : AnyChartView?) {
+        if (view == null) {
+            Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
+            return
+        }
+        APIlib.getInstance().setActiveAnyChartView(view)
+        view.setDebug(true)
+
+        view.setChart(drawWindGauge(it))
     }
 
 

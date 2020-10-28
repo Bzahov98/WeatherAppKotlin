@@ -4,6 +4,7 @@ import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
+import com.anychart.charts.CircularGauge
 import com.anychart.charts.LinearGauge
 import com.anychart.core.cartesian.series.Base
 import com.anychart.enums.Anchor
@@ -58,6 +59,14 @@ class AnyChartGraphsUtils {
         //    linearGauge.title(chartTitle)
             linearGauge.background().fill("#F1F8E9")
             return linearGauge
+        }
+        fun setupAndGetCircularGauge(chartTitle: String): CircularGauge {
+            val circularGauge = AnyChart.circular()
+            circularGauge.autoRedraw(true)
+            circularGauge.animation(true)
+           // circularGauge.title(chartTitle)
+            circularGauge.background().fill("#F1F8E9")
+            return circularGauge
         }
 
         fun com.anychart.core.axes.Linear.setAxisLabelName(unitAbbreviation: String){
