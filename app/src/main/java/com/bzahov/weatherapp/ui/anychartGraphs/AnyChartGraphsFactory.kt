@@ -6,6 +6,8 @@ import com.afollestad.materialdialogs.customview.customView
 import com.anychart.APIlib
 import com.anychart.AnyChartView
 import com.anychart.charts.Cartesian
+import com.anychart.core.Chart
+import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherState
 import com.bzahov.weatherapp.ui.weather.oneday.OneDayWeatherState
 
 class AnyChartGraphsFactory {
@@ -22,6 +24,13 @@ class AnyChartGraphsFactory {
             chartView.setDebug(true)
             chartView.setChart(drawingChart.invoke(weatherStateData))
             dialog.show()
+        }
+
+        fun initChart(it: CurrentWeatherState, view: AnyChartView, drawingChart:( (CurrentWeatherState) -> Chart)){
+            APIlib.getInstance().setActiveAnyChartView(view)
+            view.setDebug(true)
+
+            view.setChart(drawingChart.invoke(it))
         }
     }
 }

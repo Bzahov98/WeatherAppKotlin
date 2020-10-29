@@ -8,6 +8,8 @@ import com.anychart.chart.common.dataentry.SingleValueDataSet
 import com.anychart.charts.Cartesian
 import com.anychart.charts.CircularGauge
 import com.anychart.charts.LinearGauge
+import com.anychart.charts.Radar
+import com.anychart.core.Chart
 import com.anychart.core.cartesian.series.Line
 import com.anychart.data.Mapping
 import com.anychart.data.Set
@@ -18,6 +20,7 @@ import com.bzahov.weatherapp.internal.ThemperatureUtils.Companion.convertFahrenh
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.CustomDataEntry
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetCircularGauge
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetLinearGauge
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetRadar
 import com.bzahov.weatherapp.ui.base.states.AbstractState
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherState
 import com.bzahov.weatherapp.ui.weather.oneday.OneDayDialogFragment
@@ -85,7 +88,7 @@ class CurrentWeatherChartUtils {
             return linearGauge
         }
 
-        fun drawWindGauge(it: CurrentWeatherState): CircularGauge {
+        fun drawWindGauge(it: CurrentWeatherState): Chart {
             val gauge = setupAndGetCircularGauge("Wind")
 //            gauge.fill("white")
 //                .stroke(null)
@@ -126,12 +129,60 @@ class CurrentWeatherChartUtils {
 
 
             //defaultNeddle(gauge)
-            windSpeedNedle(gauge)
+            windSpeedNeedle(gauge)
 
             return gauge
         }
 
-        private fun windSpeedNedle(gauge: CircularGauge) {
+
+        fun drawPercentRadarChart(it: CurrentWeatherState): Radar {
+            val chart = setupAndGetRadar()
+            extractRadarChartData(it, chart)
+            chart.defaultSeriesType("area")
+            // force chart to stack values by Y scale.
+
+            chart.yScale().stackMode("percent")
+            // set yAxis settings
+
+            chart.yAxis().stroke("#545f69")
+            chart.yAxis().ticks().stroke("#545f69")
+
+            // set yAxis labels settings
+            chart.yAxis().labels()
+                .fontColor("#545f69")
+                .format("{%Value}%");
+
+            // set xAxis labels appearance settings
+            var xAxisLabels = chart.xAxis().labels();
+            xAxisLabels.padding(5);
+
+            // set chart legend settings
+            chart.legend()
+                .enabled(true)
+                .align("center")
+                .position("center-bottom");
+            return chart
+        }
+
+        private fun extractRadarChartData(it: CurrentWeatherState, chart: Radar) {
+            chart.data(
+                SingleValueDataSet(
+//                    arrayOf(
+//                        arrayOf("Cloud Cover", it.weatherSingleData.cloudcover),
+//                        arrayOf("Humidity", it.weatherSingleData.humidity),
+//                        arrayOf("", 0)
+//
+//                    )
+                    arrayOf(
+                        it.weatherSingleData.cloudcover,
+                        it.weatherSingleData.humidity,
+                        0
+                    )
+                )
+            )
+        }
+
+        private fun windSpeedNeedle(gauge: CircularGauge) {
             // wind speed
             val axis = gauge.axis(1)
             val innerNeddleLayout = "55%"
@@ -207,7 +258,8 @@ class CurrentWeatherChartUtils {
                 .endWidth("0");
         }
 
-        private fun defaultNeddle(gauge: CircularGauge) {
+        @Deprecated("old Needle")
+        private fun defaultNeedle(gauge: CircularGauge) {
 
             //            gauge.needle(0) // >
 //                .fill("#FFFFF")
@@ -243,7 +295,6 @@ class CurrentWeatherChartUtils {
                 )
                 .useHtml(true);
         }
-
 
         private fun jsDirectionFunction(): String {
             return "function() {" +
@@ -284,9 +335,9 @@ class CurrentWeatherChartUtils {
                 SingleValueDataSet(
                     arrayOf(
                         it.weatherSingleData.degree,
-                        it.weatherSingleData.speed+10
+                        it.weatherSingleData.speed
                     )
-                ) 
+                )
             )
 //            set.data(data)
 //            gauge.data(data)

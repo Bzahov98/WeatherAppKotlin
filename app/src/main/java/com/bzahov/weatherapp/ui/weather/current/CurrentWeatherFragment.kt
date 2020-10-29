@@ -18,7 +18,9 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.initChart
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils
+import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawPercentRadarChart
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawThermometer
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawWindGauge
 import com.bzahov.weatherapp.ui.base.ScopedFragment
@@ -203,33 +205,40 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
             .circleCrop()
             .into(currentIConditionIcon)
 
-        initThermometerChart(it)
+        initThermometerChart(it, currentThermometerChartView)
         initWindChart(it, currentWindChartView)
+        initRadarChart(it, currentRadarChartView)
     }
 
-    private fun initThermometerChart(it: CurrentWeatherState) {
-        if (currentThermometerChartView == null) {
-            Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
-            return
-        }
-        APIlib.getInstance().setActiveAnyChartView(currentThermometerChartView)
-        currentThermometerChartView.setDebug(true)
-
-        currentThermometerChartView.setChart(drawThermometer(it))
-    }
-    private fun initWindChart(it: CurrentWeatherState, view : AnyChartView?) {
+    private fun initThermometerChart(it: CurrentWeatherState, view: AnyChartView?) {
         if (view == null) {
             Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
             return
         }
-        APIlib.getInstance().setActiveAnyChartView(view)
-        view.setDebug(true)
-
-        view.setChart(drawWindGauge(it))
+//        APIlib.getInstance().setActiveAnyChartView(currentThermometerChartView)
+//        currentThermometerChartView.setDebug(true)
+        initChart(it, view) { drawThermometer(it) }
+        //currentThermometerChartView.setChart(drawThermometer(it))
     }
 
-
-
+    //                drawingChart: ((OneDayWeatherState?)-> Cartesian)
+//            chartView.setChart(drawingChart.invoke(weatherStateData))
+    private fun initWindChart(it: CurrentWeatherState, view: AnyChartView?) {
+        if (view == null) {
+            Log.e(CurrentWeatherChartUtils.TAG, " currentThermometerChartView is null")
+            return
+        }
+//        APIlib.getInstance().setActiveAnyChartView(view)
+//        view.setDebug(true)
+//
+//        view.setChart(drawWindGauge(it))
+        initChart(it, view) { drawWindGauge(it) }
+    }
+private fun initRadarChart(it: CurrentWeatherState, view: AnyChartView?){
+    if (view != null) {
+        initChart(it, view) { drawPercentRadarChart(it) }
+    }
+}
     private fun initRefresherLayout() {
         mSwipeRefreshLayout.isRefreshing = true
         mSwipeRefreshLayout.setOnRefreshListener {

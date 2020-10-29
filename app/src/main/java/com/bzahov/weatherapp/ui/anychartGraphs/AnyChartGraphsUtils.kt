@@ -6,6 +6,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
 import com.anychart.charts.CircularGauge
 import com.anychart.charts.LinearGauge
+import com.anychart.charts.Radar
 import com.anychart.core.cartesian.series.Base
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
@@ -67,6 +68,15 @@ class AnyChartGraphsUtils {
            // circularGauge.title(chartTitle)
             circularGauge.background().fill("#F1F8E9")
             return circularGauge
+        }
+
+        fun setupAndGetRadar(chartTitle: String = ""): Radar {
+            val radar = AnyChart.radar()
+            radar.autoRedraw(true)
+            radar.animation(true)
+            radar.title(chartTitle)
+            radar.background().fill("#F1F8E9")
+            return radar
         }
 
         fun com.anychart.core.axes.Linear.setAxisLabelName(unitAbbreviation: String){
