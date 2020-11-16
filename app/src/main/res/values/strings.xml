@@ -125,7 +125,7 @@
     <string name="tools_weather_prepacipitation_volume">24 mm</string>
     <string name="tools_weather_wind_speed_and_direction">24 mm</string>
     <string name="tool_zero_temperature">0.0°C</string>
-    <string name="tools_default_temp">23.0 C</string>
+    <string name="tools_default_temp">3.0 C</string>
     <string name="tools_default_temp_nounit">23.0</string>
     <string name="tools_default_temp_nounit_feels_like">Feels like: 22.0</string>
 

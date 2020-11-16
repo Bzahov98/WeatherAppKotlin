@@ -17,6 +17,7 @@ import com.anychart.enums.*
 import com.anychart.scales.Base
 import com.anychart.scales.Linear
 import com.bzahov.weatherapp.internal.ThemperatureUtils.Companion.convertFahrenheitsToCelsius
+import com.bzahov.weatherapp.internal.enums.WindDirections
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.CustomDataEntry
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetCircularGauge
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.setupAndGetLinearGauge
@@ -24,6 +25,7 @@ import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsUtils.Companion.set
 import com.bzahov.weatherapp.ui.base.states.AbstractState
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherState
 import com.bzahov.weatherapp.ui.weather.oneday.OneDayDialogFragment
+
 
 class CurrentWeatherChartUtils {
     companion object {
@@ -134,53 +136,216 @@ class CurrentWeatherChartUtils {
             return gauge
         }
 
-
         fun drawPercentRadarChart(it: CurrentWeatherState): Radar {
-            val chart = setupAndGetRadar()
-            extractRadarChartData(it, chart)
-            chart.defaultSeriesType("area")
-            // force chart to stack values by Y scale.
+           // val chart = setupAndGetRadar()
 
-            chart.yScale().stackMode("percent")
-            // set yAxis settings
+//            extractRadarChartData(it, chart)
+//            chart.defaultSeriesType("area")
+//            // force chart to stack values by Y scale.
+//
+//            chart.yScale().stackMode("percent")
+//            // set yAxis settings
+//
+//            chart.yAxis().stroke("#545f69")
+//            chart.yAxis().ticks().stroke("#545f69")
+//
+//            chart.yGrid(0).palette("[\"gray 0.1\", \"gray 0.2\"]");
+//
+//            // set yAxis labels settings
+//            chart.yAxis().labels()
+//                .fontSize(12)
+//                .fontColor("#545f69")
+//                .format("{%Value}%");
+//
+//            // set xAxis labels appearance settings
+//            var xAxisLabels = chart.xAxis().labels();
+//            xAxisLabels.padding(5);
+//
+//            chart.yScale()
+//                .ticks("{interval: 25}")
+//                .minimum(0)
+//                .maximum(100)
+//
+//
+//            // set chart legend settings
+//            chart.legend()
+//                .enabled(true)
+//                .align("center")
+//                .position("center-bottom");
+//
+//            chart.tooltip().format("{%X}: {%Value}%");
+           // return chart
 
-            chart.yAxis().stroke("#545f69")
-            chart.yAxis().ticks().stroke("#545f69")
+            return blaBla(it)
+        }
 
-            // set yAxis labels settings
-            chart.yAxis().labels()
-                .fontColor("#545f69")
-                .format("{%Value}%");
+        private fun blaBla(it: CurrentWeatherState): Radar {
+            val radar = setupAndGetRadar("")
 
-            // set xAxis labels appearance settings
-            var xAxisLabels = chart.xAxis().labels();
-            xAxisLabels.padding(5);
+            val yScale = radar.yScale()
+            //radar.labels(false)//.anchor(Anchor.RIGHT_BOTTOM)
+            yScale.minimum(0.0)
+            yScale.maximum(100.0)
+            yScale.minimumGap(25.0)
+            yScale.maximumGap(25)
+            yScale.ticks().interval(25.0).count(4)
+            yScale.stackMode("percentage")
 
-            // set chart legend settings
-            chart.legend()
+                        radar.yGrid(0).palette("[\"gray 0.1\", \"gray 0.2\"]");
+
+            //  radar.xAxis().labels().padding(5.0, 5.0, 5.0, 5.0)
+
+//            radar.legend()
+//                .align(Align.CENTER)
+//                .enabled(false)
+
+            val data: MutableList<DataEntry> = ArrayList()
+            data.add(CustomDataEntry("Humidity", it.weatherSingleData.humidity))
+            data.add(CustomDataEntry("", 100))
+            data.add(CustomDataEntry("Clouds", it.weatherSingleData.cloudcover))
+
+            val set = Set.instantiate()
+            set.data(data)
+            val shamanData = set.mapAs("{ x: 'x', value: 'value' }")
+//            val warriorData = set.mapAs("{ x: 'x', value: 'value2' }")
+//            val priestData = set.mapAs("{ x: 'x', value: 'value3' }")
+
+            radar.area(data)
+            val shamanLine: com.anychart.core.radar.series.Line = radar.line(shamanData)
+            shamanLine.name("Weather")
+                .labels(false)
+            shamanLine.markers()
                 .enabled(true)
-                .align("center")
-                .position("center-bottom");
-            return chart
+                .type(MarkerType.DIAMOND)
+                .size(6.0)
+
+//            val warriorLine: com.anychart.core.radar.series.Line = radar.line(warriorData)
+//            warriorLine.name("Warrior")
+//            warriorLine.markers()
+//                .enabled(true)
+//                .type(MarkerType.CIRCLE)
+//                .size(3.0)
+//
+//            val priestLine: com.anychart.core.radar.series.Line = radar.line(priestData)
+//            priestLine.name("Priest")
+//            priestLine.markers()
+//                .enabled(true)
+//                .type(MarkerType.CIRCLE)
+//                .size(3.0)
+
+            radar.tooltip()
+                .anchor(Anchor.AUTO)
+                .format("Value: {%Value}%")
+            return radar
         }
 
         private fun extractRadarChartData(it: CurrentWeatherState, chart: Radar) {
-            chart.data(
-                SingleValueDataSet(
+            val data: MutableList<DataEntry> = ArrayList()
+            data.add(CustomDataEntry("Cloud Cover", 136))
+            data.add(CustomDataEntry("Agility", 79))
+//            data.add(CustomDataEntry("Stamina", 149, 173, 101))
+//            data.add(CustomDataEntry("Intellect", 135, 33, 202))
+//            data.add(CustomDataEntry("Spirit", 158, 64, 196))
+
+            val set = Set.instantiate()
+            set.data(data)
+            val shamanData = set.mapAs("{ x: 'x', value: 'value' }")
+
+            val shamanLine: com.anychart.core.radar.series.Line = chart.line(shamanData)
+            shamanLine.name("Shaman")
+            shamanLine.markers()
+                .enabled(true)
+                .type(MarkerType.CIRCLE)
+                .size(2.0)
+
+            chart.data(data)
+//                SingleValueDataSet(
+////                    arrayOf(
+////                        arrayOf("Cloud Cover", it.weatherSingleData.cloudcover),
+////                        arrayOf("Humidity", it.weatherSingleData.humidity),
+////                        arrayOf("", 0)
+////
+////                    )
 //                    arrayOf(
-//                        arrayOf("Cloud Cover", it.weatherSingleData.cloudcover),
-//                        arrayOf("Humidity", it.weatherSingleData.humidity),
-//                        arrayOf("", 0)
-//
+//                        it.weatherSingleData.cloudcover,
+//                        it.weatherSingleData.humidity,
+//                        0
 //                    )
+//                )
+//            )
+        }
+
+        private fun extractWindChartDataFromState(it: CurrentWeatherState, gauge: CircularGauge) {
+            val data: MutableList<DataEntry> = ArrayList()
+            val set: Set = Set.instantiate()
+
+
+/*
+            val windSpeedData: Mapping =
+                set.mapAs("{ x: 'x', value: '${KEY_WIND_SPEED}' }") // wind speed - value
+
+            val windDegreeData: Mapping =
+                set.mapAs("{ x: 'x', value: '${KEY_WIND_DEGREE}' }") // wind degree, 0 - value2
+*/
+
+//            data.add(
+//                CustomDataEntry(
+//                    it.currentWind,
+//                    it.weatherSingleData.degree,
+//                    it.weatherSingleData.speed
+//                )
+//            )
+
+            gauge.data(
+                SingleValueDataSet(
                     arrayOf(
-                        it.weatherSingleData.cloudcover,
-                        it.weatherSingleData.humidity,
-                        0
+                        it.weatherSingleData.degree,
+                        it.weatherSingleData.speed
                     )
                 )
             )
+//            set.data(data)
+//            gauge.data(data)
         }
+
+        private fun extractChartDataFromState(
+            it: CurrentWeatherState,
+            linearGauge: LinearGauge
+        ) {
+            val temperature = "Temperature"
+            val feelsLike = "FeelsLike"
+
+            linearGauge.thermometer(0)
+                .name(temperature)
+                .id(1)
+//             linearGauge.thermometer(1)
+//                .name(feelsLike)
+//                .id(2)
+
+
+            var tempValue = it.weatherSingleData.temperature
+            var feelsLikeValue = it.weatherSingleData.feelslike
+
+            if (!it.isMetric) {
+                tempValue = convertFahrenheitsToCelsius(tempValue)
+                feelsLikeValue = convertFahrenheitsToCelsius(feelsLikeValue)
+            }
+//            if (tempValue > feelsLikeValue) {
+
+            val data: MutableList<DataEntry> = ArrayList()
+            data.add(CustomDataEntry(temperature, tempValue))
+            data.add(CustomDataEntry(feelsLike, feelsLikeValue))
+            linearGauge.data(data)
+//                linearGauge.addPointer(SingleValueDataSet(arrayOf(feelsLikeValue)))
+//                linearGauge.getPointerAt(0).name("Feels like:")
+
+//            } else {
+//                linearGauge.data(SingleValueDataSet(arrayOf(tempValue, feelsLikeValue)))
+//                linearGauge.addPointer(SingleValueDataSet(arrayOf(feelsLikeValue)))
+//            }
+
+        }
+
 
         private fun windSpeedNeedle(gauge: CircularGauge) {
             // wind speed
@@ -298,9 +463,9 @@ class CurrentWeatherChartUtils {
 
         private fun jsDirectionFunction(): String {
             return "function() {" +
-                    "if (this.value == 0) return \"N\";" +
-                    "if (this.value == 45) return \"NE\";" +
-                    "   if (this.value == 90) return \"E\";" +
+                    "if (this.value == 0) return \"${WindDirections.NORTH.shortName}\";" +
+                    "if (this.value == 45) return \"${WindDirections.NORTH_EAST.shortName}\";" +
+                    "   if (this.value == 90) return \"${WindDirections.EAST.shortName}\";" +
                     "   if (this.value == 135) return \"SE\";" +
                     "   if (this.value == 180) return \"S\";" +
                     "   if (this.value == 225) return \"SW\";" +
@@ -309,78 +474,6 @@ class CurrentWeatherChartUtils {
                     "   else return this.value;" +
                     "}"
         }
-
-        private fun extractWindChartDataFromState(it: CurrentWeatherState, gauge: CircularGauge) {
-            val data: MutableList<DataEntry> = ArrayList()
-            val set: Set = Set.instantiate()
-
-
-/*
-            val windSpeedData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_WIND_SPEED}' }") // wind speed - value
-
-            val windDegreeData: Mapping =
-                set.mapAs("{ x: 'x', value: '${KEY_WIND_DEGREE}' }") // wind degree, 0 - value2
-*/
-
-//            data.add(
-//                CustomDataEntry(
-//                    it.currentWind,
-//                    it.weatherSingleData.degree,
-//                    it.weatherSingleData.speed
-//                )
-//            )
-
-            gauge.data(
-                SingleValueDataSet(
-                    arrayOf(
-                        it.weatherSingleData.degree,
-                        it.weatherSingleData.speed
-                    )
-                )
-            )
-//            set.data(data)
-//            gauge.data(data)
-        }
-
-        private fun extractChartDataFromState(
-            it: CurrentWeatherState,
-            linearGauge: LinearGauge
-        ) {
-            val temperature = "Temperature"
-            val feelsLike = "FeelsLike"
-
-            linearGauge.thermometer(0)
-                .name(temperature)
-                .id(1)
-//             linearGauge.thermometer(1)
-//                .name(feelsLike)
-//                .id(2)
-
-
-            var tempValue = it.weatherSingleData.temperature
-            var feelsLikeValue = it.weatherSingleData.feelslike
-
-            if (!it.isMetric) {
-                tempValue = convertFahrenheitsToCelsius(tempValue)
-                feelsLikeValue = convertFahrenheitsToCelsius(feelsLikeValue)
-            }
-//            if (tempValue > feelsLikeValue) {
-
-            val data: MutableList<DataEntry> = ArrayList()
-            data.add(CustomDataEntry(temperature, tempValue))
-            data.add(CustomDataEntry(feelsLike, feelsLikeValue))
-            linearGauge.data(data)
-//                linearGauge.addPointer(SingleValueDataSet(arrayOf(feelsLikeValue)))
-//                linearGauge.getPointerAt(0).name("Feels like:")
-
-//            } else {
-//                linearGauge.data(SingleValueDataSet(arrayOf(tempValue, feelsLikeValue)))
-//                linearGauge.addPointer(SingleValueDataSet(arrayOf(feelsLikeValue)))
-//            }
-
-        }
-
 
         fun LinearGauge.jsLabel(
             index: Int = 0,

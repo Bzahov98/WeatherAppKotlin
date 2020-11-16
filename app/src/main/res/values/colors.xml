@@ -55,6 +55,7 @@
     <color name="secondaryDarkColor">#8c8c8c</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#DCCBCB</color>
+    <color name="primaryBackgroundColor">@color/light_green_50</color>
     <color name="light_green_500">#8BC34A</color>
     <color name="light_green_600">#7CB342</color>
     <color name="light_green_50">#F1F8E9</color>
@@ -63,6 +64,15 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_400">#BDBDBD</color>
+
+    // colors for animation colors
+    <color name="animation_sun_moon_color">#FFC82F</color>
+    <color name="animation_sun_moon_color_alternate">#2D02CF </color>
+    <color name="animation_clouds_color">#9B9B9B</color>
+    <color name="animation_clouds_foreground_color">#CFCFCF</color>
+    <color name="animation_rain_color">#4A90E2</color>
+    <color name="animation_mist_color">#D8D8D8</color>
+<!--    <color name="animation_transparent_color">#00000000</color>-->
 
 
     <!--Nav bar color protection for behavior differences between Android P and Q. All sdk-->

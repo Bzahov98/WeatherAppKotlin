@@ -53,14 +53,14 @@ class OneDayDialogFragment : DialogFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 })
-            .setPositiveButton("Yes",
-                DialogInterface.OnClickListener { arg0, arg1 ->
-                    Toast.makeText(
-                        this@OneDayDialogFragment.context,
-                        "Did Reset!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+            .setPositiveButton("Yes"
+            ) { _, _ ->
+                Toast.makeText(
+                    this@OneDayDialogFragment.context,
+                    "Did Reset!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             .create()
     }
 

@@ -83,6 +83,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Patchy rain possible" />
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/currentAnimationView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toTopOf="@+id/chipGroup2"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                />
+<!--            app:lottie_rawRes="@raw/weather_clouds_partly_night"-->
             <ImageView
                 android:id="@+id/currentIConditionIcon"
                 android:layout_width="0dp"

@@ -58,14 +58,14 @@
         <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
         <item name="colorOnBackground">@color/secondaryLightColor</item>
 
-        <item name="android:colorBackground">@color/light_green_50</item>
+        <item name="android:colorBackground">@color/primaryBackgroundColor</item>
         <item name="colorSurface">@color/secondaryLightColor</item>
         <item name="colorPrimarySurfaceVariant">?attr/colorPrimaryVariant</item>
         <item name="colorError">@color/myTheme_red_400</item>
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:textColorSecondary">@color/secondaryTextColor</item>
 
-        <item name="colorOnPrimary">@color/light_green_50</item>
+        <item name="colorOnPrimary">@color/primaryBackgroundColor</item>
         <item name="colorOnSecondary">@color/grey_300</item>
         <item name="colorOnSurface">@color/grey_400</item>
         <item name="colorOnError">@color/myTheme_black_900</item>
@@ -105,7 +105,9 @@
         <!--Styles-->
         <item name="bottomAppBarStyle">@style/Widget.MaterialComponents.BottomAppBar.PrimarySurface</item>
         <item name="bottomSheetStyle">@style/Widget.MaterialComponents.BottomSheet.Modal</item>
-<!--        <item name="navigationViewStyle">@style/Widget.MyTheme.NavigationView</item>-->
+<!--        <item name="snackbarStyle">@style/</item>-->
+
+        <!--        <item name="navigationViewStyle">@style/Widget.MyTheme.NavigationView</item>-->
 <!--        <item name="chipStyle">@style/Widget.MyTheme.Chip.Entry</item>-->
 
         <!--System/Platform attributes-->

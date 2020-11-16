@@ -48,7 +48,7 @@ class AnyChartGraphsUtils {
             cartesian.crosshair(false)
             cartesian.legend(true)
             cartesian.title(chartTitle)
-            cartesian.background().fill(getAppString(R.color.light_green_50),1)
+            cartesian.background().fill(getAppString(R.color.primaryBackgroundColor),1)
             return cartesian
         }
 
@@ -74,7 +74,7 @@ class AnyChartGraphsUtils {
             val radar = AnyChart.radar()
             radar.autoRedraw(true)
             radar.animation(true)
-            radar.title(chartTitle)
+            //radar.title(chartTitle)
             radar.background().fill("#F1F8E9")
             return radar
         }

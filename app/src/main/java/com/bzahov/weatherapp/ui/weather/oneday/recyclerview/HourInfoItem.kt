@@ -40,7 +40,7 @@ data class HourInfoItem(
     }
 
     private fun updateWindUI(wind: Wind, view: View) {
-        val windDirection = WindDirections.getWindDirectionByDouble(wind.deg)
+        val windDirection = WindDirections.getAllWindDirectionByDouble(wind.deg)
         view.perThreeHoursWindIcon.setImageResource(windDirection.image)
         updateWindShort(wind, isMetric, view.perThreeHoursWindSpeedInfo)
     }
