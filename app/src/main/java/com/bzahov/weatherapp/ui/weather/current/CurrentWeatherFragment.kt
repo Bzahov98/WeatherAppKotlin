@@ -302,6 +302,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 	}
 
 	private fun updateTemperatures(temp: String, feelsLike: String) {
+
 		currentTextTemperature.text = temp
 		currentFeelsLikeTemperature.text = feelsLike
 	}
@@ -323,6 +324,8 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 	}
 
 	private fun updateAnimation(code: Int, isDay: Boolean) {
+//		var code = 0 // Debug
+//		var isDay = true
 		if (isDay) {
 			currentAnimationView.setAnimation(WeatherConditions.getWeatherByCode(code).dayAnimationRes)
 

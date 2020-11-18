@@ -109,7 +109,7 @@ class CurrentWeatherChartUtils {
             axis
                 .startAngle(0)
                 .fill("#CECECE")
-                .radius("100%")
+                .radius("95%")
                 .sweepAngle(360);
 
             axis.ticks()
@@ -136,10 +136,10 @@ class CurrentWeatherChartUtils {
             return gauge
         }
 
-        fun drawPercentRadarChart(it: CurrentWeatherState): Radar {
-           // val chart = setupAndGetRadar()
-
-//            extractRadarChartData(it, chart)
+//        fun drawPercentRadarChartDep(it: CurrentWeatherState): Radar {
+//           // val chart = setupAndGetRadar()
+//
+////            extractRadarChartData(it, chart)
 //            chart.defaultSeriesType("area")
 //            // force chart to stack values by Y scale.
 //
@@ -174,12 +174,12 @@ class CurrentWeatherChartUtils {
 //                .position("center-bottom");
 //
 //            chart.tooltip().format("{%X}: {%Value}%");
-           // return chart
+//           // return chart
+//
+//            return blaBla(it)
+//        }
 
-            return blaBla(it)
-        }
-
-        private fun blaBla(it: CurrentWeatherState): Radar {
+        fun drawPercentRadarChart(it: CurrentWeatherState): Radar {
             val radar = setupAndGetRadar("")
 
             val yScale = radar.yScale()
@@ -191,33 +191,36 @@ class CurrentWeatherChartUtils {
             yScale.ticks().interval(25.0).count(4)
             yScale.stackMode("percentage")
 
-                        radar.yGrid(0).palette("[\"gray 0.1\", \"gray 0.2\"]");
+            radar.yGrid(0).palette("[\"gray 0.1\", \"gray 0.2\"]");
 
             //  radar.xAxis().labels().padding(5.0, 5.0, 5.0, 5.0)
 
-//            radar.legend()
-//                .align(Align.CENTER)
-//                .enabled(false)
+            radar.legend()
+                .align(Align.CENTER)
+                .enabled(false)
 
             val data: MutableList<DataEntry> = ArrayList()
             data.add(CustomDataEntry("Humidity", it.weatherSingleData.humidity))
             data.add(CustomDataEntry("", 100))
             data.add(CustomDataEntry("Clouds", it.weatherSingleData.cloudcover))
 
-            val set = Set.instantiate()
-            set.data(data)
-            val shamanData = set.mapAs("{ x: 'x', value: 'value' }")
+//            val set = Set.instantiate()
+//            set.data(data)
+//            val shamanData = set.mapAs("{ x: 'x', value: 'value' }")
 //            val warriorData = set.mapAs("{ x: 'x', value: 'value2' }")
 //            val priestData = set.mapAs("{ x: 'x', value: 'value3' }")
 
             radar.area(data)
-            val shamanLine: com.anychart.core.radar.series.Line = radar.line(shamanData)
-            shamanLine.name("Weather")
-                .labels(false)
-            shamanLine.markers()
-                .enabled(true)
-                .type(MarkerType.DIAMOND)
-                .size(6.0)
+//            radar.marker(data).enabled(true)
+//                .type(MarkerType.DIAMOND)
+//                .size(6.0)
+//            val shamanLine: com.anychart.core.radar.series.Line = radar.line(shamanData)
+//            shamanLine.name("Weather")
+//                .labels(false)
+//            shamanLine.markers()
+//                .enabled(true)
+//                .type(MarkerType.DIAMOND)
+//                .size(6.0)
 
 //            val warriorLine: com.anychart.core.radar.series.Line = radar.line(warriorData)
 //            warriorLine.name("Warrior")

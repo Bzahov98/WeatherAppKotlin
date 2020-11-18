@@ -108,7 +108,7 @@
                 tools:src="@drawable/ic_weather_sunny"
                 tools:tint="#f9a920" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/currentTextTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
                 app:layout_constraintTop_toTopOf="@+id/currentIConditionIcon"
                 tools:text="25.0°C" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/currentFeelsLikeTemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

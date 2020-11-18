@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@layout/motion_splash_screen_end"
+        motion:constraintSetStart="@layout/motion_splash_screen_start"
+        motion:duration="5000">
+        <KeyFrameSet>
+
+            <KeyAttribute
+                motion:framePosition="50"
+                motion:motionTarget="@+id/splashClouds1" />
+
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="85"
+                motion:motionTarget="@+id/splashAppName" />
+
+            <KeyAttribute
+                android:alpha="0.5"
+                motion:framePosition="90"
+                motion:motionTarget="@+id/splashAppName" />
+
+            <KeyAttribute
+                android:alpha="1"
+                motion:framePosition="95"
+                motion:motionTarget="@+id/splashAppName" />
+
+
+        </KeyFrameSet>
+    </Transition>
+
+<!--&lt;!&ndash;        <ConstraintSet android:id="@layout/motion_splash_screen_start">&ndash;&gt;-->
+<!--        <ConstraintSet android:id="@+id/start" layout>-->
+<!--            <Constraint android:id="@+id/splashClouds1">-->
+
+<!--                <CustomAttribute-->
+<!--                    motion:attributeName="lottie_rawRes"-->
+<!--                    motion:customStringValue="@raw/weather_moon_clear" />-->
+<!--            </Constraint>-->
+
+<!--        </ConstraintSet>-->
+
+<!--        <ConstraintSet android:id="@layout/motion_splash_screen_start"-->
+<!--            >-->
+<!--            <Constraint android:id="@+id/splashClouds1">-->
+
+<!--                <CustomAttribute-->
+<!--                    motion:attributeName="animationFromJson"-->
+<!--                    motion:customStringValue="@raw/weather_moon_clear" />-->
+<!--            </Constraint>-->
+
+<!--        </ConstraintSet>-->
+</MotionScene>

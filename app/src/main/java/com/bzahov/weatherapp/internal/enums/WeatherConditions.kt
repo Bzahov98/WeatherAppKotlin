@@ -51,7 +51,7 @@ enum class WeatherConditions(
 		R.raw.weather_mist,
 		R.raw.weather_mist
 	),
-	NOT_FOUND(arrayOf(0), "NOT FOUND", 0, 0);
+	NOT_FOUND(arrayOf(0), "NOT FOUND", R.raw.lf30_editor_9cym405e, R.raw.not_found_404);
 
 	companion object {
 		fun getWeatherByCode(code: Int): WeatherConditions {

@@ -15,6 +15,11 @@
 <resources>
 
     <!--Typography-->
+    <style name="TextAppearance.MyTheme.SplashText" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/work_sans_bold</item>
+        <item name="android:textColor">@color/color_on_surface_emphasis_high</item>
+    </style>
+
     <style name="TextAppearance.MyTheme.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
         <item name="fontFamily">@font/work_sans_semibold</item>
         <item name="android:textColor">@color/color_on_surface_emphasis_high</item>
@@ -80,6 +85,20 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/color_on_surface_emphasis_high</item>
     </style>
+
+    <style name="Widget.MyTheme.MaterialComponents.Snackbar" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">32dp</item>
+    </style>
+
+    <style name="Widget.MyTheme.MaterialComponents.Button.TextButton.Snackbar" parent="@style/Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="backgroundTint">@color/secondaryLightColor</item>
+        <item name="android:textColor">@color/primaryDarkColor</item>
+    </style>
+
+    <style name="Widget.MyTheme.MaterialComponents.Snackbar.TextView" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/secondaryLightColor</item>
+    </style>
+
 
     <color name="color_on_surface_emphasis_high">@color/primaryTextColor</color>
 </resources>
