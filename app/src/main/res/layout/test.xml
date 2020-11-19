@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.66" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.52" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/currentGroupLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            app:constraint_referenced_ids="currentProgressBarLoading, currentTextViewLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/currentProgressBarLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/currentTextViewLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/loading_string"
+            android:textAppearance="@style/TextAppearance.MyTheme.Caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentProgressBarLoading" />
+
+        <TextView
+            android:id="@+id/currentTextCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Patchy rain possible" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/currentAnimationView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@+id/chipGroup2"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+        <!--            app:lottie_rawRes="@raw/weather_clouds_partly_night"-->
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/currentFeelsLikeTemperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:autoSizeTextType="uniform"
+        android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+        app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
+        app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
+        app:layout_constraintTop_toBottomOf="@+id/currentTextTemperature"
+        tools:text="Feels like 20.4°C" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/currentTextTemperature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:autoSizeTextType="uniform"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MyTheme.Headline2"
+            app:layout_constraintBottom_toBottomOf="@+id/currentIConditionIcon"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/currentIConditionIcon"
+            tools:text="25.0°C" />
+    <ImageView
+        android:id="@+id/currentIConditionIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentTextCondition"
+        tools:src="@drawable/ic_weather_sunny"
+        tools:tint="#f9a920" />
+
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/imageView2"-->
+        <!--                android:layout_width="35dp"-->
+        <!--                android:layout_height="35dp"-->
+        <!--                android:layout_marginStart="2dp"-->
+        <!--                android:src="@drawable/wind_black40px"-->
+        <!--                app:layout_constraintBottom_toBottomOf="@+id/currentWind"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="@+id/currentWind" />-->
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/currentWind"
+            style="@style/MyChipDataStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+
+            app:chipIcon="@drawable/wind_black40px"
+            tools:text="Wind: SE, 5.3 m/sssssssas" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/currentPrecipitation"
+            style="@style/MyChipDataStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="none"
+            app:chipIcon="@drawable/rainy_snowy_black40px"
+            tools:text="Precipitation: 5 mm" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/currentVisibility"
+            style="@style/MyChipDataStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="none"
+            app:chipIcon="@drawable/vision_black40px"
+            tools:text="Visibility: 20 km" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.anychart.AnyChartView
+        android:background="#F1F8E9"
+        android:id="@+id/currentThermometerChartView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/chipGroup2"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentIConditionIcon" />
+
+    <com.anychart.AnyChartView
+        android:id="@+id/currentWindChartView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <com.anychart.AnyChartView
+        android:id="@+id/currentRadarChartView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+        <com.anychart.AnyChartView
+            android:id="@+id/currentChartView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+        </com.anychart.AnyChartView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

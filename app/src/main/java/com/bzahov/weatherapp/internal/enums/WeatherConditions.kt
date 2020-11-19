@@ -10,9 +10,15 @@ enum class WeatherConditions(
 	val nightAnimationRes: Int = 0
 ) {
 	CLOUDS(
-		arrayOf(122, 119, 116),
+		arrayOf(122, 119),
 		"Clouds",
-		R.raw.weather_clouds_120,
+		R.raw.weather_clouds_256,
+		R.raw.weather_clouds_partly_night
+	),
+	PARTLY_CLOUDS(
+		arrayOf(116),
+		"Partly Clouds",
+		R.raw.weather_clouds_partly,
 		R.raw.weather_clouds_partly_night
 	),
 	SNOW(

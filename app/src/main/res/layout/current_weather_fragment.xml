@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
+<!--    current_weather_motion_fragment_start.xml-->
     <FrameLayout
         android:id="@+id/currentWeatherFragment"
         android:name="com.bzahov.weatherapp.ui.navigation.CurrentWeatherFragment"
@@ -15,9 +15,12 @@
         tools:context=".ui.weather.current.CurrentWeatherFragment">
 
 <!--        android:background="@color/colorWeatherIconBackgroundDay"-->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/current_weather_fragment_xml_constraintlayout4_scene">
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -38,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:visibility="gone"
                 app:constraint_referenced_ids="currentProgressBarLoading, currentTextViewLoading"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,6 +55,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:indeterminate="true"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +82,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
+                android:alpha="1"
+                android:text="bla"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,11 +97,10 @@
                 app:layout_constraintBottom_toTopOf="@+id/chipGroup2"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature"
+                app:layout_constraintTop_toBottomOf="@+id/currentLocationText"
                 app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                />
-<!--            app:lottie_rawRes="@raw/weather_clouds_partly_night"-->
+                app:lottie_loop="true" />
+            <!--            app:lottie_rawRes="@raw/weather_clouds_partly_night"-->
             <ImageView
                 android:id="@+id/currentIConditionIcon"
                 android:layout_width="0dp"
@@ -112,7 +118,6 @@
                 android:id="@+id/currentTextTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
                 android:autoSizeTextType="uniform"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline2"
@@ -128,21 +133,48 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:autoSizeTextType="uniform"
+                android:drawableStart="@drawable/thermometer_alt_20px"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.MyTheme.Body1"
                 app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextTemperature"
                 tools:text="Feels like 20.4°C" />
 
-<!--            <ImageView-->
-<!--                android:id="@+id/imageView2"-->
-<!--                android:layout_width="35dp"-->
-<!--                android:layout_height="35dp"-->
-<!--                android:layout_marginStart="2dp"-->
-<!--                android:src="@drawable/wind_black40px"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/currentWind"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/currentWind" />-->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/currentDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/calendar_1_20px"
+                android:text="Петък, 01.01.2021"
+                android:textSize="11sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
+                app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
+                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/currentLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/place_marker_20px"
+                android:text="Sofia, Bulgaria"
+                android:textSize="11sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
+                app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
+                app:layout_constraintTop_toBottomOf="@+id/currentDateText" />
+
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/imageView2"-->
+            <!--                android:layout_width="35dp"-->
+            <!--                android:layout_height="35dp"-->
+            <!--                android:layout_marginStart="2dp"-->
+            <!--                android:src="@drawable/wind_black40px"-->
+            <!--                app:layout_constraintBottom_toBottomOf="@+id/currentWind"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="@+id/currentWind" />-->
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup2"
@@ -152,7 +184,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/currentFeelsLikeTemperature">
+                app:layout_constraintTop_toBottomOf="@+id/currentLocationText">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/currentWind"
@@ -187,7 +219,6 @@
                 android:id="@+id/currentThermometerChartView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="30dp"
                 android:background="#F1F8E9"
                 app:layout_constraintBottom_toBottomOf="@+id/chipGroup2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -224,7 +255,7 @@
 
             </com.anychart.AnyChartView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
     </FrameLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
