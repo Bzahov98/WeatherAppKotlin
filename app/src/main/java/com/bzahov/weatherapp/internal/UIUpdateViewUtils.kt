@@ -49,7 +49,7 @@ class UIUpdateViewUtils {
                 ) + ", "
             }
             return windString +
-                    "$convertWindDirectionToString${wind.speed} $unitAbbreviation"
+                    "$convertWindDirectionToString${wind.speed}$unitAbbreviation"
         }
 
         fun updateActionBarTitle(location: String, activity: FragmentActivity) {
@@ -57,6 +57,7 @@ class UIUpdateViewUtils {
         }
 
         fun updateActionBarSubtitleWithResource(resourceInt: Int, activity: FragmentActivity) {
+            (activity as AppCompatActivity).supportActionBar?.hide() // Hide action bar for that view
             updateActionBarSubtitle(getAppString(resourceInt), activity)
         }
 
@@ -68,6 +69,7 @@ class UIUpdateViewUtils {
             val iconUrl = UIConverterFieldUtils.getOpenWeatherIconUrl(iconNumber)
             GlideApp.with(iconView.rootView)
                 .load(iconUrl)
+//                .circleCrop()
                 .into(iconView)
         }
         fun showSnackBarMessage(message: String, activity: FragmentActivity?, isSuccessful: Boolean = true) {

@@ -22,21 +22,35 @@ class AnyChartGraphsUtils {
         class CustomDataEntry(
             x: String?,
             value: Number = 0,
-            value2: Number? = 0,
-            value3: Number? = 0,
-            value4: Number? = 0,
-            value5: Number? = 0,
-            stringValue: String = ""
+            value2: Number? = null,
+            value3: Number? = null,
+            value4: Number? = null,
+            value5: Number? = null,
+            stringValue: String = "",
+            showDef : Boolean = false
+
         ) :
 
             ValueDataEntry(x, value.toInt() + ZERO_TEMP_CONST) {
             init {
-                setValue("value2", value2)
-                setValue("value3", value3)
-                setValue("value4", value4)
-                setValue("value5", value5)
-                setValue("stringValue", stringValue)
-                setValue(KEY_DEFAULT_TEMP_ZERO, ZERO_TEMP_CONST)
+                if (value2 != null) {
+                    setValue("value2", value2)
+                }
+                if (value3 != null) {
+                    setValue("value3", value3)
+                }
+                if (value4 != null) {
+                    setValue("value4", value4)
+                }
+                if (value5 != null) {
+                    setValue("value5", value5)
+                }
+                if (stringValue != "") {
+                    setValue("stringValue", stringValue)
+                }
+                if (showDef) {
+                    setValue(KEY_DEFAULT_TEMP_ZERO, ZERO_TEMP_CONST)
+                }
             }
         }
 

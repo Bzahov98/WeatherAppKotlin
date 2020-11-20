@@ -76,14 +76,15 @@
 
             <TextView
                 android:id="@+id/currentTextCondition"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:alpha="1"
-                android:text="bla"
+                android:autoSizeTextType="uniform"
+                android:maxLines="2"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +132,7 @@
                 android:id="@+id/currentFeelsLikeTemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minWidth="30dp"
                 android:layout_marginEnd="8dp"
                 android:autoSizeTextType="uniform"
                 android:drawableStart="@drawable/thermometer_alt_20px"
@@ -139,7 +141,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextTemperature"
-                tools:text="Feels like 20.4°C" />
+                tools:text="Feels like 20.4°C"
+                android:text="@string/feels_like_empty" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/currentDateText"

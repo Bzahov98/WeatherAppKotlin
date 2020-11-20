@@ -88,7 +88,6 @@ data class CurrentWeatherState(
     }
 
     private fun calculateCondition(condition: String) {
-
         currentCondition = weatherSingleData.getCondition()
     }
 
