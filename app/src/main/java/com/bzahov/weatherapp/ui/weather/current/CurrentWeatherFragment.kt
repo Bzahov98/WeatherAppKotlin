@@ -15,6 +15,7 @@ import com.anychart.AnyChartView
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
+import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.hideSupportActionBar
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.enums.WeatherConditions
@@ -84,6 +85,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 		super.onActivityCreated(savedInstanceState)
 		viewModel = ViewModelProvider(this, viewModelFactory)
 			.get(CurrentWeatherViewModel::class.java)
+		hideSupportActionBar(this.requireActivity())
 		bindUI()
 	}
 
@@ -102,6 +104,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 				sharedPref?.edit()
 					?.putString(getString(R.string.preference_location_in_use_key), location.name)
 					?.apply()
+				currentLocationText.text = "${location.name}, ${location.country}"
 				updateActionBarTitle(location.name, requireActivity())
 				Log.d(TAG, "Update location with that data: $location")
 			})
@@ -194,6 +197,8 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 		mSwipeRefreshLayout.isRefreshing = false
 		updateAnimation(it.weatherSingleData.weatherCode, it.isDay)
 		updateCondition(it.currentCondition)
+		val observationTime = it.weatherSingleData.observationTime
+		currentDateText.text = "${getAppString(R.string.current_weather_today)} at $observationTime"
 		updateActionBarSubtitleWithResource(R.string.current_weather_today, requireActivity())
 		updatePrecipitation(it.currentPrecipitation)
 		updateTemperatures(it.currentTemperature, it.currentFeelsLikeTemperature)
