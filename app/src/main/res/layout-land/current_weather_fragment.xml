@@ -15,16 +15,23 @@
         tools:context=".ui.weather.current.CurrentWeatherFragment">
         <!--        android:background="@color/colorWeatherIconBackgroundDay"-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/current_weather_fragment_xml_scene_land">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="210dp" />
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/currentInfoGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="currentTextTemperature,currentLocationText,currentFeelsLikeTemperature,"
-                />
+                app:constraint_referenced_ids="currentTextTemperature,currentLocationText,currentFeelsLikeTemperature," />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -38,10 +45,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:visibility="gone"
                 app:constraint_referenced_ids="currentProgressBarLoading, currentTextViewLoading"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"
                 tools:visibility="gone" />
 
             <ProgressBar
@@ -94,7 +101,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline2"
-                app:layout_constraintStart_toStartOf="@+id/currentTextCondition"
+                app:layout_constraintEnd_toStartOf="@+id/guideline4"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/currentTextCondition"
                 tools:text="25.0°C" />
 
@@ -113,23 +121,25 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/currentDateText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/calendar_1_20px"
                 android:text="Петък, 01.01.2021"
                 app:layout_constraintBottom_toTopOf="@+id/currentLocationText"
-                app:layout_constraintEnd_toEndOf="@+id/currentTextCondition" />
+                app:layout_constraintEnd_toEndOf="@+id/currentTextCondition"
+                app:layout_constraintStart_toStartOf="@+id/guideline4"
+                app:layout_constraintTop_toTopOf="@+id/currentTextTemperature" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/currentLocationText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/place_marker_20px"
+                android:maxLines="2"
                 android:text="Sofia, Bulgaria"
                 app:layout_constraintBottom_toBottomOf="@+id/currentTextTemperature"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="@+id/currentDateText"
-                app:layout_constraintTop_toTopOf="@+id/currentTextTemperature" />
+                app:layout_constraintEnd_toEndOf="@+id/currentDateText"
+                app:layout_constraintStart_toStartOf="@+id/guideline4" />
 
             <ImageView
                 android:id="@+id/currentIConditionIcon"
@@ -252,6 +262,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.78" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
     </FrameLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
