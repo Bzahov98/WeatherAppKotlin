@@ -6,7 +6,8 @@
         motion:autoTransition="animateToEnd"
         motion:constraintSetEnd="@layout/motion_splash_screen_end"
         motion:constraintSetStart="@layout/motion_splash_screen_start"
-        motion:duration="5000">
+        motion:duration="1">
+<!--        motion:duration="5000">-->
         <KeyFrameSet>
 
             <KeyAttribute

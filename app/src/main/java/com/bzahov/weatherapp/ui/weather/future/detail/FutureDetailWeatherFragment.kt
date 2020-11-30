@@ -19,6 +19,7 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBa
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.exceptions.DateNotFoundException
 import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.bzahov.weatherapp.internal.gone
 import com.bzahov.weatherapp.ui.base.ScopedFragment
 import com.bzahov.weatherapp.ui.base.states.EmptyState
 import kotlinx.android.synthetic.main.future_detail_weather_fragment.*
@@ -118,7 +119,7 @@ class FutureDetailWeatherFragment : ScopedFragment(), KodeinAware {
     private fun updateUI(it: FutureDetailState) {
         Log.d(TAG, "UpdateUI for FutureDayData with: \n $it \n")
         mSwipeRefreshLayout.isRefreshing = false
-        futureDetailGroupLoading.visibility = View.GONE
+        futureDetailGroupLoading.gone()
         updateCondition(it.weatherConditionText)
         updateActionBarSubtitle(it.detailSubtitle)
         updatePrecipitation(it.rainPrecipitationText)

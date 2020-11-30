@@ -48,7 +48,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailTextViewLoading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +62,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailProgressBarLoading" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailTextCondition"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -99,12 +101,14 @@
             <!--            app:layout_constraintStart_toStartOf="parent"-->
             <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailTextTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
+                android:drawableStart="@drawable/temperature_gray_40px"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline3"
                 app:layout_constraintBottom_toBottomOf="@+id/futureDetailIConditionIcon"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -113,43 +117,51 @@
                 app:layout_constraintTop_toTopOf="@+id/futureDetailIConditionIcon"
                 tools:text="25.0°C" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailFeelsLikeTemperature"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/temperature_20px"
                 android:textAppearance="@style/TextAppearance.MyTheme.Body1"
                 app:layout_constraintEnd_toEndOf="@+id/futureDetailTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/futureDetailTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailTextTemperature"
                 tools:text="Feels like 20.4°C" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailWind"
                 android:layout_width="0dp"
+                android:drawableStart="@drawable/wind_black_25px"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="15dp"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 app:layout_constraintEnd_toEndOf="@+id/futureDetailRainPrecipitation"
                 app:layout_constraintStart_toStartOf="@+id/futureDetailRainPrecipitation"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailFeelsLikeTemperature"
                 tools:text="Wind: SE, 5.3 m/s" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailRainPrecipitation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/rainy_weather_25px"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 app:layout_constraintEnd_toEndOf="@+id/futureDetailTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/futureDetailTextTemperature"
                 app:layout_constraintTop_toBottomOf="@+id/futureDetailWind"
                 tools:text="Precipitation: 5 mm" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+
                 android:id="@+id/futureDetailVisibility"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/binoculars_25px"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 app:layout_constraintEnd_toEndOf="@+id/futureDetailRainPrecipitation"
                 app:layout_constraintStart_toStartOf="@+id/futureDetailRainPrecipitation"

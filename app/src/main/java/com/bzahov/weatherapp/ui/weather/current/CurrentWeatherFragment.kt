@@ -20,6 +20,7 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBa
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.enums.WeatherConditions
 import com.bzahov.weatherapp.internal.glide.GlideApp
+import com.bzahov.weatherapp.internal.gone
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.initChart
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawPercentRadarChart
@@ -193,7 +194,7 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 
 
 	private fun updateUI(it: CurrentWeatherState) {
-		currentGroupLoading.visibility = View.GONE
+		currentGroupLoading.gone()
 		mSwipeRefreshLayout.isRefreshing = false
 		updateAnimation(it.weatherSingleData.weatherCode, it.isDay)
 		updateCondition(it.currentCondition)

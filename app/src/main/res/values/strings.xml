@@ -49,6 +49,7 @@
     // weather stack settings
     <string name="weather_stack_url">http://api.weatherstack.com/</string>
     <string name="weather_stack_key">d008d274c9b7d028454d802a2f80a75a</string>
+<!--    <string name="weather_stack_key">e93ba03d4f5dc92b46365b6108e9a9a6</string>-->
     <string name="weather_stack_key_param">access_key</string>
     <string name="weather_stack_is_day">yes</string>
 

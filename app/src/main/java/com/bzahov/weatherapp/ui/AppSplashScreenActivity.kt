@@ -25,13 +25,17 @@ class AppSplashScreenActivity : AppCompatActivity() {
 
 	override fun onStart() {
 		super.onStart()
-		val a = DelayTaskUtils.afterMillisOnMain(5500, this) {
+		val duration : Long = calculateAnimationDuration()
+		val a = DelayTaskUtils.afterMillisOnMain(duration, this) {
 			Log.d(TAG, "afterMillisOnMain:, before start ")
 			IntentUtils.startMainActivity(this)
 			Log.d(TAG, "afterMillisOnMain: after start")
 			this.finish()
 		}
 	}
+
+	private fun calculateAnimationDuration() =
+		(resources.getInteger(R.integer.anim_splash_screen_duration) + resources.getInteger(R.integer.anim_splash_screen_duration_wait)).toLong()
 
 	override fun onWindowFocusChanged(hasFocus: Boolean) {
 		super.onWindowFocusChanged(hasFocus)

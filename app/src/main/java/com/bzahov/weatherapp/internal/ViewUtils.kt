@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 
-
 // ProgressBar
 fun ProgressBar.show() {
 	visibility = View.VISIBLE
@@ -28,7 +27,7 @@ fun View.gone() {
 }
 
 fun View.hide() {
-	visibility = View.GONE
+	visibility = View.INVISIBLE
 }
 
 fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {

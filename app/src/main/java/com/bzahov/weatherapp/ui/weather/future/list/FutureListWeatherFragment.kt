@@ -14,13 +14,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
+import com.bzahov.weatherapp.internal.gone
+import com.bzahov.weatherapp.internal.show
 import com.bzahov.weatherapp.ui.MainActivity
 import com.bzahov.weatherapp.ui.animationUtils.AnimationUtils
 import com.bzahov.weatherapp.ui.base.ScopedFragment
@@ -127,7 +128,7 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateUI(it: FutureListState) {
-        futureGroupLoading.visibility = View.GONE
+        futureGroupLoading.gone()
         mSwipeRefreshLayout.isRefreshing = false
         updateActionBarSubtitleWithResource(
             R.string.future_weather_five_days_next,
@@ -166,9 +167,9 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0 && getBottomNavigationView().isShown) {
-                    getBottomNavigationView()?.visibility = View.GONE
+                    getBottomNavigationView()?.gone()
                 } else if (dy < 0) {
-                    getBottomNavigationView()?.visibility = View.VISIBLE
+                    getBottomNavigationView()?.show()
                 }
             }
 

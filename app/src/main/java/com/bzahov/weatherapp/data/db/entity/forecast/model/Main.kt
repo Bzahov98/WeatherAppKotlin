@@ -17,4 +17,6 @@ data class Main(
     val tempMax: Double,
     @SerializedName("temp_min")
     val tempMin: Double
-)
+) {
+	constructor() : this(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+}

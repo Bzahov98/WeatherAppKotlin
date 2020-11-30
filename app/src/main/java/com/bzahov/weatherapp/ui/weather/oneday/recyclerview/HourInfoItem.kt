@@ -1,6 +1,8 @@
 package com.bzahov.weatherapp.ui.weather.oneday.recyclerview
 
+import android.animation.ObjectAnimator
 import android.view.View
+import com.bzahov.weatherapp.ForecastApplication.Companion.getAppResources
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.forecast.entities.FutureDayData
@@ -12,104 +14,150 @@ import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateWindShort
 import com.bzahov.weatherapp.internal.enums.Precipitations
 import com.bzahov.weatherapp.internal.enums.WindDirections
-import com.xwray.groupie.kotlinandroidextensions.Item
-import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import com.bzahov.weatherapp.internal.hide
+import com.bzahov.weatherapp.internal.show
+import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.item_per_three_hours.view.*
 
-data class HourInfoItem(
-    val weatherEntry: FutureDayData,
-    val isMetric: Boolean,
-    val timeZoneOffsetInSeconds: Int = 0
-) : Item() {
+public data class HourInfoItem(
+	var weatherEntry: FutureDayData,
+	val isMetric: Boolean = true,
+	val timeZoneOffsetInSeconds: Int = 0,
+	val emptyData: Boolean = false
+) : Item<OneDayViewHolder>() {
 
-    override fun getLayout() = R.layout.item_per_three_hours
+	private var animator: ObjectAnimator? = null
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.apply {
-            val view = viewHolder.itemView
-            updateViewData(view)
-        }
-    }
+	constructor() : this(FutureDayData(), emptyData = true)
 
-    private fun updateViewData(view: View) {
-        updateHourText(view)
-        updateIcon(weatherEntry.weatherDetails.last().icon, view.perThreeHoursIcon)
-        updateWindUI(weatherEntry.wind, view)
-        updateTemperature(view)
-        updatePrecipitation(view)
-    }
+	override fun getLayout() = R.layout.item_per_three_hours
 
-    private fun updateWindUI(wind: Wind, view: View) {
-        val windDirection = WindDirections.getAllWindDirectionByDouble(wind.deg)
-        view.perThreeHoursWindIcon.setImageResource(windDirection.image)
-        updateWindShort(wind, isMetric, view.perThreeHoursWindSpeedInfo)
-    }
+	override fun bind(viewHolder: OneDayViewHolder, position: Int) {
+		viewHolder.apply {
+			val view = viewHolder.itemView
+			updateViewData(view)
+		}
+	}
 
-    private fun updateHourText(view: View) {
-        view.perThreeHoursHourInfo.text =
-            dateTimestampToTimeString(weatherEntry.dt, timeZoneOffsetInSeconds)
-    }
+	private fun updateViewData(view: View) {
+//		animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0.4f)
+//		if (animator == null) {
+//			animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0.4f)
+//		}
+		if (!emptyData) {
+			showAllViews(view)
+			updateHourText(view, weatherEntry)
+			updateIcon(weatherEntry.weatherDetails.last().icon, view.perThreeHoursIcon)
+			updateWindUI(weatherEntry.wind, view)
+			updateTemperature(view, weatherEntry)
+			updatePrecipitation(view)
+		} else {
+			hideAllViews(view)
+		}
+	}
 
-    private fun updateTemperature(view: View) {
-        val unitAbbreviation = chooseLocalizedUnitAbbreviation(
-            isMetric,
-            getAppString(R.string.metric_temperature),
-            getAppString(R.string.imperial_temperature)
-        )
-        view.perThreeHoursTemperature.text =
-            convertDoubleValueAndAbbreviationToString(weatherEntry.main.temp, unitAbbreviation)
-    }
+	private fun showAllViews(view: View) {
+		// TODO Find way to destroy animation when data is available
+		animator?.cancel()
+		view.animate()?.cancel()
+		view.animation?.cancel()
+		view.clearAnimation()
+		view.perThreeHoursDataView.show()
+		view.perThreeHoursTemperature.show()
+		view.perThreeHoursPrepInfo.show()
+		view.perThreeHoursHourInfo.show()
+	}
 
-    private fun updatePrecipitation(view: View) {
-        val precipitations = PrecipitationData(weatherEntry)
+	private fun hideAllViews(view: View) {
+		view.perThreeHoursDataView.hide()
+		view.perThreeHoursTemperature.hide()
+		view.perThreeHoursPrepInfo.hide()
+		view.perThreeHoursHourInfo.hide()
 
-        view.perThreeHoursPrepInfo.text = precipitations.rainPrecipitationText
-        view.perThreeHoursPrepIcon.setImageResource(precipitations.precipitationsInfo.image)
-    }
+		animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0.4f)
+		animator?.repeatMode = ObjectAnimator.REVERSE
+		animator?.repeatCount = ObjectAnimator.INFINITE
+		animator?.duration = getAnimationDuration()
+		animator?.start()
 
-    private class PrecipitationData(val weatherEntry: FutureDayData) {
+	}
 
-        init {
-            calculatePrecipitation()
-        }
+	private fun getAnimationDuration() =
+		getAppResources()!!.getInteger(R.integer.anim_recycler_empty_duration).toLong()
 
-        lateinit var rainPrecipitationText   : String
-        lateinit var precipitationsInfo: Precipitations
+	private fun updateWindUI(wind: Wind, view: View) {
+		val windDirection = WindDirections.getAllWindDirectionByDouble(wind.deg)
+		view.perThreeHoursWindIcon.setImageResource(windDirection.image)
+		updateWindShort(wind, isMetric, view.perThreeHoursWindSpeedInfo)
+	}
 
-        private fun calculatePrecipitation() {
+	private fun updateHourText(view: View, dayData: FutureDayData) {
+		view.perThreeHoursHourInfo.text =
+			dateTimestampToTimeString(dayData.dt, timeZoneOffsetInSeconds)
+	}
 
-            // always in mm
-            val unitAbbreviation = getAppString(R.string.metric_precipitation)
-            val snowVolume3h = weatherEntry.snow?.precipitationsForLast3hours
-            val rainVolume3h = weatherEntry.rain?.precipitationsForLast3hours
+	private fun updateTemperature(view: View, dayData: FutureDayData) {
+		val unitAbbreviation = chooseLocalizedUnitAbbreviation(
+			isMetric,
+			getAppString(R.string.metric_temperature),
+			getAppString(R.string.imperial_temperature)
+		)
+		view.perThreeHoursTemperature.text =
+			convertDoubleValueAndAbbreviationToString(dayData.main.temp, unitAbbreviation)
+	}
 
-            if (snowVolume3h ?: 0.0 > 0 && rainVolume3h ?: 0.0 > 0) {
-                rainPrecipitationText =
-                    Precipitations.RAIN.shortName +
-                            " $rainVolume3h $unitAbbreviation, " +
-                            Precipitations.SNOW.shortName +
-                            ": $snowVolume3h"
-                precipitationsInfo = Precipitations.SLEET
+	private fun updatePrecipitation(view: View) {
+		val precipitations = PrecipitationData(weatherEntry)
 
-            } else {
-                rainPrecipitationText = Precipitations.NONE.shortName
-                precipitationsInfo = Precipitations.NONE
-            }
+		view.perThreeHoursPrepInfo.text = precipitations.rainPrecipitationText
+		view.perThreeHoursPrepIcon.setImageResource(precipitations.precipitationsInfo.image)
+	}
 
-            if (rainVolume3h ?: 0.0 > 0) {
-                rainPrecipitationText =
-                   "$rainVolume3h $unitAbbreviation"
+	private class PrecipitationData(val weatherEntry: FutureDayData) {
 
-                precipitationsInfo = Precipitations.RAIN
-            }
-            if (snowVolume3h ?: 0.0 > 0) {
-                rainPrecipitationText =
-                   " $snowVolume3h $unitAbbreviation"
+		init {
+			calculatePrecipitation()
+		}
 
-                precipitationsInfo = Precipitations.SNOW
-            }
+		lateinit var rainPrecipitationText: String
+		lateinit var precipitationsInfo: Precipitations
+
+		private fun calculatePrecipitation() {
+
+			// always in mm
+			val unitAbbreviation = getAppString(R.string.metric_precipitation)
+			val snowVolume3h = weatherEntry.snow?.precipitationsForLast3hours
+			val rainVolume3h = weatherEntry.rain?.precipitationsForLast3hours
+
+			if (snowVolume3h ?: 0.0 > 0 && rainVolume3h ?: 0.0 > 0) {
+				rainPrecipitationText =
+					Precipitations.RAIN.shortName +
+							" $rainVolume3h $unitAbbreviation, " +
+							Precipitations.SNOW.shortName +
+							": $snowVolume3h"
+				precipitationsInfo = Precipitations.SLEET
+
+			} else {
+				rainPrecipitationText = Precipitations.NONE.shortName
+				precipitationsInfo = Precipitations.NONE
+			}
+
+			if (rainVolume3h ?: 0.0 > 0) {
+				rainPrecipitationText =
+					"$rainVolume3h $unitAbbreviation"
+
+				precipitationsInfo = Precipitations.RAIN
+			}
+			if (snowVolume3h ?: 0.0 > 0) {
+				rainPrecipitationText =
+					" $snowVolume3h $unitAbbreviation"
+
+				precipitationsInfo = Precipitations.SNOW
+			}
 
 
-        }
-    }
+		}
+	}
+
+
 }
