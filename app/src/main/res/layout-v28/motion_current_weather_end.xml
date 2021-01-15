@@ -74,6 +74,8 @@
         android:id="@+id/currentAnimationView"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="7dp"
+        android:alpha="1"
         app:layout_constraintBottom_toTopOf="@+id/chipGroup2"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,6 +88,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
+        android:alpha="1"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -140,6 +143,7 @@
         android:drawableStart="@drawable/place_marker_20px"
         android:text="Sofia, Bulgaria"
         android:textSize="11sp"
+        android:lines="1"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
         app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"
@@ -197,31 +201,34 @@
 
     <com.anychart.AnyChartView
         android:id="@+id/currentThermometerChartView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F1F8E9"
         app:layout_constraintBottom_toBottomOf="@+id/chipGroup2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/currentIConditionIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/currentIConditionIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:alpha="1" />
 
     <com.anychart.AnyChartView
         android:id="@+id/currentWindChartView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/currentThermometerChartView" />
+        app:layout_constraintTop_toBottomOf="@+id/currentThermometerChartView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="1" />
 
     <com.anychart.AnyChartView
         android:id="@+id/currentRadarChartView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="1" />
 
     <com.anychart.AnyChartView
         android:id="@+id/currentChartView"

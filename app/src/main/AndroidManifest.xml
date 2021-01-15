@@ -15,14 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTheme.DayNight"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.AppSplashScreenActivity">
+        <activity android:name=".ui.activities.AppSplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.GraphTestActivity">
+        <activity android:name=".ui.activities.GraphTestActivity">
 
             <!-- FOR DEBUG -->
             <!-- <intent-filter> -->
@@ -50,7 +50,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -10,93 +10,21 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/oneDayWeatherFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <!--        android:background="@color/secondaryLightColor"-->
         <!--        android:backgroundTint="@color/cardview_shadow_start_color"-->
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/oneDayMainInfo"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <!--~~~~~~~~~~~~~~~~~Desciption and Day/Night icons~~~~~~~~~~~~~~~~~~~-->
-
-                <!-- <TextView
-                     android:id="@+id/oneDayWeatherDate"
-                     android:layout_width="wrap_content"
-                     android:layout_height="0dp"
-                     android:layout_marginTop="32dp"
-                     android:textAlignment="center"
-                     android:textSize="@dimen/normal_text_size"
-                     android:visibility="gone"
-                     android:textStyle="italic"
-                     app:layout_constraintEnd_toEndOf="parent"
-                     app:layout_constraintStart_toStartOf="parent"
-                     app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
-                     tools:text="1.1.2000" />-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <!--<TextView
-                    android:id="@+id/oneDayConditionText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.MyTheme.Headline5"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
-                    app:layout_constraintTop_toTopOf="@+id/guidelineHorizontalTop"
-                    tools:text="Clear" />
-
-                <ImageView
-                    android:id="@+id/oneDayConditionIcon"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
-                    app:layout_constraintStart_toStartOf="@+id/guidelineLeftVertical"
-                    app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
-                    tools:src="@drawable/ic_weather_sunny"
-                    android:visibility="gone"
-                    android:contentDescription="@string/description_icon_day"
-                    tools:tint="#f9a920" />-->
-
-                <!--  <ImageView
-                      android:id="@+id/oneNightConditionIcon"
-                      android:layout_width="0dp"
-                      android:visibility="gone"
-                      android:layout_height="0dp"
-                      android:layout_marginBottom="8dp"
-                      app:layout_constraintDimensionRatio="1:1"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      app:layout_constraintEnd_toStartOf="@+id/guidelineRightVertical"
-                      app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
-                      app:layout_constraintTop_toBottomOf="@+id/oneDayConditionText"
-                      tools:src="@drawable/nightclear"
-                      android:contentDescription="@string/description_icon_night" />-->
-                <!--~~~~~~~~~~~~~~~~~DayTimeText~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
                 <include
                     android:id="@+id/oneDayTemperatureView"
@@ -112,11 +40,11 @@
                     android:id="@+id/oneDayNightIconDescrView"
                     layout="@layout/layout_day_night_description_view"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="3dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/constraintLayout"
-                    app:layout_constraintStart_toStartOf="@+id/constraintLayout"
+                    app:layout_constraintEnd_toStartOf="@+id/oneNightTemperatureView"
+                    app:layout_constraintStart_toEndOf="@+id/oneDayTemperatureView"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <include
@@ -171,7 +99,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                app:cardCornerRadius="9dp">
+                android:layout_marginTop="23dp"
+                app:cardCornerRadius="9dp"
+                app:layout_constraintBottom_toTopOf="@+id/oneDayChartText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayMainInfo">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/oneDayHourlyInfo"
@@ -185,7 +118,6 @@
                         style="@style/MyMaterialTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
                         android:text="@string/description_each_3_hours_of_day"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +130,9 @@
                         android:clipChildren="false"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        android:layoutAnimation="@anim/layout_animation_from_right"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourText"
                         tools:itemCount="8"
@@ -206,124 +140,69 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-            <!--            <com.google.android.material.card.MaterialCardView-->
-            <!--                android:id="@+id/oneDayPerHourColumnChart"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                style="@style/DayCardView"-->
-            <!--                app:cardCornerRadius="3dp">-->
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="1dp">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/oneDayChartText"
                     style="@style/ChartMaterialTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
                     android:background="@color/primaryLightColor"
                     android:text="@string/description_each_3_hours_of_day"
+                    app:layout_constraintBottom_toTopOf="@+id/chipGroup"
                     app:layout_constraintEnd_toEndOf="@+id/chipGroup"
-                    app:layout_constraintStart_toStartOf="@+id/chipGroup"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="@+id/chipGroup" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                style="@style/MyChipStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourRecyclerCardView">
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/oneDayPerHourChartPrecipitation"
                     style="@style/MyChipStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:foregroundGravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/oneDayChartText">
+                    android:text="@string/description_chart_precipitations_short"
+                    app:chipIcon="@drawable/sleet_black40px" />
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/oneDayPerHourChartWind"
+                    style="@style/MyChipStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_chart_wind_short"
+                    app:chipIcon="@drawable/wind_black40px" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/oneDayPerHourChartPrecipitation"
-                        style="@style/MyChipStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/description_chart_precipitations_short"
-                        app:chipIcon="@drawable/sleet_black40px" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/oneDayPerHourChartText"
+                    style="@style/MyChipStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_chart_short"
+                    app:chipIcon="@drawable/ic_weather_sunny" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/oneDayPerHourChartWind"
-                        style="@style/MyChipStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/description_chart_wind_short"
-                        app:chipIcon="@drawable/wind_black40px" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/oneDayPerHourChartTemperature"
+                    style="@style/MyChipStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_chart_temperature_short"
+                    app:chipIcon="@drawable/temperature_black40px" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/oneDayPerHourChartText"
-                        style="@style/MyChipStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/description_chart_short"
-                        app:chipIcon="@drawable/ic_weather_sunny" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/oneDayPerHourChartTemperature"
-                        style="@style/MyChipStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/description_chart_temperature_short"
-                        app:chipIcon="@drawable/temperature_black40px" />
-
-                </com.google.android.material.chip.ChipGroup>
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/oneDayPerHourChartTemperature"-->
-                <!--                        style="@style/MyMaterialTextView"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginTop="4dp"-->
-                <!--                        android:text="@string/description_chart_temperature_short"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                <!--                        app:layout_constraintTop_toTopOf="parent"/>-->
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/oneDayPerHourChartPrecipitation"-->
-                <!--                        style="@style/MyMaterialTextView"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginTop="4dp"-->
-                <!--                        android:text="@string/description_chart_precipitations"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                <!--                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartTemperature" />-->
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/oneDayPerHourChartWind"-->
-                <!--                        style="@style/MyMaterialTextView"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginTop="4dp"-->
-                <!--                        android:text="@string/description_chart_wind"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                <!--                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartPrecipitation" />-->
-
-                <!--                    <com.google.android.material.textview.MaterialTextView-->
-                <!--                        android:id="@+id/oneDayPerHourChartText"-->
-                <!--                        style="@style/MyMaterialTextView"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginTop="4dp"-->
-                <!--                        android:text="@string/description_chart_"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                <!--                        app:layout_constraintTop_toBottomOf="@+id/oneDayPerHourChartWind" />-->
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.chip.ChipGroup>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/oneDayLoadingLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/oneDayGroupLoading"
@@ -364,7 +243,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/oneDayProgressBarLoading"
                      />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

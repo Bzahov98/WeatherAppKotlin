@@ -29,7 +29,7 @@ import com.bzahov.weatherapp.data.repo.interfaces.CurrentForecastRepository
 import com.bzahov.weatherapp.data.repo.interfaces.FutureForecastRepository
 import com.bzahov.weatherapp.data.services.OpenWeatherApiService
 import com.bzahov.weatherapp.data.services.WeatherApiService
-import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
+import com.bzahov.weatherapp.ui.fragments.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.remoteviews.notifications.AlarmReceiver
 import com.bzahov.weatherapp.ui.remoteviews.notifications.cancelNotifications
 import com.bzahov.weatherapp.ui.weather.current.CurrentWeatherViewModelFactory

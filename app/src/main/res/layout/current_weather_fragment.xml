@@ -19,7 +19,7 @@
             android:id="@+id/constraintLayout4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutDescription="@xml/current_weather_fragment_xml_constraintlayout4_scene">
+            app:layoutDescription="@xml/current_weather_fragment_xml_scene">
 
 
             <androidx.constraintlayout.widget.Guideline
@@ -162,7 +162,9 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/place_marker_20px"
                 android:text="Sofia, Bulgaria"
+                android:autoSizeTextType="none"
                 android:textSize="11sp"
+                android:lines="1"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="@+id/currentTextTemperature"
                 app:layout_constraintStart_toStartOf="@+id/currentTextTemperature"

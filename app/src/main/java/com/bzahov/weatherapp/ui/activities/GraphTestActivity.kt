@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui
+package com.bzahov.weatherapp.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

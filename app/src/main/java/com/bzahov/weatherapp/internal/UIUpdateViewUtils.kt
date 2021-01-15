@@ -57,12 +57,19 @@ class UIUpdateViewUtils {
         }
 
         fun updateActionBarSubtitleWithResource(resourceInt: Int, activity: FragmentActivity) {
-            (activity as AppCompatActivity).supportActionBar?.hide() // Hide action bar for that view
+            //(activity as AppCompatActivity).supportActionBar?.hide() // Hide action bar for that view
             updateActionBarSubtitle(getAppString(resourceInt), activity)
         }
 
         fun updateActionBarSubtitle(text: String, activity: FragmentActivity) {
             (activity as AppCompatActivity).supportActionBar?.subtitle = text
+        }
+
+        fun hideSupportActionBar(activity: FragmentActivity) {
+            val supportActionBar = (activity as AppCompatActivity).supportActionBar
+            if (supportActionBar != null && supportActionBar.isShowing) {
+                supportActionBar.hide() // Hide action bar for that view
+            }
         }
 
         fun updateIcon(iconNumber: String, iconView: ImageView) {

@@ -1,5 +1,7 @@
 package com.bzahov.weatherapp.internal
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
 import android.view.View
@@ -28,7 +30,7 @@ fun View.gone() {
 }
 
 fun View.hide() {
-	visibility = View.GONE
+	visibility = View.INVISIBLE
 }
 
 fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
@@ -47,4 +49,29 @@ fun hideSoftKeyboard(activity: Activity) {
 	val inputMethodManager =
 		activity.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
 	inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+}
+
+fun View.goneAnimated(){
+	this.animate()
+		.alpha(1.0f)
+		.setDuration(150)
+		.setListener(object : AnimatorListenerAdapter() {
+			override fun onAnimationEnd(animation: Animator?) {
+				super.onAnimationEnd(animation)
+				this@goneAnimated.gone()
+				this@goneAnimated.alpha = 0.0f
+			}
+		})
+}
+
+fun View.showAnimated(){
+	this.animate()
+		.alpha(1.0f)
+		.setDuration(50)
+		.setListener(object : AnimatorListenerAdapter() {
+			override fun onAnimationEnd(animation: Animator?) {
+				super.onAnimationEnd(animation)
+				this@showAnimated.show()
+			}
+		})
 }
