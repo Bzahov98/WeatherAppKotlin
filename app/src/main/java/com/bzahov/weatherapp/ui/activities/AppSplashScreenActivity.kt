@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui
+package com.bzahov.weatherapp.ui.activities
 
 import android.app.Activity
 import android.content.Context

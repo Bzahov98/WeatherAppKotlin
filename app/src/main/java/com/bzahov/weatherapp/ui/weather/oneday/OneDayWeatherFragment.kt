@@ -13,12 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils
+import com.bzahov.weatherapp.internal.*
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateIcon
-import com.bzahov.weatherapp.internal.gone
-import com.bzahov.weatherapp.internal.show
-import com.bzahov.weatherapp.ui.MainActivity
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.showDialog
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createChart
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.OneDayChartUtils.Companion.createPrecipitationsChart
@@ -70,30 +67,10 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		initRefresherLayout()
-		// TODO add listeners when add views in landscape layout
 		oneDayPerHourChartTemperature.setOnClickListener(this);
 		oneDayPerHourChartPrecipitation.setOnClickListener(this);
-		oneDayPerHourChartWind?.setOnClickListener(this); // TODO ADD to landscape view
+		oneDayPerHourChartWind?.setOnClickListener(this);
 		oneDayPerHourChartText.setOnClickListener(this);
-	}
-
-	private fun initRefresherLayout() {
-		mSwipeRefreshLayout.isRefreshing = true
-		mSwipeRefreshLayout.setOnRefreshListener {
-			mSwipeRefreshLayout.isRefreshing = false
-			if (viewModel.isOnline()) {
-				Log.d(TAG, "Updating Weather Data")
-				UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
-				launch { viewModel.requestRefreshOfData() }
-			} else {
-				Log.e(TAG, getAppString(R.string.warning_device_offline))
-				UIUpdateViewUtils.showSnackBarMessage(
-					getAppString(R.string.warning_device_offline),
-					requireActivity(),
-					false
-				)
-			}
-		}
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -105,13 +82,7 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 
 		updateEmptyStateUI(EmptyState())
 
-		getActionBar().show()
-	}
-
-	private fun initViewModel() {
-		viewModel = ViewModelProvider(this, viewModelFactory)
-			.get(OneDayWeatherViewModel::class.java)
-		viewModel.resetStartEndDates()
+//		getActionBar().show()
 	}
 
 	override fun onAttachFragment(childFragment: Fragment) {
@@ -122,18 +93,17 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 	override fun onResume() {
 		super.onResume()
 		lastOrientation = resources.configuration.orientation
-
-//        if (lastOrientation == Configuration.ORIENTATION_PORTRAIT && oneDayPerHourColumnChartView != null) {
-//            defaultView(oneDayPerHourColumnChartView)
-//        }
-		lastOrientation = resources.configuration.orientation
+		this.hideSupportActionBar()
 		bindUI()
 	}
 
+	override fun onStart() {
+		super.onStart()
+		this.hideSupportActionBar()
+	}
 	override fun onStop() {
 		super.onStop()
-		getActionBar().show()
-		getBottomNavigationView().visibility = View.VISIBLE
+		resetControlViews()
 	}
 
 	override fun onClick(view: View) {
@@ -153,6 +123,33 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 			oneDayPerHourChartWind?.id -> {
 				Log.d(TAG, "oneDayPerHourChartWind")
 				showWeatherWindDialog()
+			}
+		}
+	}
+
+
+
+	private fun initViewModel() {
+		viewModel = ViewModelProvider(this, viewModelFactory)
+			.get(OneDayWeatherViewModel::class.java)
+		viewModel.resetStartEndDates()
+	}
+
+	private fun initRefresherLayout() {
+		mSwipeRefreshLayout.isRefreshing = true
+		mSwipeRefreshLayout.setOnRefreshListener {
+			mSwipeRefreshLayout.isRefreshing = false
+			if (viewModel.isOnline()) {
+				Log.d(TAG, "Updating Weather Data")
+				UIUpdateViewUtils.showSnackBarMessage("Updating Weather Data", requireActivity())
+				launch { viewModel.requestRefreshOfData() }
+			} else {
+				Log.e(TAG, getAppString(R.string.warning_device_offline))
+				UIUpdateViewUtils.showSnackBarMessage(
+					getAppString(R.string.warning_device_offline),
+					requireActivity(),
+					false
+				)
 			}
 		}
 	}
@@ -380,10 +377,6 @@ class OneDayWeatherFragment : ScopedFragment(), KodeinAware, View.OnClickListene
 	private fun updateActionBarDescription(subtitle: String) {
 		(activity as? AppCompatActivity)?.supportActionBar?.subtitle = subtitle
 	}
-
-	private fun getActionBar() = (requireActivity() as MainActivity).supportActionBar!!
-
-	private fun getBottomNavigationView() = requireActivity().bottom_navigation
 
 	private fun showWeatherDialog() {
 		showDialog(

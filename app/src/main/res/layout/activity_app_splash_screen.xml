@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/activity_app_splash_screen_scene"
-    tools:context=".ui.AppSplashScreenActivity">
+    tools:context=".ui.activities.AppSplashScreenActivity">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/splashSun"

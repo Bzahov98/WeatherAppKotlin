@@ -10,6 +10,7 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.entity.current.WeatherLocation
@@ -113,6 +114,8 @@ class LocationProviderImpl(
         )
     }
 
+
+
     @SuppressLint("MissingPermission")
     override suspend fun getLastPhysicalDeviceLocation(): Location? {
         return (if (hasLocationPermission())
@@ -143,5 +146,19 @@ class LocationProviderImpl(
             appContext,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    companion object{
+        fun Fragment.getLocationSharedPreferences() =
+            this.requireActivity().getSharedPreferences(
+                ForecastApplication.getAppString(R.string.preference_current_location),
+                Context.MODE_PRIVATE
+            )
+
+        fun Fragment.getLocationString() =
+            (getLocationSharedPreferences())?.getString(
+                getString(R.string.preference_location_in_use_key),
+                ForecastApplication.getAppString(R.string.default_location) + " erRor"
+            )
     }
 }

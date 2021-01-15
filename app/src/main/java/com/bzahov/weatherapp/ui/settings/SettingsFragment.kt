@@ -16,8 +16,8 @@ import com.bzahov.weatherapp.ForecastApplication
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.ui.base.ScopedPreferenceCompatFragment
-import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModel
-import com.bzahov.weatherapp.ui.base.fragments.SettingsFragmentViewModelFactory
+import com.bzahov.weatherapp.ui.fragments.SettingsFragmentViewModel
+import com.bzahov.weatherapp.ui.fragments.SettingsFragmentViewModelFactory
 import com.bzahov.weatherapp.ui.remoteviews.widgets.CurrentWeatherWidgetConfigureActivity
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware

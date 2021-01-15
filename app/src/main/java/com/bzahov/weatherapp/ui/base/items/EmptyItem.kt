@@ -1,7 +1,8 @@
-package com.bzahov.weatherapp.ui.weather.oneday.recyclerview
+package com.bzahov.weatherapp.ui.base.items
 
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.internal.hide
+import com.bzahov.weatherapp.ui.weather.oneday.recyclerview.OneDayViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.item_per_three_hours.view.*
 

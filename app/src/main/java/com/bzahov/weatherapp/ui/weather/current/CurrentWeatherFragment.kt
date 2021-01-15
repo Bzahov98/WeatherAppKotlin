@@ -1,6 +1,5 @@
 package com.bzahov.weatherapp.ui.weather.current
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,13 +13,15 @@ import com.anychart.APIlib
 import com.anychart.AnyChartView
 import com.bzahov.weatherapp.ForecastApplication.Companion.getAppString
 import com.bzahov.weatherapp.R
+import com.bzahov.weatherapp.data.provider.LocationProviderImpl.Companion.getLocationSharedPreferences
+import com.bzahov.weatherapp.data.provider.LocationProviderImpl.Companion.getLocationString
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils
-import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.hideSupportActionBar
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarSubtitleWithResource
 import com.bzahov.weatherapp.internal.UIUpdateViewUtils.Companion.updateActionBarTitle
 import com.bzahov.weatherapp.internal.enums.WeatherConditions
 import com.bzahov.weatherapp.internal.glide.GlideApp
 import com.bzahov.weatherapp.internal.gone
+import com.bzahov.weatherapp.internal.hideSupportActionBar
 import com.bzahov.weatherapp.ui.anychartGraphs.AnyChartGraphsFactory.Companion.initChart
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils
 import com.bzahov.weatherapp.ui.anychartGraphs.specificUtils.CurrentWeatherChartUtils.Companion.drawPercentRadarChart
@@ -80,16 +81,25 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		initRefresherLayout()
+		bindUI()
 	}
 
 	override fun onActivityCreated(savedInstanceState: Bundle?) {
 		super.onActivityCreated(savedInstanceState)
 		viewModel = ViewModelProvider(this, viewModelFactory)
 			.get(CurrentWeatherViewModel::class.java)
-		hideSupportActionBar(this.requireActivity())
-		bindUI()
+		this.hideSupportActionBar()
 	}
 
+	override fun onStart() {
+		super.onStart()
+		this.hideSupportActionBar()
+	}
+
+	override fun onResume() {
+		super.onResume()
+		this.hideSupportActionBar()
+	}
 	private var location: String? = null
 
 	private fun bindUI(): Job {
@@ -165,18 +175,6 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware,
 	private fun getWeatherDescription(it: CurrentWeatherState): String? {
 		return "${getLocationString()} + ${it.currentFeelsLikeTemperature} | "
 	}
-
-	private fun getLocationString() =
-		(getLocationSharedPreferences())?.getString(
-			getString(R.string.preference_location_in_use_key),
-			getAppString(R.string.default_location) + " erRor"
-		)
-
-	private fun getLocationSharedPreferences() =
-		activity?.getSharedPreferences(
-			getString(R.string.preference_current_location),
-			Context.MODE_PRIVATE
-		)
 
 	private fun updateEmptyStateUI(it: EmptyState) {
 		updateCondition(it.warningString)

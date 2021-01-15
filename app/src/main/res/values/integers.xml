@@ -7,7 +7,7 @@
     <integer name="anim_recycler_empty_duration">1250</integer>
 
     <!-- DEBUG: FOR DEBUG PURPOSES, normal speed: "anim_splash_screen_duration_normal "-->
-    <integer name="anim_splash_screen_duration">@integer/anim_splash_screen_duration_short</integer>
+    <integer name="anim_splash_screen_duration">@integer/anim_splash_screen_duration_normal</integer>
     <integer name="anim_splash_screen_wait_duration">@integer/anim_splash_screen_duration_wait</integer>
 
     <integer name="anim_splash_screen_duration_short">100</integer>

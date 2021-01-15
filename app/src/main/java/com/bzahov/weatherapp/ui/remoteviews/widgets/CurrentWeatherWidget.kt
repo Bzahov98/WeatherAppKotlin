@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.db.ForecastDatabase
 import com.bzahov.weatherapp.data.provider.PreferenceProvider.Companion.getUnitAbbreviation
-import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.activities.MainActivity
 import com.bzahov.weatherapp.ui.remoteviews.widgets.interfaces.CurrentWidgetRefresher
 import com.bzahov.weatherapp.ui.settings.SettingsFragment
 import kotlinx.coroutines.CoroutineScope

@@ -29,7 +29,7 @@
 
     </style>
 
-    <style name="TestAppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="TestAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryVariant">#000000</item>
         <item name="colorOnPrimary">#FFFFFF</item>

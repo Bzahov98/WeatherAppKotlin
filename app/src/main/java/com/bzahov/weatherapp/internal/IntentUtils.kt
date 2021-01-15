@@ -3,7 +3,7 @@ package com.bzahov.weatherapp.internal
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.activities.MainActivity
 
 class IntentUtils {
 	companion object {

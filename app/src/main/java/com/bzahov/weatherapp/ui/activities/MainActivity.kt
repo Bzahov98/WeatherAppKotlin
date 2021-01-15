@@ -1,4 +1,4 @@
-package com.bzahov.weatherapp.ui
+package com.bzahov.weatherapp.ui.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.bzahov.weatherapp.R
+import com.bzahov.weatherapp.internal.hideSupportActionBar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -50,13 +51,22 @@ class MainActivity(
         NavigationUI.setupActionBarWithNavController(this, navController)
 
         requestLocationPermission()
+        this.hideSupportActionBar()
 
         if (hasLocationPermission()) {
             bindLocationManager()
         } else
             requestLocationPermission()
     }
+    override fun onStart() {
+        super.onStart()
+        this.hideSupportActionBar()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        this.hideSupportActionBar()
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()

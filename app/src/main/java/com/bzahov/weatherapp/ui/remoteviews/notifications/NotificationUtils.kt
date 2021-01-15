@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import com.bumptech.glide.Glide
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.provider.TAG
-import com.bzahov.weatherapp.ui.MainActivity
+import com.bzahov.weatherapp.ui.activities.MainActivity
 
 private val NOTIFICATION_ID = 0
 private val REQUEST_CODE = 0

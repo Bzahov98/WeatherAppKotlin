@@ -9,7 +9,7 @@ import com.afollestad.materialdialogs.utils.MDUtil.inflate
 import com.bzahov.weatherapp.R
 import com.bzahov.weatherapp.data.provider.TAG
 import com.bzahov.weatherapp.internal.enums.RecyclerviewItemTypes
-import com.bzahov.weatherapp.internal.enums.RecyclerviewItemTypes.PER_THREE_HOURS_VIEW
+import com.bzahov.weatherapp.internal.enums.RecyclerviewItemTypes.PER_THREE_HOURS_ITEM
 import com.bzahov.weatherapp.ui.weather.oneday.OneDayWeatherFragmentDirections
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -29,7 +29,7 @@ class OneDayRecyclerAdapter(
 //				inflateViewHolder(parent, EMPTY_VIEW)
 //			}
 //			PER_THREE_HOURS_VIEW.typeID -> {
-			return	inflateViewHolder(parent, PER_THREE_HOURS_VIEW)
+			return	inflateViewHolder(parent, PER_THREE_HOURS_ITEM)
 //			}
 //			else -> { // EMPTY_VIEW
 //				inflateViewHolder(parent, EMPTY_VIEW)
@@ -53,7 +53,7 @@ class OneDayRecyclerAdapter(
 
 	override fun onBindViewHolder(holder: OneDayViewHolder, position: Int) = Unit
 	override fun getItemViewType(position: Int): Int {
-		return /*if (withHeader && position == 0) EMPTY_VIEW.typeID else*/ PER_THREE_HOURS_VIEW.typeID
+		return /*if (withHeader && position == 0) EMPTY_VIEW.typeID else*/ PER_THREE_HOURS_ITEM.typeID
 	}
 }
 
